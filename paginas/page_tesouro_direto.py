@@ -1,11 +1,15 @@
 import streamlit as st
-from datetime import datetime
+from datetime import datetime, timedelta
+import time
 from libs.tesouro_direto import TesouroDireto
 from st_pages import Page, Section, show_pages, add_page_title
+import pytz
 
+## Construção da página
+        
 st.set_page_config(layout="wide")
-
 add_page_title()
+mensagens = st.container()
 
 @st.cache_data
 def atualizar_dados_tesouro_direto(data_atual):
@@ -18,12 +22,17 @@ def atualizar_dados_tesouro_direto(data_atual):
 #     layout="wide",
 # )
 
-agora = datetime.today().strftime('%d/%m/%Y')
+delta = 0
+if time.tzname[0] == "UTC":
+    delta = 3;
+agora = datetime.today() - timedelta(hours=delta, minutes=0) 
+agora = agora.strftime('%d/%m/%Y')
+
 td = atualizar_dados_tesouro_direto(agora)
 
 # st.sidebar.markdown("# Tesouro Direto")
 
-selic, ipca, pre = st.tabs(["SELIC", "IPCA+", "PREFIXADO"])
+selic, ipca, pre = st.tabs(["SELIC", ":dragon: IPCA+", "PREFIXADO"])
 
 with selic:
     st.markdown("## Tesouro SELIC")

@@ -148,7 +148,13 @@ class TesouroDireto():
         fig = fig.add_trace(go.Scatter(x = self.selic2027.index,
                                        y = self.selic2027[self.PU_BASE_MANHA], 
                                        name="Tesouro Selic 2027"))
-        fig.update_layout(title=f"Tesouro SELIC - Preço (gerado em {self.hoje})", title_x=0.5)
+        fig.update_layout(
+             title={
+                'text': f"Tesouro SELIC - Preço (gerado em {self.hoje})",
+                'y':0.9,
+                'x':0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'})
         fig.update_layout(legend=dict(x=0, y=-0.1, orientation="h",))
         return fig
 
@@ -160,7 +166,13 @@ class TesouroDireto():
         fig = fig.add_trace(go.Scatter(x = self.selic2027.index,
                                        y = self.selic2027[self.TAXA_COMPRA_MANHA], 
                                        name="Tesouro Selic 2027"))
-        fig.update_layout(title=f"Tesouro SELIC - Taxa (gerado em {self.hoje})", title_x=0.5)       
+        fig.update_layout(title={
+                'text': f"Tesouro SELIC - Taxa (gerado em {self.hoje})",
+                'y':0.9,
+                'x':0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'})
+                     
         fig.update_layout(legend=dict(x=0, y=-0.1, orientation="h",))
         return fig
 
@@ -175,8 +187,13 @@ class TesouroDireto():
         fig = fig.add_trace(go.Scatter(x = self.pre2033.index,
                                        y = self.pre2033[self.PU_BASE_MANHA], 
                                        name="Tesouro Prefixado com Juros Semestrais 2033"))
-
-        fig.update_layout(title=f"Tesouro Pré-Fixado - Preço (gerado em {self.hoje})", title_x=0.5)
+        fig.update_layout(title={
+                'text': f"Tesouro Pré-Fixado - Preço (gerado em {self.hoje})",
+                'y':0.9,
+                'x':0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'})
+            
         fig.update_layout(legend=dict(x=0, y=-0.1, orientation="h",))
         return fig
 
@@ -191,7 +208,13 @@ class TesouroDireto():
         fig = fig.add_trace(go.Scatter(x = self.pre2033.index,
                                        y = self.pre2033[self.TAXA_COMPRA_MANHA], 
                                        name="Tesouro Prefixado com Juros Semestrais 2033"))                                  
-        fig.update_layout(title=f"Tesouro Pré-Fixado - Taxa (gerado em {self.hoje})", title_x=0.5)
+        fig.update_layout(title={
+                'text': f"Tesouro Pré-Fixado - Taxa (gerado em {self.hoje})",
+                'y':0.9,
+                'x':0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'})
+                
         fig.update_layout(legend=dict(x=0, y=-0.1, orientation="h",))
         return fig
 
@@ -215,7 +238,13 @@ class TesouroDireto():
         fig = fig.add_trace(go.Scatter(x = self.ipca2055.index,
                                        y = self.ipca2055[self.PU_BASE_MANHA], 
                                        name="Tesouro IPCA+ com Juros Semestrais 2055"))
-        fig.update_layout(title=f"Tesouro IPCA+ - Preço (gerado em {self.hoje})", title_x=0.5)
+        fig.update_layout(title={
+                'text': f"Tesouro IPCA+ - Preço (gerado em {self.hoje})",
+                'y':0.9,
+                'x':0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'})
+                
         fig.update_layout(legend=dict(x=0, y=-0.1, orientation="h",))
         return fig
         
@@ -240,7 +269,13 @@ class TesouroDireto():
         fig = fig.add_trace(go.Scatter(x = self.ipca2055.index,
                                        y = self.ipca2055[self.TAXA_COMPRA_MANHA], 
                                        name="Tesouro IPCA+ com Juros Semestrais 2055"))
-        fig.update_layout(title=f"Tesouro IPCA+ - Taxa (gerado em {self.hoje})", title_x=0.5)
+        fig.update_layout(title={
+                'text': f"Tesouro IPCA+ - Taxa (gerado em {self.hoje})",
+                'y':0.9,
+                'x':0.5,
+                'xanchor': 'center',
+                'yanchor': 'top'})
+                
         self.atualizar_eventos_grafico(fig)
         fig.update_layout(legend=dict(x=0, y=-0.1, orientation="h",))
         return fig

@@ -4,13 +4,11 @@ from libs.dividendos import Dividendos
 import logging
 
 from st_pages import Page, Section, show_pages, add_page_title
-# st.set_page_config(
-#         page_title="Dividendos - Maiores pagadores",
-# )
 
-st.markdown("# Dividendos")
-
+st.set_page_config(layout="wide")
+st.markdown("# 〰️ Dividendos")
 add_page_title()
+mensagens = st.container()
 
 @st.cache_data
 def retornar_dados(ticker, data_inicial, data_final):
