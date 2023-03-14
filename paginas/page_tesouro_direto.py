@@ -23,19 +23,18 @@ def atualizar_dados_tesouro_direto(data_atual):
 # )
 
 delta = 0
-st.text(time.tzname)
+# st.text(time.tzname)
 if time.tzname[0] == "UTC":
      delta = 3;
 agora = datetime.today()
-st.text("Agora:")
-st.text(agora)
-st.text("Agora - delta:")
+# st.text("Agora:")
+# st.text(agora)
+# st.text("Agora - delta:")
 agora = datetime.today() - timedelta(hours=delta, minutes=0) 
-st.text(agora)
-
-st.text("Agora formatado:")
+# st.text(agora)
+# st.text("Agora formatado:")
 agora = agora.strftime('%d/%m/%Y')
-st.text(agora)
+# st.text(agora)
 
 td = atualizar_dados_tesouro_direto(agora)
 
