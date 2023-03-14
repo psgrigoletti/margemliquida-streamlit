@@ -10,4 +10,3 @@ plotly==5.13.1
 numpy==1.24.2
 seleniumbase
 webdriver-manager
-yaml
