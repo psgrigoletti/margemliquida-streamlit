@@ -1,7 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 import plotly.graph_objects as go
-# import locale
 import logging
 
 class TesouroDireto():
@@ -79,7 +78,11 @@ class TesouroDireto():
         self.atualizar_dados_pre()
         self.atualizar_dados_selic()
         
-        self.hoje = datetime.today().strftime('%d/%m/%Y %H:%M:%S')
+        delta = 0
+        if time.tzname[0] == "UTC":
+            delta = 3;
+        agora = datetime.today() - timedelta(hours=delta, minutes=0) 
+        self.hoje = agora.strftime('%d/%m/%Y %H:%M:%S')
         
     def atualizar_dados_selic(self):
         self.selic2025 = self.titulos.loc[(self.TESOURO_SELIC, '2025-03-01')]
@@ -128,11 +131,11 @@ class TesouroDireto():
     def atualizar_eventos_grafico(self, fig):
         fig.add_trace(go.Scatter(
             x=[pd.to_datetime('01-01-2010', dayfirst=True),
-            pd.to_datetime('01-01-2014', dayfirst=True),
-            pd.to_datetime('31-08-2016', dayfirst=True), 
-            pd.to_datetime('01-01-2018', dayfirst=True),
-            pd.to_datetime('11-03-2020', dayfirst=True),
-            pd.to_datetime('01-01-2023', dayfirst=True)],
+               pd.to_datetime('01-01-2014', dayfirst=True),
+               pd.to_datetime('31-08-2016', dayfirst=True), 
+               pd.to_datetime('01-01-2018', dayfirst=True),
+               pd.to_datetime('11-03-2020', dayfirst=True),
+               pd.to_datetime('01-01-2023', dayfirst=True)],
             y=[7, 7.5, 8, 7, 1, 8],
             mode="markers+text",
             name="Eventos",

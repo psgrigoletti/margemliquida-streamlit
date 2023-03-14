@@ -1,14 +1,9 @@
 import streamlit as st
-# import streamlit_authenticator as stauth
-# import yaml
 from st_pages import Page, Section, show_pages, add_page_title, add_indentation
-
-# from yaml.loader import SafeLoader
 
 st.set_page_config(page_title="Dashboard Margem Líquida", page_icon=None, 
                    layout="wide", initial_sidebar_state="auto", 
                    menu_items=None)
-
 show_pages(
     [
         Page("streamlit_app.py", "Inicial", ":beginner:"),        
