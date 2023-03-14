@@ -22,9 +22,11 @@ def atualizar_dados_tesouro_direto(data_atual):
 #     layout="wide",
 # )
 
+st.text(time.tzname)
+
 delta = 0
-if time.tzname[0] == "UTC":
-    delta = 3;
+# if time.tzname[0] == "UTC":
+#     delta = 3;
 agora = datetime.today() - timedelta(hours=delta, minutes=0) 
 agora = agora.strftime('%d/%m/%Y')
 
