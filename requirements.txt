@@ -11,3 +11,5 @@ numpy==1.24.2
 seleniumbase
 webdriver-manager
 python-bcb==0.1.8
+holidays
+workalendar
