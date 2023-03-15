@@ -2,8 +2,7 @@ import streamlit as st
 from datetime import datetime, timedelta
 import time
 from libs.tesouro_direto import TesouroDireto
-from st_pages import Page, Section, show_pages, add_page_title
-import pytz
+from st_pages import add_page_title
 
 ## Construção da página
         

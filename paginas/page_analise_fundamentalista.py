@@ -1,9 +1,9 @@
 from libs.analise_fundamentalista import AnaliseFundamentalista
 from libs.dados_cvm import DadosCVM
-from datetime import datetime
 
 import streamlit as st
 from st_pages import Page, Section, show_pages, add_page_title
+from utils.data_hora_utils import DataHoraUtils
 
 add_page_title()
 
@@ -33,13 +33,13 @@ def buscar_empresas(data_atual):
 #     layout="wide",
 # )
 
-agora = datetime.today().strftime('%d/%m/%Y')
+hoje = DataHoraUtils.retorna_data_atual_formato_ddmmyyyy()
 
 st.markdown("# Análise Fundamentalista")
 st.sidebar.markdown("# Análise Fundamentalista")
 empresas_selecionadas = st.multiselect(
     'Selecione os ativos:',
-    buscar_empresas(agora),
+    buscar_empresas(hoje),
     [])
 
 anos_selecionados = st.multiselect(

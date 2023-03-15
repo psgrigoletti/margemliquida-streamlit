@@ -4,6 +4,7 @@ from libs.dividendos import Dividendos
 from libs.carteira_global import CarteiraGlobal 
 import logging
 from st_pages import add_page_title
+from utils.data_hora_utils import DataHoraUtils
 
 @st.cache_data
 def retornar_dados_fii(ticker):
@@ -137,8 +138,8 @@ if st.button("Pesquisar", help="Pesquisar"):
             st.dataframe(dados, width=0, height=0, use_container_width=True)
 
         with graficos:
-            data_inicial_formatada = data_inicial.strftime("%d/%m/%Y")
-            data_final_formatada = data_final.strftime("%d/%m/%Y")        
+            data_inicial_formatada = DataHoraUtils.retorna_data_formato_ddmmyyyy(data_inicial)
+            data_final_formatada = DataHoraUtils.retorna_data_formato_ddmmyyyy(data_final)        
             
             d = Dividendos()
             d.setar_chave_carteira_global(st.secrets["carteira_global"]["x_api_key"])       

@@ -3,6 +3,8 @@
 import logging
 import plotly.graph_objects as go
 from datetime import date
+
+from utils.data_hora_utils import DataHoraUtils
 from .carteira_global import CarteiraGlobal
 
 class Dividendos:
@@ -73,10 +75,10 @@ class Dividendos:
             bargroupgap=0.1) # gap between bars of the same location coordinate.
 
         # Pega a data em que o gráfico foi gerado
-        today = date.today().strftime('%d/%m/%Y')
+        hoje = DataHoraUtils.retorna_data_atual_formato_ddmmyyyy()
 
         fig.add_annotation(x=1, y=0, 
-                        text=f"Fonte dos dados: https://api.carteiraglobal.com/ <br>Data da geração: {today}", showarrow=False,
+                        text=f"Fonte dos dados: https://api.carteiraglobal.com/ <br>Data da geração: {hoje}", showarrow=False,
                         xref='paper', yref='paper', 
                         xshift=0, yshift=-110, font=dict(size=12, color="grey"), align="left")
 
@@ -118,10 +120,10 @@ class Dividendos:
             bargroupgap=0.1) # gap between bars of the same location coordinate.
 
         # Pega a data em que o gráfico foi gerado
-        today = date.today().strftime('%d/%m/%Y')
+        hoje = DataHoraUtils.retorna_data_atual_formato_ddmmyyyy()
 
         fig.add_annotation(x=1, y=0, 
-                        text=f"Fonte dos dados: https://api.carteiraglobal.com/ <br>Data da geração: {today}", showarrow=False,
+                        text=f"Fonte dos dados: https://api.carteiraglobal.com/ <br>Data da geração: {hoje}", showarrow=False,
                         xref='paper', yref='paper', 
                         xshift=0, yshift=-110, font=dict(size=12, color="grey"), align="left")
 
@@ -151,10 +153,10 @@ class Dividendos:
                 'xanchor': 'center', 'yanchor': 'top'})
         
         # Pega a data em que o gráfico foi gerado
-        today = date.today().strftime('%d/%m/%Y')
+        hoje = DataHoraUtils.retorna_data_atual_formato_ddmmyyyy()
 
         fig.add_annotation(x=1, y=0, 
-                        text=f"Fonte dos dados: https://api.carteiraglobal.com/ <br>Data da geração: {today}", showarrow=False,
+                        text=f"Fonte dos dados: https://api.carteiraglobal.com/ <br>Data da geração: {hoje}", showarrow=False,
                         xref='paper', yref='paper', 
                         xshift=0, yshift=-110, font=dict(size=12, color="grey"), align="left")
 
@@ -185,10 +187,10 @@ class Dividendos:
                 'xanchor': 'center', 'yanchor': 'top'})
         
         # Pega a data em que o gráfico foi gerado
-        today = date.today().strftime('%d/%m/%Y')
+        hoje = DataHoraUtils.retorna_data_atual_formato_ddmmyyyy()
 
         fig.add_annotation(x=1, y=0, 
-                        text=f"Fonte dos dados: https://api.carteiraglobal.com/ <br>Data da geração: {today}", showarrow=False,
+                        text=f"Fonte dos dados: https://api.carteiraglobal.com/ <br>Data da geração: {hoje}", showarrow=False,
                         xref='paper', yref='paper', 
                         xshift=0, yshift=-110, font=dict(size=12, color="grey"), align="left")
 
@@ -220,10 +222,10 @@ class Dividendos:
                 'xanchor': 'center', 'yanchor': 'top'})
         
         # Pega a data em que o gráfico foi gerado
-        today = date.today().strftime('%d/%m/%Y')
+        hoje = DataHoraUtils.retorna_data_atual_formato_ddmmyyyy()
 
         fig.add_annotation(x=1, y=0, 
-                        text=f"Fonte dos dados: https://api.carteiraglobal.com/ <br>Data da geração: {today}", showarrow=False,
+                        text=f"Fonte dos dados: https://api.carteiraglobal.com/ <br>Data da geração: {hoje}", showarrow=False,
                         xref='paper', yref='paper', 
                         xshift=0, yshift=-110, font=dict(size=12, color="grey"), align="left")
 
