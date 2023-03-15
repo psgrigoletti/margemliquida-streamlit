@@ -1,9 +1,9 @@
 import streamlit as st
+from st_pages import add_page_title
 import datetime
 from libs.dividendos import Dividendos 
 from libs.carteira_global import CarteiraGlobal 
 import logging
-from st_pages import add_page_title
 from utils.data_hora_utils import DataHoraUtils
 
 @st.cache_data
