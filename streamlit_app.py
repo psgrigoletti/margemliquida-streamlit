@@ -12,6 +12,7 @@ show_pages(
         Page("paginas/page_tesouro_direto.py", "Tesouro Direto", ":flag-br:"),
         Page("paginas/page_relatorio_focus.py", "Relatório Focus", ":newspaper:"),
         Page("paginas/page_juros_futuros.py", "Juros Futuros", ":calendar:"),
+        Page("paginas/page_inflacao.py", "Inflação no Brasil", ":dragon:"),        
         Section(name="Em desenvolvimento", icon=":computer:"),        
         Page("paginas/page_analise_fundamentalista.py", "Análise Fundamentalista", ":bank:"),
         Page("paginas/page_dividendos_maiores_pagadores.py", "Maiores pagadores de dividendos", ":moneybag:"),
