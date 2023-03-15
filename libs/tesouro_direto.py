@@ -80,8 +80,17 @@ class TesouroDireto():
         self.atualizar_dados_selic()
         
         delta = 0
+        # st.text(time.tzname)
         if time.tzname[0] == "UTC":
             delta = 3;
+        agora = datetime.today()
+        # st.text("Agora:")
+        # st.text(agora)
+        # st.text("Agora - delta:")
+        agora = datetime.today() - timedelta(hours=delta, minutes=0) 
+        # st.text(agora)
+        # st.text("Agora formatado:")
+
         agora = datetime.today() - timedelta(hours=delta, minutes=0) 
         self.hoje = agora.strftime('%d/%m/%Y %H:%M:%S')
         
