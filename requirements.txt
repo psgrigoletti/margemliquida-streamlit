@@ -15,3 +15,4 @@ holidays
 workalendar
 sidrapy
 scipy
+matplotlib
