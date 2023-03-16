@@ -16,6 +16,7 @@ show_pages(
         Section(name="Em desenvolvimento", icon=":computer:"),        
         Page("paginas/page_analise_fundamentalista.py", "Análise Fundamentalista", ":bank:"),
         Page("paginas/page_dividendos_maiores_pagadores.py", "Maiores pagadores de dividendos", ":moneybag:"),
+        Page("paginas/page_markowitz.py", "Otimização de carteira por Markowitz", ":compass:"),  
         Section(name="Testes", icon=":test_tube:"),        
         Page("paginas/page_test_webdriver.py", "Teste Webdriver", ":test_tube:"),        
     ]

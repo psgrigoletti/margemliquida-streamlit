@@ -14,3 +14,4 @@ python-bcb==0.1.8
 holidays
 workalendar
 sidrapy
+scipy
