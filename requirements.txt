@@ -16,3 +16,4 @@ workalendar
 sidrapy
 scipy
 matplotlib
+seaborn
