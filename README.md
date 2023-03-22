@@ -1,7 +1,7 @@
 # margemliquida-streamlit
 
 Aplicação criada para exercitar os aprendizados no curso Python para Mercado Financeiro.
-Aprender a usar a biblioteca (https://streamlit.io/)[Streamlit] bem como o ambiente [Streamlit Cloud](https://streamlit.io/cloud).
+Aprender a usar a biblioteca [Streamlit](https://streamlit.io/) bem como o ambiente [Streamlit Cloud](https://streamlit.io/cloud).
 
 Versão: 0.0.1 - 13/03/2023
 
