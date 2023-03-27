@@ -12,3 +12,8 @@ Versão: 0.0.1 - 13/03/2023
 
 ## Contato:
 **Pablo Grigoletti** - psgrigoletti@gmail.com
+
+## Todo list:
+- Implementar tela que fornece estatísticas de ações considerando dias consecutivos up ou down. Baseado no método Vlad.
+- Implementar tela com a análise fundamentalista
+- Implementar tela da cointegração
