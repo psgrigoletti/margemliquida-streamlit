@@ -119,7 +119,7 @@ class DiasConsecutivos:
             media_piores_resultado = round((sum(resultados_nao_esperados)/len(resultados_nao_esperados)),2)
             taxa = round((len(resultados_esperados)/(len(resultados_esperados)+len(resultados_nao_esperados)))*100,2)
 
-            expectativa_matematica_ganhos = taxa * media_melhores_resultado
+            expectativa_matematica_ganhos = abs(taxa * media_melhores_resultado)
             expectativa_matematica_perdas = abs((1 - taxa) * media_piores_resultado)
             expectativa_matematica = round(expectativa_matematica_ganhos - expectativa_matematica_perdas, 2)
 
@@ -199,7 +199,7 @@ class DiasConsecutivos:
             media_piores_resultado = round((sum(resultados_nao_esperados)/len(resultados_nao_esperados)),2)
             taxa = round((len(resultados_esperados)/(len(resultados_esperados)+len(resultados_nao_esperados)))*100,2)
 
-            expectativa_matematica_ganhos = taxa * media_melhores_resultado
+            expectativa_matematica_ganhos = abs(taxa * media_melhores_resultado)
             expectativa_matematica_perdas = abs((1 - taxa) * media_piores_resultado)
             expectativa_matematica = round(expectativa_matematica_ganhos - expectativa_matematica_perdas, 2)
 
