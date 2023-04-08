@@ -9,6 +9,7 @@ show_pages(
         Page("streamlit_app.py", "Inicial", ":beginner:"),        
         Section(name="OK", icon=":white_check_mark:"),
         Page("paginas/page_dividendos_por_acao.py", "Dividendos por ação", ":heavy_dollar_sign:"),
+        Page("paginas/page_dias_seguidos.py", "Estratégia Dias seguidos", ":infinity:"),
         Page("paginas/page_tesouro_direto.py", "Tesouro Direto", ":flag-br:"),
         Page("paginas/page_relatorio_focus.py", "Relatório Focus", ":newspaper:"),
         Page("paginas/page_juros_futuros.py", "Juros Futuros", ":calendar:"),
@@ -16,7 +17,8 @@ show_pages(
         Section(name="Em desenvolvimento", icon=":computer:"),        
         Page("paginas/page_analise_fundamentalista.py", "Análise Fundamentalista", ":bank:"),
         Page("paginas/page_dividendos_maiores_pagadores.py", "Maiores pagadores de dividendos", ":moneybag:"),
-        Page("paginas/page_markowitz.py", "Otimização de carteira por Markowitz", ":compass:"),  
+        Page("paginas/page_markowitz.py", "Markowitz", ":compass:"),  
+        Page("paginas/page_long_and_short.py", "Long & Short", ":jigsaw:"),  
         Section(name="Testes", icon=":test_tube:"),        
         Page("paginas/page_test_webdriver.py", "Teste Webdriver", ":test_tube:"),        
     ]
@@ -24,6 +26,7 @@ show_pages(
 
 # venv: https://www.alura.com.br/artigos/ambientes-virtuais-em-python
 # emojis: https://streamlit-emoji-shortcodes-streamlit-app-gwckff.streamlit.app/
+# emojis: https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md
 
 add_indentation() 
 add_page_title()
