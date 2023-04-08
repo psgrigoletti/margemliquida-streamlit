@@ -172,8 +172,6 @@ class DiasConsecutivos:
             media_melhores_resultado = 0
             media_piores_resultado = 0
 
-            #variacoes_absolutas = self.resultados[k].variacoes
-
             media = np.mean(self.resultados[k].variacoes)
             media = round(media, 2)
             if self.direcao == self.direcoes[1]: # ALTA/UP
@@ -236,15 +234,12 @@ class DiasConsecutivos:
             cor = random.choice(["RoyalBlue", "Green", "Blue", "Red", "Yellow", "Pink"])
             cor_linha = "Green" if self.direcao == self.direcoes[0] else "Red"
             fig.add_shape(type="rect",
-                        #yref="paper", #xref="x", 
                         x0=data_inicial_rect, 
                         y0=menor_y,
                         x1=data_final_rect, 
                         y1=maior_y,
-                        #ysizemode='scaled',#xsizemode='scaled',
                         fillcolor=cor,
                         opacity=0.3,
-                        #layer="below",
                         line=dict(color=cor_linha, width=2))
 
         # Define o layout do gráfico
@@ -311,10 +306,6 @@ class DiasConsecutivos:
 
             menor_data_achou = min(temp1.index)
             maior_data_achou = max(temp2.index)
-            # print("Vai comparar:")
-            # print(temp1)
-            # print(temp2) 
-            # print(f"Maior data: {data_achou}")
             temp1 = temp1.reset_index()['Close']
             temp2 = temp2.reset_index()['Close']
 
@@ -332,6 +323,6 @@ class DiasConsecutivos:
             self.quantidade_periodos_encontrados = len(self.df[self.df[f'{self.direcao}_{self.n_days}_dias']==True])
             datas = self.df[self.df[f'{self.direcao}_{self.n_days}_dias']==True].index
             self.periodos = [(self.df.loc[i]['inicio_dias'], i) for i in datas]
-            #print(f"Períodos com {self.n_days} {self.direcao}s consecutivos: {self.quantidade_periodos_encontrados}")
-            #print(f"Datas: {list(datas)}")
-            #print(f"Períodos: {list(self.periodos)}")
+            # print(f"Períodos com {self.n_days} {self.direcao}s consecutivos: {self.quantidade_periodos_encontrados}")
+            # print(f"Datas: {list(datas)}")
+            # print(f"Períodos: {list(self.periodos)}")

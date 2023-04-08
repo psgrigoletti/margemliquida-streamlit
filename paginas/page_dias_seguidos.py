@@ -1,10 +1,8 @@
 import streamlit as st
 import datetime
 from libs.dias_consecutivos import DiasConsecutivos
-from libs.dividendos import Dividendos 
-import logging
 
-from st_pages import Page, Section, show_pages, add_page_title
+from st_pages import add_page_title
 
 st.set_page_config(layout="wide")
 add_page_title()
@@ -15,7 +13,7 @@ ticker = col1.text_input("Ticker:", value="PETR4.SA")
 data_inicial = col2.date_input("Data inicial:", value=datetime.date(2020, 1, 1))
 data_final = col3.date_input("Data final:", value=datetime.date(2023, 4, 1))
 
-st.markdown(f"#### Buscar por:")
+st.markdown("#### Buscar por:")
 col5, col6, _,_,_ = st.columns(5)
 dias_consecutivos = col5.number_input("Dias consecutivos:", min_value=3, max_value=10, value=5)
 direcao = col6.select_slider("Tendência:", ["Baixa", "Alta"])
@@ -36,5 +34,4 @@ if st.button("Analisar"):
     else:
         tab2, tab3 = st.tabs(["Relatório", "Tabela"])
         tab2.markdown(dias_consecutivos.retornar_relatorio())
-        tab3.markdown(dias_consecutivos.retornar_tabela())        
-        
+        tab3.markdown(dias_consecutivos.retornar_tabela())
