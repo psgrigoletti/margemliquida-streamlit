@@ -92,7 +92,7 @@ class DiasConsecutivos:
         tabela.append(["| [:red[ERROS]] **Pior resultado** |"])
         tabela.append(["|  |"])
         tabela.append(["| **Taxa de acerto** |"])
-        tabela.append(["| **Expectativa matemática** |"])
+        tabela.append(["| **[Expectativa matemática](# \"EM negativa significa que você irá perder dinheiro no longo prazo; EM positiva significa que você irá ganhar dinheiro no longo prazo.\")** |"])
    
         for k in self.resultados.keys():
             taxa = 0
@@ -115,12 +115,20 @@ class DiasConsecutivos:
                 melhor_resultado = round(max(self.resultados[k].variacoes), 2)
                 pior_resultado = round(min(self.resultados[k].variacoes), 2) 
 
-            media_melhores_resultado = round((sum(resultados_esperados)/len(resultados_esperados)),2)
-            media_piores_resultado = round((sum(resultados_nao_esperados)/len(resultados_nao_esperados)),2)
+            if len(resultados_esperados)>0:
+                media_melhores_resultado = round((sum(resultados_esperados)/len(resultados_esperados)),2)
+            else:
+                media_melhores_resultado = 0
+                
+            if len(resultados_nao_esperados)>0:
+                media_piores_resultado = round((sum(resultados_nao_esperados)/len(resultados_nao_esperados)),2)
+            else:
+                media_piores_resultado = 0
+                
             taxa = round((len(resultados_esperados)/(len(resultados_esperados)+len(resultados_nao_esperados)))*100,2)
 
-            expectativa_matematica_ganhos = abs(taxa * media_melhores_resultado)
-            expectativa_matematica_perdas = abs((1 - taxa) * media_piores_resultado)
+            expectativa_matematica_ganhos = abs((taxa/100) * media_melhores_resultado)
+            expectativa_matematica_perdas = abs((1 - (taxa/100)) * media_piores_resultado)
             expectativa_matematica = round(expectativa_matematica_ganhos - expectativa_matematica_perdas, 2)
 
             tabela[0].append(f" {k} dia |")
@@ -195,12 +203,18 @@ class DiasConsecutivos:
                 melhor_resultado = round(max(self.resultados[k].variacoes), 2)
                 pior_resultado = round(min(self.resultados[k].variacoes), 2) 
 
-            media_melhores_resultado = round((sum(resultados_esperados)/len(resultados_esperados)),2)
-            media_piores_resultado = round((sum(resultados_nao_esperados)/len(resultados_nao_esperados)),2)
+            if len(resultados_esperados)>0:
+                media_melhores_resultado = round((sum(resultados_esperados)/len(resultados_esperados)),2)
+            else:
+                media_melhores_resultado = 0
+                
+            if len(resultados_nao_esperados)>0:
+                media_piores_resultado = round((sum(resultados_nao_esperados)/len(resultados_nao_esperados)),2)
+            else:
+                media_piores_resultado = 0
             taxa = round((len(resultados_esperados)/(len(resultados_esperados)+len(resultados_nao_esperados)))*100,2)
-
-            expectativa_matematica_ganhos = abs(taxa * media_melhores_resultado)
-            expectativa_matematica_perdas = abs((1 - taxa) * media_piores_resultado)
+            expectativa_matematica_ganhos = abs((taxa/100) * media_melhores_resultado)
+            expectativa_matematica_perdas = abs((1 - (taxa/100)) * media_piores_resultado)
             expectativa_matematica = round(expectativa_matematica_ganhos - expectativa_matematica_perdas, 2)
 
             lista_variacoes_arredondada = [round(x, 2) for x in self.resultados[k].variacoes]
