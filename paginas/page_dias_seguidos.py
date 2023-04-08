@@ -18,12 +18,12 @@ data_final = col3.date_input("Data final:", value=datetime.date(2023, 4, 1))
 st.markdown(f"#### Buscar por:")
 col5, col6, _,_,_ = st.columns(5)
 dias_consecutivos = col5.number_input("Dias consecutivos:", min_value=3, max_value=10, value=5)
-direcao = col6.select_slider("Tendência:", ["down", "up"])
+direcao = col6.select_slider("Tendência:", ["Baixa", "Alta"])
 
 st.markdown("#### Análise/Resultado:")
 col7, col8, _ = st.columns(3)
 dias_analise = col7.multiselect("Analisar n dias após:", [1,2,3,5,10,15], [1,2,5,10])
-mostrar_grafico = col7.checkbox("Mostrar Gráfico:", value=True)
+mostrar_grafico = col7.checkbox("Mostrar Gráfico", value=True)
 if st.button("Analisar"):
     dias_consecutivos = DiasConsecutivos(ticker=ticker, dias_apos=dias_analise, 
                                          end_date=data_final, start_date=data_inicial,

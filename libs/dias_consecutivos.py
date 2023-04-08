@@ -39,7 +39,7 @@ class DiasConsecutivos:
             self.ticker += ".SA"
         
         self.direcao = direcao
-        self.direcoes = ['down', 'up']
+        self.direcoes = ['Baixa', 'Alta']
         self.n_days = dias_consecutivos
 
         self.resultados = {}
@@ -66,7 +66,9 @@ class DiasConsecutivos:
                         variacao = sum(self.df["pct_change"][i+1:i+1+d])
                         self.resultados[d].variacoes.append(variacao*100)
 
-        relatorio = f"#### {self.ticker} - Resultados após períodos de {self.n_days} {self.direcao}s consecutivos entre {self.data_inicial_formatada} e {self.data_final_formatada}\n"
+        relatorio = "#### Estratégia: Dias Consecutivos\n"
+        relatorio += "#### Tipo: Retorno à Média\n"
+        relatorio += f"#### {self.ticker} - Resultados após períodos de {self.n_days} {self.direcao.lower()}s consecutivas, entre {self.data_inicial_formatada} e {self.data_final_formatada}\n"
         relatorio += f"#### Número de ocorrências: {self.quantidade_periodos_encontrados}\n"
 
         if self.direcao == self.direcoes[1]: # ALTA/UP
@@ -81,11 +83,13 @@ class DiasConsecutivos:
         tabela.append(["| ---- |"])
         tabela.append(["| **Variação média** |"])
         tabela.append(["|  |"])
-        tabela.append([f"| **Variação {resultado_esperado} média** |"])
-        tabela.append(["| **Melhor resultado** |"])
+        tabela.append(["| [ACERTOS] **Número de acertos** |"])
+        tabela.append([f"| [ACERTOS] **Variação {resultado_esperado} média** |"])
+        tabela.append(["| [ACERTOS] **Melhor resultado** |"])
         tabela.append(["|  |"])
-        tabela.append([f"| **Variação {resultado_nao_esperado} média** |"])
-        tabela.append(["| **Pior resultado** |"])
+        tabela.append(["| [ERROS] **Número de erros** |"])
+        tabela.append([f"| [ERROS] **Variação {resultado_nao_esperado} média** |"])
+        tabela.append(["| [ERROS] **Pior resultado** |"])
         tabela.append(["|  |"])
         tabela.append(["| **Taxa de acerto** |"])
         tabela.append(["| **Expectativa matemática** |"])
@@ -116,21 +120,23 @@ class DiasConsecutivos:
             taxa = round((len(resultados_esperados)/(len(resultados_esperados)+len(resultados_nao_esperados)))*100,2)
 
             expectativa_matematica_ganhos = taxa * media_melhores_resultado
-            expectativa_matematica_perdas = (1 - taxa) * media_piores_resultado
+            expectativa_matematica_perdas = abs((1 - taxa) * media_piores_resultado)
             expectativa_matematica = round(expectativa_matematica_ganhos - expectativa_matematica_perdas, 2)
 
             tabela[0].append(f" {k} dia |")
             tabela[1].append(" ----: |")
             tabela[2].append(f" {media}% |")
             tabela[3].append(" |")
-            tabela[4].append(f" {media_melhores_resultado}% |")
-            tabela[5].append(f" {melhor_resultado}% |")
-            tabela[6].append(" |")
-            tabela[7].append(f" {media_piores_resultado}% |")
-            tabela[8].append(f" {pior_resultado}% |")
-            tabela[9].append(" |")
-            tabela[10].append(f" {taxa}% |")
-            tabela[11].append(f" **{expectativa_matematica}%** |")
+            tabela[4].append(f" {len(resultados_esperados)} |")
+            tabela[5].append(f" {media_melhores_resultado}% |")
+            tabela[6].append(f" {melhor_resultado}% |")
+            tabela[7].append(" |")
+            tabela[8].append(f" {len(resultados_nao_esperados)} |")
+            tabela[9].append(f" {media_piores_resultado}% |")
+            tabela[10].append(f" {pior_resultado}% |")
+            tabela[11].append(" |")
+            tabela[12].append(f" {taxa}% |")
+            tabela[13].append(f" **{expectativa_matematica}%** |")
 
         for t in tabela:
             relatorio += " ".join(t) + "\n"
@@ -148,9 +154,17 @@ class DiasConsecutivos:
                         variacao = sum(self.df["pct_change"][i+1:i+1+d])
                         self.resultados[d].variacoes.append(variacao*100)
 
-        relatorio = ""
-        relatorio += f"#### {self.ticker} - Resultados após períodos de {self.n_days} {self.direcao}s consecutivos entre {self.data_inicial_formatada} e {self.data_final_formatada}\n"
+        relatorio = "#### Estratégia: Dias Consecutivos\n"
+        relatorio += "#### Tipo: Retorno à Média\n"
+        relatorio += f"#### {self.ticker} - Resultados após períodos de {self.n_days} {self.direcao.lower()}s consecutivas, entre {self.data_inicial_formatada} e {self.data_final_formatada}\n"
         relatorio += f"#### Número de ocorrências: {self.quantidade_periodos_encontrados}\n"
+        
+        if self.direcao == "Alta":
+            objetivo = "Baixa"
+        else:
+            objetivo = "Alta"
+        
+        relatorio += f"##### Objetivo: {objetivo}\n"
    
         for k in self.resultados.keys():
             taxa = 0
@@ -185,7 +199,7 @@ class DiasConsecutivos:
             taxa = round((len(resultados_esperados)/(len(resultados_esperados)+len(resultados_nao_esperados)))*100,2)
 
             expectativa_matematica_ganhos = taxa * media_melhores_resultado
-            expectativa_matematica_perdas = (1 - taxa) * media_piores_resultado
+            expectativa_matematica_perdas = abs((1 - taxa) * media_piores_resultado)
             expectativa_matematica = round(expectativa_matematica_ganhos - expectativa_matematica_perdas, 2)
 
             lista_variacoes_arredondada = [round(x, 2) for x in self.resultados[k].variacoes]
@@ -195,11 +209,13 @@ class DiasConsecutivos:
             relatorio += f"Variações: {lista_variacoes_arredondada}\n"
             relatorio += f"Variação média : {media}%\n"
             relatorio += "\n"
-            relatorio += f"Variação {resultado_esperado} média: {media_melhores_resultado}%\n"
-            relatorio += f"Melhor resultado: {melhor_resultado}%\n"
+            relatorio += f"[ACERTOS] Número de acertos: {len(resultados_esperados)}\n"
+            relatorio += f"[ACERTOS] Variação {resultado_esperado} média: {media_melhores_resultado}%\n"
+            relatorio += f"[ACERTOS] Melhor resultado: {melhor_resultado}%\n"
             relatorio += "\n"
-            relatorio += f"Variação {resultado_nao_esperado} média: {media_piores_resultado}%\n"
-            relatorio += f"Pior resultado: {pior_resultado}%\n"
+            relatorio += f"[ERROS] Número de erros: {len(resultados_nao_esperados)}\n"
+            relatorio += f"[ERROS] Variação {resultado_nao_esperado} média: {media_piores_resultado}%\n"
+            relatorio += f"[ERROS] Pior resultado: {pior_resultado}%\n"
             relatorio += "\n"
             relatorio += f"Taxa de acerto: {taxa}%\n"
             relatorio += f"Expectativa matemática: {expectativa_matematica}%\n```\n"
@@ -232,7 +248,7 @@ class DiasConsecutivos:
                         line=dict(color=cor_linha, width=2))
 
         # Define o layout do gráfico
-        fig.update_layout(title=f'{self.ticker} - Períodos de {self.n_days} {self.direcao}s consecutivos entre {self.data_inicial_formatada} e {self.data_final_formatada}',
+        fig.update_layout(title=f'{self.ticker} - Períodos de {self.n_days} {self.direcao.lower()}s consecutivas, entre {self.data_inicial_formatada} e {self.data_final_formatada}',
                         xaxis_title='Data',
                         yaxis_title='Preço (R$)', showlegend=True,
                         font=dict(size=12))
