@@ -9,7 +9,7 @@ show_pages(
         Page("streamlit_app.py", "Inicial", ":beginner:"),        
         Section(name="OK", icon=":white_check_mark:"),
         Page("paginas/page_dividendos_por_acao.py", "Dividendos por ação", ":heavy_dollar_sign:"),
-        Page("paginas/page_dias_seguidos.py", "Estratégia Dias seguidos", ":infinity:"),
+        Page("paginas/page_dias_consecutivos.py", "Estratégia Dias Consecutivos", ":infinity:"),
         Page("paginas/page_tesouro_direto.py", "Tesouro Direto", ":flag-br:"),
         Page("paginas/page_relatorio_focus.py", "Relatório Focus", ":newspaper:"),
         Page("paginas/page_juros_futuros.py", "Juros Futuros", ":calendar:"),

@@ -83,13 +83,13 @@ class DiasConsecutivos:
         tabela.append(["| ---- |"])
         tabela.append(["| **Variação média** |"])
         tabela.append(["|  |"])
-        tabela.append(["| [ACERTOS] **Número de acertos** |"])
-        tabela.append([f"| [ACERTOS] **Variação {resultado_esperado} média** |"])
-        tabela.append(["| [ACERTOS] **Melhor resultado** |"])
+        tabela.append(["| [:green[ACERTOS]] **Número de acertos** |"])
+        tabela.append([f"| [:green[ACERTOS]] **Variação {resultado_esperado} média** |"])
+        tabela.append(["| [:green[ACERTOS]] **Melhor resultado** |"])
         tabela.append(["|  |"])
-        tabela.append(["| [ERROS] **Número de erros** |"])
-        tabela.append([f"| [ERROS] **Variação {resultado_nao_esperado} média** |"])
-        tabela.append(["| [ERROS] **Pior resultado** |"])
+        tabela.append(["| [:red[ERROS]] **Número de erros** |"])
+        tabela.append([f"| [:red[ERROS]] **Variação {resultado_nao_esperado} média** |"])
+        tabela.append(["| [:red[ERROS]] **Pior resultado** |"])
         tabela.append(["|  |"])
         tabela.append(["| **Taxa de acerto** |"])
         tabela.append(["| **Expectativa matemática** |"])
@@ -136,8 +136,11 @@ class DiasConsecutivos:
             tabela[10].append(f" {pior_resultado}% |")
             tabela[11].append(" |")
             tabela[12].append(f" {taxa}% |")
-            tabela[13].append(f" **{expectativa_matematica}%** |")
-
+            if expectativa_matematica>=0:
+                tabela[13].append(f" **:green[{expectativa_matematica}%]** |")
+            else:
+                tabela[13].append(f" **:red[{expectativa_matematica}%]** |")
+                
         for t in tabela:
             relatorio += " ".join(t) + "\n"
 
