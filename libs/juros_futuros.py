@@ -141,12 +141,29 @@ class JurosFuturos:
                       nome_serie + ". Buscando próxima série...")
 
     def __atualizar_dados_anbima(self):
-        hoje = date.today().strftime('%d/%m/%Y')
-        ontem = date.today() - timedelta(days=1)
-        ontem = ontem.strftime('%d/%m/%Y')
+        #hoje = date.today().strftime('%d/%m/%Y')
+        #ontem = date.today() - timedelta(days=1)
+        #ontem = ontem.strftime('%d/%m/%Y')
+
+        import pandas_market_calendars as mcal
+        from datetime import datetime, timedelta
+
+        # Define o calendário que será utilizado (neste caso, o calendário da Bovespa)
+        cal = mcal.get_calendar('B3')
+
+        # Define a data de hoje
+        today = datetime.today().date()
+
+        # Subtrai um dia da data de hoje para garantir que o último dia útil antes de hoje seja incluído
+        last_business_day = cal.valid_days(start_date=(today - timedelta(days=7)), end_date=today)[-1]
+
+        # Converte o último dia útil antes de hoje para um objeto do tipo datetime
+        # last_business_day = pd.Timestamp(last_business_day).to_pydatetime()
+        ultimo_dia_util = last_business_day.strftime('%d/%m/%Y')
 
         url = 'https://www.anbima.com.br/informacoes/est-termo/CZ-down.asp'
-        payload = {'Idioma': 'US', 'Dt_Ref': ontem, 'saida': 'xml'}
+        payload = {'Idioma': 'US', 'Dt_Ref': ultimo_dia_util, 'saida': 'xml', 
+                   'escolha': 2, 'Dt_Ref_Ver': '20230330'}
 
         from urllib import request, parse
         data = parse.urlencode(payload).encode()
@@ -155,6 +172,7 @@ class JurosFuturos:
 
         with request.urlopen(req) as response:
             xml = response.read()
+            print(xml)
 
         vertices = pd.read_xml(xml, xpath="//TERM_STRUCTURE")
         vertices.drop('Indexed', axis=1, inplace=True)

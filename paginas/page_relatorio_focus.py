@@ -10,7 +10,7 @@ st.set_page_config(layout="wide")
 add_page_title()
 mensagens = st.container()
 
-@st.cache_data
+@st.cache_resource
 def atualizar_dados_relatorio_focus(data_atual):
     logging.log(logging.INFO, "Buscando dados do BCB")
     rf = RelatorioFocus()
