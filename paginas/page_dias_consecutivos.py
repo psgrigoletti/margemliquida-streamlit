@@ -12,7 +12,7 @@ def buscar_dados_ticker(ticker, dias_analise, data_final, data_inicial, direcao,
                                          direcao=direcao, dias_consecutivos=dias_consecutivos)
     return dias_consecutivos    
 
-def validar_parametros(ticker, data_inicial, data_final):
+def validar_parametros(ticker, data_inicial, data_final, dias_analise):
     if not ticker:
         mensagens.error('Ticker não informado.', icon="🚨")
         st.stop()
@@ -27,6 +27,10 @@ def validar_parametros(ticker, data_inicial, data_final):
     
     if data_final <= data_inicial:
         mensagens.error('Data inicial deve ser menor que a Data final.', icon="🚨")
+        st.stop()
+
+    if not dias_analise or len(dias_analise)==0:
+        mensagens.error('Selecione pelo menos um valor em \'Analisar n dias após\'.', icon="🚨")
         st.stop()
         
 st.set_page_config(layout="wide")
@@ -47,11 +51,16 @@ st.markdown("#### Análise/Resultado:")
 dias_analise = st.multiselect("Analisar n dias após:", [1,2,3,5,10,15,20], [1,2,5,10])
 mostrar_grafico = st.checkbox("Mostrar Gráfico", value=True)
 if st.button("Analisar"):
-    validar_parametros(ticker, data_inicial, data_final)
+    validar_parametros(ticker, data_inicial, data_final, dias_analise)
     dias_consecutivos = buscar_dados_ticker(ticker, dias_analise, 
                                          data_final, data_inicial,
                                          direcao, dias_consecutivos)
-    mensagens.success("Análise realizada com sucesso.", icon="✅")
+    if dias_consecutivos.quantidade_periodos_encontrados == 0:
+        mensagens.error("Nenhum resultado encontrado.", icon="🚨")
+        st.stop()
+    else:
+        mensagens.success("Análise realizada com sucesso.", icon="✅")
+    
     if mostrar_grafico:
         tab1, tab2, tab3 = st.tabs(["Gráfico", "Relatório", "Tabela"])
         tab1.plotly_chart(dias_consecutivos.retornar_grafico(), use_container_width=True)
