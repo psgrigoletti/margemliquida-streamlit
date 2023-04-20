@@ -19,6 +19,7 @@ Versão: 0.0.1 - 13/03/2023
 - Implementar tela da cointegração
 - Melhorar tela de Markowitz
 - Implementar tela com comparativo IBOV e SELIC, considerando um aporte ou n aportes....
+- Fazer uma página semelhante: https://maisretorno.com/fii/galg11
 
 ## Links úteis:
 - [Site oficial](http://streamlit.io) 
