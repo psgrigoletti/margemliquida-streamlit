@@ -1,6 +1,5 @@
 import streamlit as st
 import yfinance as yf
-import investpy as inv
 import pandas as pd
 from datetime import date
 from st_pages import add_page_title
