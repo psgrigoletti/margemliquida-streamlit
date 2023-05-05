@@ -23,7 +23,8 @@ show_pages(
              "Rentabilidades Mensais", ":1234:"),
         Page("paginas/page_comparativo_fundamentos.py",
              "Comparativo de Fundamentos", ":tophat:"),
-
+        Page("paginas/page_backtests.py",
+             "Backtests", ":chart:"),
         Section(name="Em desenvolvimento", icon=":computer:"),
         Page("paginas/page_analise_fundamentalista.py",
              "Análise Fundamentalista", ":bank:"),
