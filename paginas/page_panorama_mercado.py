@@ -1,3 +1,5 @@
+import datetime
+import os
 import streamlit as st
 import yfinance as yf
 import pandas as pd
@@ -7,77 +9,114 @@ import plotly.graph_objects as go
 
 # Construção da página
 
-st.set_page_config(layout="wide")
-add_page_title()
-mensagens = st.container()
 
-st.markdown(date.today().strftime('%d/%m/%Y'))
-st.subheader("Mercados pelo Mundo")
-dict_tickers = {
-    "Bovespa": "^BVSP",
-    "SP500": "^GSPC",
-    "NASDAQ": "^IXIC",
-    "DAX": "^GDAXI",
-    "FTSE 100": "^FTSE",
-    "Cruid Oil": "CL=F",
-    "Gold": "GC=F",
-    "BITCOIN": "BTC-USD",
-    "ETHEREUM": "ETH-USD",
-    "PETR4": "PETR4.SA",
-    "VALE3": "VALE3.SA",
-}
-
-df_info = pd.DataFrame({'Ativo': dict_tickers.keys(),
-                        'Ticker': dict_tickers.values()})
-df_info['Ult. Valor'] = ''
-df_info['%'] = ''
-count = 0
-with st.spinner("Baixando cotações..."):
-    for ticker in dict_tickers.values():
+def buscar_panorama(tickers, df_info):
+    count = 0
+    for ticker in tickers:
         cotacoes = yf.download(ticker, period='5d')['Adj Close']
         variacao = ((cotacoes.iloc[-1]/cotacoes.iloc[-2])-1)*100
         df_info['Ult. Valor'][count] = round(cotacoes.iloc[-1], 2)
         df_info['%'][count] = round(variacao, 2)
         count += 1
+    return df_info
 
-# st.write(df_info)
 
-col1, col2, col3 = st.columns(3)
+def adicionar_avisos_dev():
+    _, col_avisos = st.columns([7, 3])
+    with col_avisos:
+        st.write(
+            "Encontrou algum problema? [me avise](https://github.com/psgrigoletti/margemliquida-streamlit/issues/new) por favor.")
+        # Obter informações sobre o arquivo
+        info = os.stat(__file__)
+        # Extrair a data da última modificação
+        mod_time = info.st_mtime
+        # Converter o tempo em formato legível
+        mod_time_str = datetime.datetime.fromtimestamp(
+            mod_time).strftime('%d/%m/%Y %H:%M:%S')
+        st.write(
+            f"Última atualização do código desta página em: {mod_time_str}")
 
-with col1:
-    st.metric(df_info['Ativo'][0], df_info['Ult. Valor']
-              [0], delta=str(df_info['%'][0]) + '%')
-    st.metric(df_info['Ativo'][1], df_info['Ult. Valor']
-              [1], delta=str(df_info['%'][1]) + '%')
-    st.metric(df_info['Ativo'][2], df_info['Ult. Valor']
-              [2], delta=str(df_info['%'][2]) + '%')
 
-with col2:
-    st.metric(df_info['Ativo'][3], df_info['Ult. Valor']
-              [3], delta=str(df_info['%'][3]) + '%')
-    st.metric(df_info['Ativo'][4], df_info['Ult. Valor']
-              [4], delta=str(df_info['%'][4]) + '%')
-    st.metric(df_info['Ativo'][5], df_info['Ult. Valor']
-              [5], delta=str(df_info['%'][5]) + '%')
+def gerar_descricao(dict_tickers, df_info, numero_item):
+    hint = dict_tickers.get(df_info['Ativo'][numero_item])['descricao']
+    nome = df_info['Ativo'][numero_item]
+    codigo_yf = dict_tickers.get(df_info['Ativo'][numero_item])['ticker']
 
-with col3:
-    st.metric(df_info['Ativo'][6], df_info['Ult. Valor']
-              [6], delta=str(df_info['%'][6]) + '%')
-    st.metric(df_info['Ativo'][7], df_info['Ult. Valor']
-              [7], delta=str(df_info['%'][7]) + '%')
-    st.metric(df_info['Ativo'][8], df_info['Ult. Valor']
-              [8], delta=str(df_info['%'][8]) + '%')
+    return "**[" + nome + "]" + \
+        f"(https://br.financas.yahoo.com/quote/{codigo_yf}?p={codigo_yf}, \"" + \
+        hint + "\")**"
+
+
+def gerar_valor(dict_tickers, df_info, numero_item):
+    valor = df_info['Ult. Valor'][numero_item]
+    valor_br = str(valor).replace(',', '').replace('.', ',')
+
+    return str(valor_br) + \
+        dict_tickers.get(df_info['Ativo'][numero_item])['texto_pos']
+
+
+st.set_page_config(layout="wide")
+add_page_title()
+
+adicionar_avisos_dev()
+
+mensagens = st.container()
+
+st.subheader("Cotações pelo Mundo em " + date.today().strftime('%d/%m/%Y'))
+st.write(
+    "Observação: atraso de 15 minutos, dados do [Yahoo Finanças](https://br.financas.yahoo.com/).")
+
+dict_tickers = {
+    "Bovespa": {'ticker': "^BVSP", 'texto_pos': ' pontos', 'descricao': "O índice Bovespa, também conhecido como Ibovespa, é o principal índice de ações da bolsa de valores brasileira, a B3 (Brasil, Bolsa, Balcão). A unidade de medida do Ibovespa é em pontos. Ele é calculado a partir do desempenho das ações mais negociadas na B3, ponderado pelo valor de mercado das empresas. O Ibovespa é uma referência importante para o mercado financeiro brasileiro e é utilizado como indicador do desempenho médio das ações negociadas na bolsa."},
+    "S&P500": {'ticker': "^GSPC", 'texto_pos': ' pontos', 'descricao': "O S&P 500 é um índice de ações das 500 maiores empresas negociadas nas bolsas de valores dos Estados Unidos, selecionadas com base em sua capitalização de mercado, liquidez e representatividade setorial. A unidade de medida do S&P 500 é em pontos. O índice é calculado com base na soma dos valores de mercado das ações das 500 empresas componentes, ponderados pelo seu peso relativo no índice. O S&P 500 é um dos principais indicadores do mercado financeiro dos Estados Unidos e é amplamente utilizado como referência para o desempenho do mercado de ações americano."},
+    "NASDAQ": {'ticker': "^IXIC", 'texto_pos': ' pontos', 'descricao': "A NASDAQ é uma bolsa de valores eletrônica dos Estados Unidos, onde são negociadas ações de empresas de tecnologia e outras indústrias relacionadas. A NASDAQ também possui vários índices de ações, o mais conhecido dos quais é o NASDAQ Composite, que inclui todas as empresas listadas na bolsa. A unidade de medida do NASDAQ Composite é em pontos, calculados com base no valor de mercado de todas as ações incluídas no índice. Além do NASDAQ Composite, a NASDAQ também possui outros índices, como o NASDAQ 100, que inclui as 100 maiores empresas não financeiras listadas na bolsa."},
+    "DAX": {'ticker': "^GDAXI", 'texto_pos': ' pontos', 'descricao': "O DAX é o principal índice de ações da bolsa de valores da Alemanha, a Frankfurt Stock Exchange (FSE). A unidade de medida do DAX é em pontos. Ele é calculado com base no desempenho das 30 maiores empresas listadas na FSE, ponderadas pelo valor de mercado das empresas. O DAX é um dos principais indicadores do mercado financeiro europeu e é frequentemente utilizado como uma referência para o desempenho das ações alemãs. O índice é considerado um barômetro importante para a economia alemã e é acompanhado de perto por investidores em todo o mundo."},
+    "Nikkei 225": {'ticker': "^N225", 'texto_pos': ' pontos', 'descricao': "A Nikkei 225 é o principal índice de ações da bolsa de valores do Japão, a Tokyo Stock Exchange (TSE). A unidade de medida da Nikkei 225 é em pontos. Ele é calculado com base no desempenho das 225 empresas listadas na TSE, ponderadas pelo preço de suas ações. A Nikkei 225 é considerada um dos principais indicadores do mercado financeiro japonês e é amplamente acompanhada por investidores em todo o mundo. A composição do índice inclui empresas de diversos setores da economia, como eletrônicos, automóveis, finanças e telecomunicações, entre outros."},
+    "FTSE 100": {'ticker': "^FTSE", 'texto_pos': ' GBP', 'descricao': "A FTSE 100 é o principal índice de ações da bolsa de valores do Reino Unido, a London Stock Exchange (LSE). A unidade de medida da FTSE 100 é em pontos. Ele é calculado com base no desempenho das 100 maiores empresas listadas na LSE, ponderadas pelo valor de mercado das empresas. A FTSE 100 é frequentemente considerada como um indicador do desempenho da economia britânica e é amplamente acompanhada por investidores em todo o mundo. A composição do índice inclui empresas de diversos setores, como finanças, energia, mineração, farmacêutico, entre outros. O FTSE 100 é um dos principais índices de ações europeus e é considerado um dos principais índices de referência para investidores que desejam acompanhar o mercado de ações do Reino Unido."},
+    "PETRÓLEO CRU": {'ticker': "CL=F", 'texto_pos': ' USD', 'descricao': "O Petróleo Cru, também conhecido como WTI (West Texas Intermediate) ou Brent, é uma commodity negociada nos mercados financeiros internacionais. A unidade de medida do Petróleo Cru é em dólares americanos por barril (bbl). O preço do petróleo é influenciado por diversos fatores, como a oferta e a demanda global, a produção de petróleo dos países produtores, a política dos países exportadores, as condições climáticas, entre outros. O preço do petróleo é um dos indicadores mais importantes da economia global, já que o petróleo é uma das commodities mais amplamente utilizadas em todo o mundo, seja para a produção de energia, combustíveis, plásticos, entre outros produtos."},
+    "OURO": {'ticker': "GC=F", 'texto_pos': ' USD', 'descricao': "O ouro é uma commodity negociada nos mercados financeiros internacionais, e a unidade de medida padrão do ouro é a onça troy (oz t), que equivale a cerca de 31,1 gramas. O preço do ouro é influenciado por diversos fatores, como a demanda global por joias, a estabilidade política e econômica dos países, as condições do mercado financeiro global, a inflação, entre outros. O ouro é considerado uma reserva de valor, sendo muitas vezes utilizado como uma forma de proteger o patrimônio em tempos de instabilidade econômica ou política. O preço do ouro é um dos indicadores mais importantes dos mercados financeiros globais, e é amplamente acompanhado por investidores em todo o mundo."},
+    "Bitcoin USD": {'ticker': "BTC-USD", 'texto_pos': ' USD', 'descricao': "O Bitcoin é uma criptomoeda negociada nos mercados financeiros internacionais e a unidade de medida padrão do preço do Bitcoin é em dólares americanos (USD) por unidade. O preço do Bitcoin é altamente volátil e é influenciado por diversos fatores, como a oferta e a demanda dos investidores, a adoção global da criptomoeda, as regulamentações governamentais, a confiança do mercado, entre outros. O Bitcoin é uma forma de ativo digital que permite transações financeiras sem a necessidade de intermediários, como bancos ou governos, e é considerado por muitos como uma alternativa ao sistema financeiro tradicional."},
+    "Ethereum USD": {'ticker': "ETH-USD", 'texto_pos': ' USD', 'descricao': "O Ethereum é uma criptomoeda negociada nos mercados financeiros internacionais, e a unidade de medida padrão do preço do Ethereum é em dólares americanos (USD) por unidade. O preço do Ethereum é altamente volátil e é influenciado por diversos fatores, como a oferta e a demanda dos investidores, a adoção global da criptomoeda, as regulamentações governamentais, a confiança do mercado, entre outros. O Ethereum é uma plataforma blockchain descentralizada que permite a criação de aplicativos descentralizados e contratos inteligentes. A criptomoeda é utilizada para pagar pelos serviços na rede Ethereum, incluindo taxas de transação e remuneração para os mineradores. "},
+    "EURO/R\$": {'ticker': "EURBRL=X", 'texto_pos': ' R$', 'descricao': "Euro/R$ é o par de moedas que representa a taxa de câmbio entre o euro e o real brasileiro. A unidade de medida padrão para o par de moedas Euro/R$ é o valor do euro em reais. Ou seja, se a taxa de câmbio do Euro/R$ for 6,00, significa que um euro vale 6 reais. "},
+    "USD/R\$": {'ticker': "USDBRL=X", 'texto_pos': ' R$', 'descricao': "USD/R$ é o par de moedas que representa a taxa de câmbio entre o dólar americano e o real brasileiro. A unidade de medida padrão para o par de moedas USD/R$ é o valor do dólar em reais. Ou seja, se a taxa de câmbio do USD/R$ for 5,00, significa que um dólar vale 5 reais."},
+}
+
+ativos = dict_tickers.keys()
+tickers = list(map(lambda item: item['ticker'], dict_tickers.values()))
+
+df_info = pd.DataFrame({'Ativo': ativos,
+                        'Ticker': tickers})
+df_info['Ult. Valor'] = ''
+df_info['%'] = ''
+
+with st.spinner("Baixando cotações..."):
+    df_info = buscar_panorama(tickers, df_info)
+
+colunas = [col1, col2, col3, col4] = st.columns(4)
+
+numero_item = 0
+for c in colunas:
+    with c:
+        for linha in [0, 1, 2, 3]:
+            if (numero_item < len(tickers)):
+                descricao = gerar_descricao(dict_tickers, df_info, numero_item)
+                valor = gerar_valor(dict_tickers, df_info, numero_item)
+                variacao = str(df_info['%'][numero_item]) + '%'
+
+                st.metric(descricao, valor, delta=variacao)
+                numero_item += 1
 
 st.markdown("---")
-st.subheader("Comportamento durante o dia")
+st.subheader("Gráfico diário (5 minutos)")
 
-lista_ticker = [x for x in dict_tickers.keys()]
-indice = st.selectbox("Selecione o ticker", lista_ticker)
+col4, _, _ = st.columns(3)
+with col4:
+    indice = st.selectbox("Selecione", ativos)
+
 ticker_diario = yf.download(dict_tickers.get(
-    indice), period='1d', interval='5m')
+    indice)['ticker'], period='1d', interval='5m')
 
 fig = go.Figure(data=[go.Candlestick(x=ticker_diario.index, open=ticker_diario['Open'],
                 high=ticker_diario['High'], close=ticker_diario['Close'], low=ticker_diario['Low'])])
 fig.update_layout(title=indice, xaxis_rangeslider_visible=False)
-
-st.plotly_chart(fig)
+st.plotly_chart(fig, use_container_width=True)
