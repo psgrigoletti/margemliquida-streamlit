@@ -1,5 +1,6 @@
 import datetime
 import os
+import logging
 import streamlit as st
 import yfinance as yf
 import pandas as pd
@@ -7,10 +8,14 @@ from datetime import date
 from st_pages import add_page_title
 import plotly.graph_objects as go
 
+logging.basicConfig(level=logging.DEBUG)
+
 # Construção da página
 
 
+@st.cache_data(show_spinner="Buscando panorama...", ttl=60*5)
 def buscar_panorama(tickers, df_info):
+    logging.log(logging.DEBUG, "Buscando panorama...")
     count = 0
     for ticker in tickers:
         cotacoes = yf.download(ticker, period='5d')['Adj Close']
@@ -19,6 +24,14 @@ def buscar_panorama(tickers, df_info):
         df_info['%'][count] = round(variacao, 2)
         count += 1
     return df_info
+
+
+@st.cache_data(show_spinner="Buscando dados intraday...", ttl=60*5)
+def buscar_dados_intraday(dict_tickers, indice):
+    logging.log(logging.DEBUG, "Buscando dados intraday...")
+    ticker_diario = yf.download(dict_tickers.get(
+        indice)['ticker'], period='1d', interval='5m')
+    return ticker_diario
 
 
 def adicionar_avisos_dev():
@@ -93,8 +106,7 @@ df_info = pd.DataFrame({'Ativo': ativos,
 df_info['Ult. Valor'] = ''
 df_info['%'] = ''
 
-with st.spinner("Baixando cotações..."):
-    df_info = buscar_panorama(tickers, df_info)
+df_info = buscar_panorama(tickers, df_info)
 
 colunas = [col1, col2, col3, col4] = st.columns(4)
 
@@ -114,11 +126,9 @@ st.markdown("---")
 st.subheader("Gráfico diário (5 minutos)")
 
 col4, _, _ = st.columns(3)
-with col4:
-    indice = st.selectbox("Selecione", ativos)
 
-ticker_diario = yf.download(dict_tickers.get(
-    indice)['ticker'], period='1d', interval='5m')
+indice = col4.selectbox("Selecione", ativos)
+ticker_diario = buscar_dados_intraday(dict_tickers, indice)
 
 fig = go.Figure(data=[go.Candlestick(x=ticker_diario.index, open=ticker_diario['Open'],
                 high=ticker_diario['High'], close=ticker_diario['Close'], low=ticker_diario['Low'])])
