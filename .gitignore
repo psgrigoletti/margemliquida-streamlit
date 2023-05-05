@@ -132,3 +132,4 @@ dmypy.json
 .streamlit/secrets.toml
 *.csv
 *.xlxs
+http_cache.sqlite

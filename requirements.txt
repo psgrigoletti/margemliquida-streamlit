@@ -19,3 +19,4 @@ scipy
 matplotlib
 seaborn
 pandas_market_calendars==4.1.4
+fundamentus
