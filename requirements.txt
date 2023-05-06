@@ -23,3 +23,6 @@ fundamentus
 
 backtrader
 backtrader_plotting
+tabulate
+
+prettyprint

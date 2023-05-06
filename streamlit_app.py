@@ -22,7 +22,7 @@ show_pages(
         Page("paginas/page_rentabilidades_mensais.py",
              "Rentabilidades Mensais", ":1234:"),
         Page("paginas/page_comparativo_fundamentos.py",
-             "Comparativo de Fundamentos", ":tophat:"),
+             "Comparador de Fundamentos", ":tophat:"),
         Page("paginas/page_backtests.py",
              "Backtests", ":chart:"),
         Section(name="Em desenvolvimento", icon=":computer:"),
