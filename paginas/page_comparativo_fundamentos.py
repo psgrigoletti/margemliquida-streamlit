@@ -90,16 +90,20 @@ class Descricoes:
 
 detalhes = [
     {'indice': 'pl', 'nome': 'P/L', 'descricao': Descricoes.DESCRICAO_PL,
-     'link': 'https://statusinvest.com.br/termos/p/p-l', 'ordenacao': 'ASC'},  # Menor valor -> melhor
+     'link': 'https://statusinvest.com.br/termos/p/p-l', 'ordenacao': 'ASC',
+     'multiplicador': 1},  # Menor valor -> melhor
 
     {'indice': 'dy', 'nome': 'D.Y', 'descricao': Descricoes.DESCRICAO_DY,
-     'link': 'https://statusinvest.com.br/termos/d/dividend-yield', 'ordenacao': 'DESC'},  # Maior valor -> melhor
+     'link': 'https://statusinvest.com.br/termos/d/dividend-yield', 'ordenacao': 'DESC',
+     'multiplicador': 100},  # Maior valor -> melhor
 
     {'indice': 'pvp', 'nome': 'P/VP', 'descricao': Descricoes.DESCRICAO_PVP,
-     'link': 'https://statusinvest.com.br/termos/p/p-vp', 'ordenacao': 'ASC'},  # Menor valor ->melhor
+     'link': 'https://statusinvest.com.br/termos/p/p-vp', 'ordenacao': 'ASC',
+     'multiplicador': 1},  # Menor valor ->melhor
 
     {'indice': 'roe', 'nome': 'ROE', 'descricao': Descricoes.DESCRICAO_ROE,
-     'link': 'https://statusinvest.com.br/termos/r/roe', 'ordenacao': 'DESC'},  # Maior valor -> melhor
+     'link': 'https://statusinvest.com.br/termos/r/roe', 'ordenacao': 'DESC',
+     'multiplicador': 100},  # Maior valor -> melhor
 
     # TODO: adicionar outros detalhes
 ]
@@ -119,11 +123,16 @@ def transformar_lista_pretty(lista):
             lista_pretty[numero_linha][0] = mk_primeira_coluna
 
     # ajustando demais dados
-    for numero_linha, linha in enumerate(lista_pretty):
+    # for numero_linha, linha in enumerate(lista_pretty):
+
+    #     dados_indicador = list(
+    #         filter(lambda d: d['indice'] == lista_pretty[numero_linha][0], detalhes))[0]
+
         for numero_coluna, coluna in enumerate(linha):
             if numero_linha > 0 and numero_coluna > 0:
                 item = coluna
-                item.valor = formatar_valor(item.valor)
+                item.valor = formatar_valor(str(
+                    float(item.valor)*dados_indicador['multiplicador']))
 
                 if item.classificao == '1 lugar':
                     item.valor = f"🥇 **{item.valor}**"
@@ -229,7 +238,8 @@ def classificar_numeros_lista(df: pd.DataFrame, detalhes):
                     linha_sem_o_item.remove(coluna)
 
                     for item2 in linha_sem_o_item:
-                        if (ordem == "ASC" and item2.valor < coluna.valor) or (ordem == "DESC" and item2.valor > coluna.valor):
+                        if (ordem == "ASC" and float(item2.valor) < float(coluna.valor)) or \
+                           (ordem == "DESC" and float(item2.valor) > float(coluna.valor)):
                             quantos += 1
 
                     coluna.classificao = f"{quantos+1} lugar"
