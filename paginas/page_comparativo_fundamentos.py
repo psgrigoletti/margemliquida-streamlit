@@ -303,8 +303,12 @@ if form.form_submit_button("Comparar"):
         st.stop()
 
     dados_filtrados = dados[papeis_selecionados]
+
+    detalhes_filtrados = list(
+        filter(lambda x: x['nome'] in indicadores_selecionados, detalhes))
+
     dados_filtrados = dados_filtrados.loc[dados_filtrados.index.isin(
-        det['indice'] for det in detalhes)]
+        det['indice'] for det in detalhes_filtrados)]
 
     retorno = transformar_lista_pretty(
         classificar_numeros_lista(dados_filtrados, detalhes))
