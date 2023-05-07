@@ -320,4 +320,4 @@ if form.form_submit_button("Comparar"):
 
     st.write(retorno_markdown)
 
-    st.write(dados.transpose().iloc[0])
+    # st.write(dados.transpose().iloc[0])
