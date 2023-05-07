@@ -62,5 +62,8 @@ class TestClassificador(unittest.TestCase):
             resultado, retornar_lista_desc())
 
 
-if __name__ == '__main__':
-    unittest.main()
+# if __name__ == '__main__':
+#     unittest.main()
+
+
+print(xpi.analise("cyre3"))

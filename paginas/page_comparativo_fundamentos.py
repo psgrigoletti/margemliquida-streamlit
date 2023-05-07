@@ -1,15 +1,16 @@
-from pprint import pprint
-from typing import List
-import streamlit as st
-import yfinance as yf
-import pandas as pd
-import numpy as np
-import fundamentus as fd
+import datetime
 import os
 from datetime import date
-import datetime
-from st_pages import add_page_title
+from pprint import pprint
+from typing import List
+
+import fundamentus as fd
+import numpy as np
+import pandas as pd
 import plotly.graph_objects as go
+import streamlit as st
+import yfinance as yf
+from st_pages import add_page_title
 from tabulate import tabulate
 
 
@@ -208,13 +209,17 @@ def adicionar_linha_classificacao_final(lista: List):
         ordem = ordenada.index(ticker)+1
 
         if ordem == 1:
-            classificacao.append(f"🥇 **{ordem}º lugar**")
+            classificacao.append(
+                f"<p class=\"icone-maior\" title=\"{ordem}º lugar\">🥇</p>")
         elif ordem == 2:
-            classificacao.append(f"🥈 **{ordem}º lugar**")
+            classificacao.append(
+                f"<p class=\"icone-maior\" title=\"{ordem}º lugar\">🥈</p>")
         elif ordem == 3:
-            classificacao.append(f"🥉 **{ordem}º lugar**")
+            classificacao.append(
+                f"<p class=\"icone-maior\" title=\"{ordem}º lugar\">🥉</p>")
         else:
-            classificacao.append(f"{ordem}º lugar")
+            classificacao.append(
+                f"<p class=\"centralizado\">**{ordem}º lugar**</p>")
 
     lista.append(["**Classificação final**"]+classificacao)
     return lista
@@ -288,7 +293,7 @@ def gerar_tabela():
     alinhamento = ("right",)*len(retorno[0])
     retorno_markdown = tabulate(
         retorno, headers="firstrow", tablefmt='pipe', showindex=False, colalign=alinhamento)
-    st.write(retorno_markdown)
+    st.write(retorno_markdown, unsafe_allow_html=True)
 
 
 def gerar_observacoes():
@@ -300,13 +305,36 @@ def gerar_observacoes():
 # Construção da página
 
 st.set_page_config(layout="wide")
+
+st.markdown("""
+<style>
+.icone-maior {
+    font-size: 25pt !important;
+    text-align: center !important;
+    margin: 0 !important;
+}
+
+.centralizado {
+    text-align: center !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
 add_page_title()
 adicionar_avisos_dev()
 alertas = st.empty()
-dados = get_resultado().transpose()
+dados = get_resultado()
+# st.write(dados)
+setores = fd.setor._setor
+dados = dados.transpose()
 lista_indicadores = list(map(lambda i: i['nome'], detalhes))
 
 form = st.form("form")
+
+# form.checkbox("Filtrar por setor?")
+# setor_selecionado = form.selectbox(
+#     'Selecione o setor:', list(map(lambda s: s[1], setores)))
+
 papeis_selecionados = form.multiselect(
     'Selecione o(s) ticker(s):', dados.columns)
 indicadores_selecionados = form.multiselect(
