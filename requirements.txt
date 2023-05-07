@@ -19,7 +19,7 @@ scipy
 matplotlib
 seaborn
 pandas_market_calendars==4.1.4
-fundamentus
+fundamentus==0.2.0
 
 backtrader
 backtrader_plotting

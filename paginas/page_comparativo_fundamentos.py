@@ -4,12 +4,12 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 import numpy as np
+import fundamentus as fd
 import os
 from datetime import date
 import datetime
 from st_pages import add_page_title
 import plotly.graph_objects as go
-import fundamentus as fd
 from tabulate import tabulate
 
 
@@ -89,6 +89,7 @@ class Descricoes:
     DESCRICAO_ROIC = """Analisar os números de uma empresa é uma prática recorrente entre os investidores da bolsa. Neste contexto, o ROIC é uma métrica utilizada com frequência por quem investe em ações."""
     DESCRICAO_PATRIMONIO_LIQUIDO = """O Patrimônio Líquido é um indicador contábil que indica a relação entre os ativos e passivos financeiros de uma empresa. Por conta disso, o Patrimônio Líquido representa o total de bens de uma companhia que realmente pertence aos seus acionistas. Para calcular o Patrimônio Líquido, basta fazer uma subtração entre os bens e direitos que uma organização possui em relação às suas obrigações financeiras. É possível afirmar que o PL é um dos conceitos mais importantes dentro de um balanço patrimonial. Nele, são registrados o capital social, lucros acumulados, contas de reserva e outros dados financeiros."""
     DESCRICAO_MARGEM_LIQUIDA = """A Margem Líquida é razão entre o Lucro Líquido e a Receita Líquida de uma companhia após a dedução de impostos e tributos. Podendo representar um resultado trimestral ou anual, a Margem Líquida representa o resultado líquido das vendas de um negócio. Portanto, está diretamente ligado com o nível de rentabilidade que uma companhia consegue com suas operações. Para os investidores, a Margem Líquida demonstra se uma empresa possui bons retornos a partir custos de produção do seu produto/serviço."""
+    DESCRICAO_PRECO_SOBRE_CAPITAL_GIRO = """P/Capital de Giro representa o Preço da Ação dividido pelo Capital de Giro por ação de uma empresa. O P/Capital de Giro é um indicador muito importante na análise de empresas, já que permite que sejam encontradas boas e novas oportunidades de investimentos. O Capital de Giro de uma empresa representa o seu ativo circulante menos seu passivo circulante, ou seja, o resultado entre o dinheiro que ela possui e o que ela deve."""
 
 
 detalhes = [
@@ -120,9 +121,12 @@ detalhes = [
      'link': 'https://statusinvest.com.br/termos/m/margem-liquida', 'ordenacao': 'DESC',
      'multiplicador': 100},  # Maior valor -> melhor
 
+    {'indice': 'pcg', 'nome': 'P/CAPITAL DE GIRO', 'descricao': Descricoes.DESCRICAO_PRECO_SOBRE_CAPITAL_GIRO,
+     'link': 'https://statusinvest.com.br/termos/p/p-capital-giro', 'ordenacao': 'ASC',
+     'multiplicador': 1},  # Menor valor -> melhor
 
     # TODO: adicionar outros detalhes
-    # psr, pa, pcg, pebit, pacl, evebit, evebitda, mrgebit,
+    # psr, pa, , pebit, pacl, evebit, evebitda, mrgebit,
     # liqc, liq2m, divbpatr, c5y
 
 ]
@@ -140,12 +144,6 @@ def transformar_lista_pretty(lista):
             mk_primeira_coluna = f"[{dados_indicador['nome']}]({dados_indicador['link']}, \"{dados_indicador['descricao']}\")"
 
             lista_pretty[numero_linha][0] = mk_primeira_coluna
-
-    # ajustando demais dados
-    # for numero_linha, linha in enumerate(lista_pretty):
-
-    #     dados_indicador = list(
-    #         filter(lambda d: d['indice'] == lista_pretty[numero_linha][0], detalhes))[0]
 
         for numero_coluna, coluna in enumerate(linha):
             if numero_linha > 0 and numero_coluna > 0:
@@ -224,16 +222,11 @@ def adicionar_linha_classificacao_final(lista: List):
 
 def ajustar_cabecalho(lista: List, dados):
     mais_cabecalho = ["**Cotação:**"]
-
-    # print(dados)
-
     for numero_coluna, coluna in enumerate(lista[0]):
         if (numero_coluna > 0):
             mais_cabecalho.append("R$ " + formatar_valor(
                 dados.loc['cotacao', coluna]))
-
         lista[0][numero_coluna] = f"[{coluna}](https://www.fundamentus.com.br/detalhes.php?papel={coluna})"
-
     lista.insert(1, mais_cabecalho)
     return lista
 
@@ -246,7 +239,6 @@ def classificar_numeros_lista(df: pd.DataFrame, detalhes):
             indice_linha = linha[0]
             ordem = list(filter(lambda o: o['indice'] ==
                                 indice_linha, detalhes))[0]['ordenacao']
-            # print(f"A ordem da linha {indice_linha} é {ordem}")
 
             for numero_coluna, coluna in enumerate(linha):
                 if numero_coluna > 0:  # desconsiderar coluna 0
@@ -266,62 +258,61 @@ def classificar_numeros_lista(df: pd.DataFrame, detalhes):
     return lista_completa
 
 
-# Construção da página
-st.set_page_config(layout="wide")
-add_page_title()
-
-adicionar_avisos_dev()
-
-st.write(
-    "Observação: Dados do site [Fundamentus](https://www.fundamentus.com.br/). Baseado no comparador existente no site [Status Invest](https://statusinvest.com.br/cliente/comparar-acoes/).")
-
-
-mensagens = st.container()
-dados = get_resultado().transpose()
-
-
-form = st.form("form")
-# lista_papeis = list_papel_all()
-papeis_selecionados = form.multiselect('Selecione', dados.columns)
-
-lista_indicadores = list(map(lambda i: i['nome'], detalhes))
-indicadores_selecionados = form.multiselect(
-    'Selecione os indicadores', lista_indicadores, lista_indicadores)
-
-
 def formatar_valor(valor: str):
     valor = float(valor)
     return "{:,.2f}".format(valor).replace('.', 'X').replace(',', '.').replace('X', ',')
 
 
-if form.form_submit_button("Comparar"):
+def validar():
     if (len(papeis_selecionados) == 0):
-        st.error("Selecione pelo menos um ticker.")
+        with alertas:
+            st.error(icon="🚨", body="Selecione pelo menos um ticker.")
         st.stop()
     if (len(indicadores_selecionados) == 0):
-        st.error("Selecione pelo menos um indicador.")
+        with alertas:
+            st.error(icon="🚨", body="Selecione pelo menos um indicador.")
         st.stop()
 
-    dados_filtrados = dados[papeis_selecionados]
 
+def gerar_tabela():
+    dados_filtrados = dados[papeis_selecionados]
     detalhes_filtrados = list(
         filter(lambda x: x['nome'] in indicadores_selecionados, detalhes))
-
     dados_filtrados = dados_filtrados.loc[dados_filtrados.index.isin(
         det['indice'] for det in detalhes_filtrados)]
-
     retorno = transformar_lista_pretty(
         classificar_numeros_lista(dados_filtrados, detalhes))
-
     retorno = adicionar_linha_medalhas(retorno)
     retorno = adicionar_linha_classificacao_final(retorno)
     retorno = ajustar_cabecalho(retorno, dados)
-
     alinhamento = ("right",)*len(retorno[0])
-
     retorno_markdown = tabulate(
         retorno, headers="firstrow", tablefmt='pipe', showindex=False, colalign=alinhamento)
-
     st.write(retorno_markdown)
 
-    # st.write(dados.transpose().iloc[0])
+
+def gerar_observacoes():
+    st.write("------")
+    st.write(
+        "Observação: Dados do site [Fundamentus](https://www.fundamentus.com.br/). Baseado no comparador existente no site [Status Invest](https://statusinvest.com.br/cliente/comparar-acoes/).")
+
+
+# Construção da página
+
+st.set_page_config(layout="wide")
+add_page_title()
+adicionar_avisos_dev()
+alertas = st.empty()
+dados = get_resultado().transpose()
+lista_indicadores = list(map(lambda i: i['nome'], detalhes))
+
+form = st.form("form")
+papeis_selecionados = form.multiselect(
+    'Selecione o(s) ticker(s):', dados.columns)
+indicadores_selecionados = form.multiselect(
+    'Selecione o(s) indicadore(s):', lista_indicadores, lista_indicadores)
+
+if form.form_submit_button("Comparar"):
+    validar()
+    gerar_tabela()
+    gerar_observacoes()
