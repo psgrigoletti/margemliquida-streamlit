@@ -331,10 +331,6 @@ lista_indicadores = list(map(lambda i: i['nome'], detalhes))
 
 form = st.form("form")
 
-# form.checkbox("Filtrar por setor?")
-# setor_selecionado = form.selectbox(
-#     'Selecione o setor:', list(map(lambda s: s[1], setores)))
-
 papeis_selecionados = form.multiselect(
     'Selecione o(s) ticker(s):', dados.columns)
 indicadores_selecionados = form.multiselect(
