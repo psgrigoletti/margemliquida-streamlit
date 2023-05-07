@@ -86,6 +86,9 @@ class Descricoes:
     DESCRICAO_PL = """O P/L, ou Preço/Lucro, é um índice usado para avaliar se o preço das ações de uma empresa está caro ou barato. Na fórmula do P/L, o preço analisado é sempre o valor por ação que está divulgado na bolsa em um certo momento. Já o lucro é o ganho líquido por cada uma das ações neste mesmo momento."""
     DESCRICAO_DY = """O Dividend Yield, que traduzido para o português refere-se a Rendimento de Dividendos, é o indicador que verifica a performance da organização mediante os proventos que foram pagos aos acionistas da empresa ao longo dos últimos 12 meses do ano."""
     DESCRICAO_ROE = """O ROE (Return on Equity), ou Retorno sobre Patrimônio Líquido, é um indicador de rentabilidade que serve para determinar o quão eficiente é uma empresa na geração de lucro a partir dos seus recursos. O ROE leva em conta o patrimônio líquido e os valores investidos no negócio, inclusive o de acionistas."""
+    DESCRICAO_ROIC = """Analisar os números de uma empresa é uma prática recorrente entre os investidores da bolsa. Neste contexto, o ROIC é uma métrica utilizada com frequência por quem investe em ações."""
+    DESCRICAO_PATRIMONIO_LIQUIDO = """O Patrimônio Líquido é um indicador contábil que indica a relação entre os ativos e passivos financeiros de uma empresa. Por conta disso, o Patrimônio Líquido representa o total de bens de uma companhia que realmente pertence aos seus acionistas. Para calcular o Patrimônio Líquido, basta fazer uma subtração entre os bens e direitos que uma organização possui em relação às suas obrigações financeiras. É possível afirmar que o PL é um dos conceitos mais importantes dentro de um balanço patrimonial. Nele, são registrados o capital social, lucros acumulados, contas de reserva e outros dados financeiros."""
+    DESCRICAO_MARGEM_LIQUIDA = """A Margem Líquida é razão entre o Lucro Líquido e a Receita Líquida de uma companhia após a dedução de impostos e tributos. Podendo representar um resultado trimestral ou anual, a Margem Líquida representa o resultado líquido das vendas de um negócio. Portanto, está diretamente ligado com o nível de rentabilidade que uma companhia consegue com suas operações. Para os investidores, a Margem Líquida demonstra se uma empresa possui bons retornos a partir custos de produção do seu produto/serviço."""
 
 
 detalhes = [
@@ -105,7 +108,23 @@ detalhes = [
      'link': 'https://statusinvest.com.br/termos/r/roe', 'ordenacao': 'DESC',
      'multiplicador': 100},  # Maior valor -> melhor
 
+    {'indice': 'roic', 'nome': 'ROIC', 'descricao': Descricoes.DESCRICAO_ROIC,
+     'link': 'https://statusinvest.com.br/termos/r/roic', 'ordenacao': 'DESC',
+     'multiplicador': 100},  # Maior valor -> melhor
+
+    {'indice': 'patrliq', 'nome': 'PATRIMÔNIO LÍQUIDO', 'descricao': Descricoes.DESCRICAO_PATRIMONIO_LIQUIDO,
+     'link': 'https://statusinvest.com.br/termos/p/patrimonio-liquido', 'ordenacao': 'DESC',
+     'multiplicador': 1},  # Maior valor -> melhor
+
+    {'indice': 'mrgliq', 'nome': 'MARGEM LÍQUIDA', 'descricao': Descricoes.DESCRICAO_MARGEM_LIQUIDA,
+     'link': 'https://statusinvest.com.br/termos/m/margem-liquida', 'ordenacao': 'DESC',
+     'multiplicador': 100},  # Maior valor -> melhor
+
+
     # TODO: adicionar outros detalhes
+    # psr, pa, pcg, pebit, pacl, evebit, evebitda, mrgebit,
+    # liqc, liq2m, divbpatr, c5y
+
 ]
 
 
@@ -294,9 +313,11 @@ if form.form_submit_button("Comparar"):
     retorno = adicionar_linha_classificacao_final(retorno)
     retorno = ajustar_cabecalho(retorno, dados)
 
+    alinhamento = ("right",)*len(retorno[0])
+
     retorno_markdown = tabulate(
-        retorno, headers="firstrow", tablefmt='pipe', showindex=False)
+        retorno, headers="firstrow", tablefmt='pipe', showindex=False, colalign=alinhamento)
 
     st.write(retorno_markdown)
 
-    # st.write(dados)
+    st.write(dados.transpose().iloc[0])
