@@ -12,6 +12,7 @@ import streamlit as st
 import yfinance as yf
 from st_pages import add_page_title
 from tabulate import tabulate
+from utils.streamlit_utils import adicionar_avisos_dev
 
 
 @st.cache_data(show_spinner="Buscando todos os dados fundamentalistas...", ttl=3600)
@@ -27,22 +28,6 @@ def get_detalhes_papel(papel):
 @st.cache_data(show_spinner="Buscando lista de papeis...", ttl=3600)
 def list_papel_all():
     return fd.list_papel_all()
-
-
-def adicionar_avisos_dev():
-    _, col_avisos = st.columns([7, 3])
-    with col_avisos:
-        st.write(
-            "Encontrou algum problema? [me avise](https://github.com/psgrigoletti/margemliquida-streamlit/issues/new?title=escreva%20o%20seu%20titulo&body=escreva%20o%20seu%20comentario) por favor.")
-        # Obter informações sobre o arquivo
-        info = os.stat(__file__)
-        # Extrair a data da última modificação
-        mod_time = info.st_mtime
-        # Converter o tempo em formato legível
-        mod_time_str = datetime.datetime.fromtimestamp(
-            mod_time).strftime('%d/%m/%Y %H:%M:%S')
-        st.write(
-            f"Última atualização do código desta página em: {mod_time_str}")
 
 
 class ItemClassificar:

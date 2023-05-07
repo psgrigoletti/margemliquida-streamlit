@@ -141,62 +141,68 @@ class JurosFuturos:
                       nome_serie + ". Buscando próxima série...")
 
     def __atualizar_dados_anbima(self):
-        #hoje = date.today().strftime('%d/%m/%Y')
-        #ontem = date.today() - timedelta(days=1)
-        #ontem = ontem.strftime('%d/%m/%Y')
+        try:
+            # hoje = date.today().strftime('%d/%m/%Y')
+            # ontem = date.today() - timedelta(days=1)
+            # ontem = ontem.strftime('%d/%m/%Y')
 
-        import pandas_market_calendars as mcal
-        from datetime import datetime, timedelta
+            import pandas_market_calendars as mcal
+            from datetime import datetime, timedelta
 
-        # Define o calendário que será utilizado (neste caso, o calendário da Bovespa)
-        cal = mcal.get_calendar('B3')
+            # Define o calendário que será utilizado (neste caso, o calendário da Bovespa)
+            cal = mcal.get_calendar('B3')
 
-        # Define a data de hoje
-        today = datetime.today().date()
+            # Define a data de hoje
+            today = datetime.today().date()
 
-        # Subtrai um dia da data de hoje para garantir que o último dia útil antes de hoje seja incluído
-        last_business_day = cal.valid_days(start_date=(today - timedelta(days=7)), end_date=today)[-1]
+            # Subtrai um dia da data de hoje para garantir que o último dia útil antes de hoje seja incluído
+            last_business_day = cal.valid_days(start_date=(
+                today - timedelta(days=7)), end_date=today)[-1]
 
-        # Converte o último dia útil antes de hoje para um objeto do tipo datetime
-        # last_business_day = pd.Timestamp(last_business_day).to_pydatetime()
-        ultimo_dia_util = last_business_day.strftime('%d/%m/%Y')
+            # Converte o último dia útil antes de hoje para um objeto do tipo datetime
+            # last_business_day = pd.Timestamp(last_business_day).to_pydatetime()
+            ultimo_dia_util = last_business_day.strftime('%d/%m/%Y')
 
-        url = 'https://www.anbima.com.br/informacoes/est-termo/CZ-down.asp'
-        payload = {'Idioma': 'US', 'Dt_Ref': ultimo_dia_util, 'saida': 'xml', 
-                   'escolha': 2, 'Dt_Ref_Ver': '20230330'}
+            url = 'https://www.anbima.com.br/informacoes/est-termo/CZ-down.asp'
+            payload = {'Idioma': 'US', 'Dt_Ref': ultimo_dia_util, 'saida': 'xml',
+                       'escolha': 2, 'Dt_Ref_Ver': '20230330'}
 
-        from urllib import request, parse
-        data = parse.urlencode(payload).encode()
-        # this will make the method "POST"
-        req = request.Request(url, data=data)
+            from urllib import request, parse
+            data = parse.urlencode(payload).encode()
+            # this will make the method "POST"
+            req = request.Request(url, data=data)
 
-        with request.urlopen(req) as response:
-            xml = response.read()
-            print(xml)
+            with request.urlopen(req) as response:
+                xml = response.read()
+                print(xml)
 
-        vertices = pd.read_xml(xml, xpath="//TERM_STRUCTURE")
-        vertices.drop('Indexed', axis=1, inplace=True)
-        vertices.drop('BEI', axis=1, inplace=True)
-        vertices.dropna(inplace=True)
-        vertices = vertices.replace({',': ''}, regex=True)
-        vertices['Prefixed'] = vertices['Prefixed'].astype(float)
-        vertices['Business_Day'] = vertices['Business_Day'].astype(int)
-        vertices.rename({'Prefixed': 'Taxa'}, axis=1, inplace=True)
-        vertices.rename({'Business_Day': 'DiasUteis'}, axis=1, inplace=True)
-        # vertices
+            vertices = pd.read_xml(xml, xpath="//TERM_STRUCTURE")
+            vertices.drop('Indexed', axis=1, inplace=True)
+            vertices.drop('BEI', axis=1, inplace=True)
+            vertices.dropna(inplace=True)
+            vertices = vertices.replace({',': ''}, regex=True)
+            vertices['Prefixed'] = vertices['Prefixed'].astype(float)
+            vertices['Business_Day'] = vertices['Business_Day'].astype(int)
+            vertices.rename({'Prefixed': 'Taxa'}, axis=1, inplace=True)
+            vertices.rename({'Business_Day': 'DiasUteis'},
+                            axis=1, inplace=True)
+            # vertices
 
-        circular = pd.read_xml(xml, xpath="//CIRCULAR ")
-        circular = circular.replace({',': ''}, regex=True)
-        circular['Rate'] = circular['Rate'].astype(float)
-        circular['Business_Day'] = circular['Business_Day'].astype(int)
-        circular.rename({'Rate': 'Taxa'}, axis=1, inplace=True)
-        circular.rename({'Business_Day': 'DiasUteis'}, axis=1, inplace=True)
-        circular.dropna(inplace=True)
-        # circular
+            circular = pd.read_xml(xml, xpath="//CIRCULAR ")
+            circular = circular.replace({',': ''}, regex=True)
+            circular['Rate'] = circular['Rate'].astype(float)
+            circular['Business_Day'] = circular['Business_Day'].astype(int)
+            circular.rename({'Rate': 'Taxa'}, axis=1, inplace=True)
+            circular.rename({'Business_Day': 'DiasUteis'},
+                            axis=1, inplace=True)
+            circular.dropna(inplace=True)
+            # circular
 
-        self.anbima_df = pd.concat([vertices, circular]).sort_values(
-            by="DiasUteis").drop_duplicates().reset_index(drop=True)
-        self.anbima_df.set_index('DiasUteis', inplace=True)
+            self.anbima_df = pd.concat([vertices, circular]).sort_values(
+                by="DiasUteis").drop_duplicates().reset_index(drop=True)
+            self.anbima_df.set_index('DiasUteis', inplace=True)
+        except:
+            print("Erro ao baixar/tratar os dados da Anbima.")
 
     def __atualizar_dados_por_titulo(self):
         self.difuturo_por_titulo = pd.concat(self.series_advfn, axis=1)
@@ -319,7 +325,7 @@ class JurosFuturos:
 
     def retornar_grafico_por_dias_uteis(self):
         hoje = date.today().strftime('%d/%m/%Y')
-        ontem = date.today() - timedelta(days = 1)
+        ontem = date.today() - timedelta(days=1)
 
         layout = go.Layout(
             annotations=[
@@ -343,8 +349,9 @@ class JurosFuturos:
 
         fig.update_yaxes(title_text="Taxas (em %)")
 
-        fig.add_trace(go.Scatter(x=self.anbima_df.index, y=self.anbima_df['Taxa'], name="(ANBIMA) Ontem: " + ontem.strftime(
-            '%d/%m/%Y'), line_shape='spline', mode='lines+markers', connectgaps=True, marker_size=10))
+        if self.anbima_df is not None:
+            fig.add_trace(go.Scatter(x=self.anbima_df.index, y=self.anbima_df['Taxa'], name="(ANBIMA) Ontem: " + ontem.strftime(
+                '%d/%m/%Y'), line_shape='spline', mode='lines+markers', connectgaps=True, marker_size=10))
 
         for numero, i in enumerate(self.difuturo_por_dias_uteis_transposto):
             # suavizado, conectando gaps https://plotly.com/python/line-charts/
