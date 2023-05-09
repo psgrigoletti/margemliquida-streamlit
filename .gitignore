@@ -134,3 +134,4 @@ dmypy.json
 *.xlxs
 http_cache.sqlite
 example.png
+.vscode/

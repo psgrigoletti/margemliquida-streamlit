@@ -1,10 +1,10 @@
 import streamlit as st
 from datetime import datetime
 import os
-import pytz
-from pytz import common_timezones
+# import pytz
+# from pytz import common_timezones
 
-print(common_timezones)
+# print(common_timezones)
 
 
 def adicionar_avisos_dev():
@@ -18,6 +18,6 @@ def adicionar_avisos_dev():
         mod_time = info.st_mtime
         # Converter o tempo em formato legível
         mod_time_str = datetime.fromtimestamp(
-            mod_time, tz=pytz.timezone("America/Sao_Paulo")).strftime('%d/%m/%Y %H:%M:%S')
+            mod_time).strftime('%d/%m/%Y %H:%M:%S')
         st.write(
             f"Última atualização do código desta página em: {mod_time_str}.")

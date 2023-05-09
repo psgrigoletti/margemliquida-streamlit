@@ -25,6 +25,8 @@ show_pages(
              "Comparador de Fundamentos", ":tophat:"),
         Page("paginas/page_backtests.py",
              "Backtests", ":chart:"),
+        Page("paginas/page_backtests_vbt.py",
+             "Backtests com VectorBT", ":chart:"),
         Section(name="Em desenvolvimento", icon=":computer:"),
         Page("paginas/page_analise_fundamentalista.py",
              "Análise Fundamentalista", ":bank:"),
