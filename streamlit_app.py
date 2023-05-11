@@ -8,6 +8,8 @@ show_pages(
     [
         Page("streamlit_app.py", "Inicial", ":beginner:"),
         Section(name="OK", icon=":white_check_mark:"),
+        Page("paginas/page_comparador_carteiras.py",
+             "Comparador de Carteiras", ":straight_ruler:"),
         Page("paginas/page_dividendos_por_acao.py",
              "Dividendos por ação", ":heavy_dollar_sign:"),
         Page("paginas/page_dias_consecutivos.py",
