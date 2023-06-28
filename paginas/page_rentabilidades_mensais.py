@@ -106,3 +106,6 @@ def run():
             ax.xaxis.tick_top()
             plt.ylabel('')
             st.pyplot(fig)
+
+
+run()
