@@ -1,10 +1,6 @@
 import streamlit as st
 from datetime import datetime
 import os
-# import pytz
-# from pytz import common_timezones
-
-# print(common_timezones)
 
 
 def adicionar_avisos_dev():

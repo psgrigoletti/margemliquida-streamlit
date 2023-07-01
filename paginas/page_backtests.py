@@ -5,11 +5,12 @@ import pandas as pd
 import backtrader.analyzers as btanal
 import backtrader.strategies as btstrats
 
-from st_pages import add_page_title
+# from st_pages import add_page_title
 
 import matplotlib
 matplotlib.use('agg')
 
+descricao = 'Backtests'
 # Função que salva imagem
 
 
@@ -123,9 +124,9 @@ estrategias['RSI'] = RSI
 
 class RSI_MMA(bt.Strategy):
     def __init__(self):
-        self.rsi = bt.indicators.RSI(self.data.close, period=21)
-        self.mm_rapida = bt.indicators.SMA(self.data.close, period=20)
-        self.mm_lenta = bt.indicators.SMA(self.data.close, period=100)
+        self.rsi = bt.indicators.RSI(self.data.close, period=2)
+        self.mm_rapida = bt.indicators.SMA(self.data.close, period=5)
+        self.mm_lenta = bt.indicators.SMA(self.data.close, period=200)
         # self.crossup = bt.ind.CrossUp(self.mm_rapida, self.mm_lenta)
 
     def next(self):
@@ -140,49 +141,53 @@ class RSI_MMA(bt.Strategy):
 estrategias['RSI_MMA'] = RSI_MMA
 
 # Página
-st.set_page_config(layout="wide")
-add_page_title()
-mensagens = st.container()
+# st.set_page_config(layout="wide")
+# add_page_title()
 
-col1, col2 = st.columns(2)
 
-with col1:
-    ativo = st.text_input("Ticker", value='PETZ3.SA')
-    caixa_inicial = st.text_input("Caixa inicial", value=30000)
-with col2:
-    estrategia = st.selectbox("Estratégia", estrategias.keys())
-    comissao = st.text_input("Comissão", value=0.003)
+def run():
+    st.title(descricao)
+    mensagens = st.container()
 
-cerebro = bt.Cerebro()
-cerebro.addstrategy(estrategias.get(estrategia))
+    col1, col2 = st.columns(2)
 
-data = bt.feeds.PandasData(dataname=yf.download(ativo, '2020-01-01',
-                                                '2023-05-01', auto_adjust=True))
-if st.button("Executar"):
-    cerebro.adddata(data)
-    cerebro.broker.setcommission(commission=float(comissao))
-    cerebro.broker.setcash(float(caixa_inicial))
-    cerebro.addanalyzer(btanal.PeriodStats, _name='periodsstats',
-                        timeframe=bt.TimeFrame.Days)
-    cerebro.addanalyzer(btanal.SharpeRatio_A, _name='sharperatio')
-    cerebro.addanalyzer(btanal.DrawDown, _name='drawdown')
-    cerebro.addanalyzer(btanal.TradeAnalyzer, _name='tradeanalyzer')
+    with col1:
+        ativo = st.text_input("Ticker", value='PETZ3.SA')
+        caixa_inicial = st.text_input("Caixa inicial", value=30000)
+    with col2:
+        estrategia = st.selectbox("Estratégia", estrategias.keys())
+        comissao = st.text_input("Comissão", value=0.003)
 
-    resultado = cerebro.run()
-    resultados = resultado[0]
-    saveplots(cerebro, file_path='example.png')  # run it
-    st.markdown("---")
+    cerebro = bt.Cerebro()
+    cerebro.addstrategy(estrategias.get(estrategia))
 
-    tab1, tab2 = st.tabs(tabs=['Gráfico', 'Estatísticas'])
-    with tab1:
-        st.image('example.png', use_column_width=True)
-    with tab2:
-        st.markdown("Estatísticas (período diário):")
-        st.write(resultados.analyzers.periodsstats.get_analysis())
-        st.markdown("Sharpe Ratio (período anual):")
-        # riskfreerate = 0.01 (default)
-        st.write(resultados.analyzers.sharperatio.get_analysis())
-        st.markdown("Drawdown (período anual):")
-        st.write(resultados.analyzers.drawdown.get_analysis())
-        st.markdown("Trade Analyser (período anual):")
-        st.write(resultados.analyzers.tradeanalyzer.get_analysis())
+    data = bt.feeds.PandasData(dataname=yf.download(ativo, '2020-01-01',
+                                                    '2023-05-01', auto_adjust=True))
+    if st.button("Executar"):
+        cerebro.adddata(data)
+        cerebro.broker.setcommission(commission=float(comissao))
+        cerebro.broker.setcash(float(caixa_inicial))
+        cerebro.addanalyzer(btanal.PeriodStats, _name='periodsstats',
+                            timeframe=bt.TimeFrame.Days)
+        cerebro.addanalyzer(btanal.SharpeRatio_A, _name='sharperatio')
+        cerebro.addanalyzer(btanal.DrawDown, _name='drawdown')
+        cerebro.addanalyzer(btanal.TradeAnalyzer, _name='tradeanalyzer')
+
+        resultado = cerebro.run()
+        resultados = resultado[0]
+        saveplots(cerebro, file_path='example.png')  # run it
+        st.markdown("---")
+
+        tab1, tab2 = st.tabs(tabs=['Gráfico', 'Estatísticas'])
+        with tab1:
+            st.image('example.png', use_column_width=True)
+        with tab2:
+            st.markdown("Estatísticas (período diário):")
+            st.write(resultados.analyzers.periodsstats.get_analysis())
+            st.markdown("Sharpe Ratio (período anual):")
+            # riskfreerate = 0.01 (default)
+            st.write(resultados.analyzers.sharperatio.get_analysis())
+            st.markdown("Drawdown (período anual):")
+            st.write(resultados.analyzers.drawdown.get_analysis())
+            st.markdown("Trade Analyser (período anual):")
+            st.write(resultados.analyzers.tradeanalyzer.get_analysis())

@@ -10,7 +10,6 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 import yfinance as yf
-from st_pages import add_page_title
 from tabulate import tabulate
 from utils.streamlit_utils import adicionar_avisos_dev
 
@@ -253,7 +252,7 @@ def formatar_valor(valor: str):
     return "{:,.2f}".format(valor).replace('.', 'X').replace(',', '.').replace('X', ',')
 
 
-def validar():
+def validar(papeis_selecionados, indicadores_selecionados):
     if (len(papeis_selecionados) == 0):
         with alertas:
             st.error(icon="🚨", body="Selecione pelo menos um ticker.")
@@ -264,7 +263,7 @@ def validar():
         st.stop()
 
 
-def gerar_tabela():
+def gerar_tabela(dados, papeis_selecionados, indicadores_selecionados):
     dados_filtrados = dados[papeis_selecionados]
     detalhes_filtrados = list(
         filter(lambda x: x['nome'] in indicadores_selecionados, detalhes))
@@ -287,41 +286,39 @@ def gerar_observacoes():
         "Observação: Dados do site [Fundamentus](https://www.fundamentus.com.br/). Baseado no comparador existente no site [Status Invest](https://statusinvest.com.br/cliente/comparar-acoes/).")
 
 
-# Construção da página
+def main():
+    st.title(":tophat: Factor Investing")
+    mensagens = st.container()
 
-st.set_page_config(layout="wide")
+    st.markdown("""
+    <style>
+    .icone-maior {
+        font-size: 25pt !important;
+        text-align: center !important;
+        margin: 0 !important;
+    }
 
-st.markdown("""
-<style>
-.icone-maior {
-    font-size: 25pt !important;
-    text-align: center !important;
-    margin: 0 !important;
-}
+    .centralizado {
+        text-align: center !important;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
-.centralizado {
-    text-align: center !important;
-}
-</style>
-""", unsafe_allow_html=True)
+    adicionar_avisos_dev()
+    alertas = st.empty()
+    dados = get_resultado()
+    setores = fd.setor._setor
+    dados = dados.transpose()
+    lista_indicadores = list(map(lambda i: i['nome'], detalhes))
 
-add_page_title()
-adicionar_avisos_dev()
-alertas = st.empty()
-dados = get_resultado()
-# st.write(dados)
-setores = fd.setor._setor
-dados = dados.transpose()
-lista_indicadores = list(map(lambda i: i['nome'], detalhes))
+    form = st.form("form")
 
-form = st.form("form")
+    papeis_selecionados = form.multiselect(
+        'Selecione o(s) ticker(s):', dados.columns)
+    indicadores_selecionados = form.multiselect(
+        'Selecione o(s) indicadore(s):', lista_indicadores, lista_indicadores)
 
-papeis_selecionados = form.multiselect(
-    'Selecione o(s) ticker(s):', dados.columns)
-indicadores_selecionados = form.multiselect(
-    'Selecione o(s) indicadore(s):', lista_indicadores, lista_indicadores)
-
-if form.form_submit_button("Comparar"):
-    validar()
-    gerar_tabela()
-    gerar_observacoes()
+    if form.form_submit_button("Comparar"):
+        validar(papeis_selecionados, indicadores_selecionados)
+        gerar_tabela(dados, papeis_selecionados, indicadores_selecionados)
+        gerar_observacoes()
