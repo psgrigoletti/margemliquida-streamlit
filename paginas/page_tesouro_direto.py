@@ -19,6 +19,7 @@ def carregar_dados(mensagens):
     agora = agora.strftime('%d/%m/%Y')
 
     td = atualizar_dados_tesouro_direto(agora)
+
     with mensagens:
         st.success("Dados carregados com sucesso!")
 
