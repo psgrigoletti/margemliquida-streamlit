@@ -1,0 +1,13 @@
+credentials:
+    usernames:
+        psgrigoletti:
+            email: pablo@email
+            name: Pablo
+            password: $2b$12$fWk5jwO7rY1Guzg6ZlFY1.593Ry4UF3o3uDeaaobwLYpQJFDlBVM2
+cookie:
+    expiry_days: 30
+    key: random_signature_key # Must be string
+    name: random_cookie_name
+preauthorized:
+    emails:
+        - guest@mail.com
