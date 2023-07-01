@@ -252,11 +252,13 @@ def formatar_valor(valor: str):
     return "{:,.2f}".format(valor).replace('.', 'X').replace(',', '.').replace('X', ',')
 
 
-def validar(alertas, papeis_selecionados, indicadores_selecionados):
+def validar(papeis_selecionados, indicadores_selecionados, alertas):
     if (len(papeis_selecionados) == 0):
         with alertas:
             st.error(icon="🚨", body="Selecione pelo menos um ticker.")
         st.stop()
+        
+    print(type(indicadores_selecionados))
     if (len(indicadores_selecionados) == 0):
         with alertas:
             st.error(icon="🚨", body="Selecione pelo menos um indicador.")
@@ -316,7 +318,7 @@ def main():
     papeis_selecionados = form.multiselect(
         'Selecione o(s) ticker(s):', dados.columns)
     indicadores_selecionados = form.multiselect(
-        'Selecione o(s) indicadore(s):', lista_indicadores, lista_indicadores)
+        'Selecione o(s) indicadore(s):', lista_indicadores.copy(), lista_indicadores.copy())
 
     if form.form_submit_button("Comparar"):
         validar(papeis_selecionados, indicadores_selecionados, alertas)

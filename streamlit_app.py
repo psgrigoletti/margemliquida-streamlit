@@ -1,8 +1,9 @@
 import streamlit as st
 import streamlit_authenticator as stauth
+from streamlit_option_menu import option_menu
+
 import yaml
 from yaml.loader import SafeLoader
-from streamlit_option_menu import option_menu
 from menu import Menu
 
 st.set_page_config(layout="wide")
