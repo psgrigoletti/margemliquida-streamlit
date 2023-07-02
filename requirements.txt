@@ -11,6 +11,10 @@ streamlit_option_menu==0.3.6
 pandas==2.0.3
 numpy==1.25.0
 
+# Datas
+pandas_market_calendars==4.1.4
+workalendar==17.0.0
+
 # Fontes de dados
 yfinance==0.2.22
 python-bcb==0.1.9
@@ -30,9 +34,7 @@ pymongo==4.4.0
 #seleniumbase
 #webdriver-manager
 #holidays
-#workalendar
 #scipy
-#pandas_market_calendars==4.1.4
 #backtrader
 #backtrader_plotting
 #tabulate==0.9.0
