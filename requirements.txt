@@ -1,5 +1,6 @@
 # Ultima revisão: 02/07/2023
 
+pip==23.1.2
 # Interface
 streamlit==1.24.0
 streamlit-authenticator==0.2.2
