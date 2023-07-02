@@ -5,7 +5,7 @@ from libs.market_data.carteira_global import CarteiraGlobal
 import logging
 from utils.data_hora_utils import DataHoraUtils
 
-@st.cache_data
+@st.cache_data(show_spinner="Carregando dados...", ttl=60*5)
 def retornar_dados_fii(ticker):
     logging.log(logging.INFO, f"Buscando dados gerais do FII {ticker}")
     cg = CarteiraGlobal()
@@ -13,7 +13,7 @@ def retornar_dados_fii(ticker):
     dados = cg.retonar_dados_fiis(ticker)
     return dados
 
-@st.cache_data
+@st.cache_data(show_spinner="Carregando dados...", ttl=60*5)
 def retornar_dados_acao(ticker):
     logging.log(logging.INFO, f"Buscando dados gerais da Ação {ticker}")
     cg = CarteiraGlobal()
@@ -21,7 +21,7 @@ def retornar_dados_acao(ticker):
     dados = cg.retonar_dados_acoes(ticker)
     return dados
 
-@st.cache_data
+@st.cache_data(show_spinner="Carregando dados...", ttl=60*5)
 def retornar_dados(ticker, data_inicial, data_final):
     logging.log(logging.INFO, f"Buscando histórico de {ticker} entre {data_inicial} e {data_final}")
     d = Dividendos()
@@ -106,7 +106,7 @@ def gerar_bloco_sobre(dados_ticker):
 ## Construção da página
         
 def main():
-    st.title(":dragon: Inflação no Brasil", )
+    st.title(":heavy_dollar_sign: Dividendos", )
     mensagens = st.container()
 
     ## Formulário
@@ -123,11 +123,11 @@ def main():
         
         try:
             if tipo == "Ações":
-                dados_ticker = retornar_dados_acao(ticker)
+                dados_ticker = retornar_dados_acao(ticker.upper())
             elif tipo == "FIIs":
-                dados_ticker = retornar_dados_fii(ticker)
+                dados_ticker = retornar_dados_fii(ticker.upper())
                 
-            dados = retornar_dados(ticker, data_inicial, data_final)
+            dados = retornar_dados(ticker.upper(), data_inicial, data_final)
             sobre, graficos, tabela = st.tabs(["Sobre o Ticker", "📈 Gráficos", "🗃 Dados"])
                 
             with sobre:

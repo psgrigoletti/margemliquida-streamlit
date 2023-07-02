@@ -6,7 +6,7 @@ class Menu:
               "Factor Investing",
               "Panorama de Mercado",
               "Rentabilidades mensais",
-              "Dividendos por ação"]
+              "Dividendos"]
 
     def __init__(self):
         pass
@@ -41,6 +41,6 @@ class Menu:
             from paginas.page_rentabilidades_mensais import main
             main()
             
-        if selecionada == "Dividendos por ação":
-            from paginas.page_dividendos_por_acao import main
+        if selecionada == "Dividendos":
+            from paginas.page_dividendos import main
             main()
