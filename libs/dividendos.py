@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 from datetime import date
 
 from utils.data_hora_utils import DataHoraUtils
-from .carteira_global import CarteiraGlobal
+from .market_data.carteira_global import CarteiraGlobal
 
 class Dividendos:
     chave_carteira_global = None

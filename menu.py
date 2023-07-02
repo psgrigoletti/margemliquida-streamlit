@@ -3,7 +3,10 @@ class Menu:
               "Inflação",
               "Tesouro Direto",
               "Dias Consecutivos",
-              "Factor Investing"]
+              "Factor Investing",
+              "Panorama de Mercado",
+              "Rentabilidades mensais",
+              "Dividendos por ação"]
 
     def __init__(self):
         pass
@@ -28,4 +31,16 @@ class Menu:
 
         if selecionada == "Factor Investing":
             from paginas.page_comparativo_fundamentos import main
+            main()
+            
+        if selecionada == "Panorama de Mercado":
+            from paginas.page_panorama_mercado import main
+            main()
+            
+        if selecionada == "Rentabilidades mensais":
+            from paginas.page_rentabilidades_mensais import main
+            main()
+            
+        if selecionada == "Dividendos por ação":
+            from paginas.page_dividendos_por_acao import main
             main()

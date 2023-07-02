@@ -1,32 +1,39 @@
+# Ultima revisão: 02/07/2023
+
+# Interface
 streamlit==1.24.0
 streamlit-authenticator==0.2.2
-#streamlit-toggle-switch==1.0.2
-streamlit_option_menu
-# streamlit-on-Hover-tabs==1.0.1
-# st-pages==0.4.1
+streamlit_option_menu==0.3.6
+
+# Gerais
 yfinance==0.2.22
 python-bcb==0.1.9
-jinja2==3.1.2
 pandas==2.0.3
 plotly==5.15.0
 numpy==1.25.0
+fundamentus==0.2.0
+matplotlib==3.7.1
+seaborn==0.12.2
+
+# Banco de dados
+pymongo==4.4.0
+
+# Não sei bem...
+#jinja2==3.1.2
 #seleniumbase
 #webdriver-manager
-python-bcb==0.1.9
-holidays
-workalendar
-sidrapy
-scipy
-matplotlib
-seaborn
-pandas_market_calendars==4.1.4
-fundamentus==0.2.0
+#python-bcb==0.1.9
+#holidays
+#workalendar
+#sidrapy
+#scipy
+#pandas_market_calendars==4.1.4
 #backtrader
 #backtrader_plotting
-tabulate==0.9.0
-prettyprint
+#tabulate==0.9.0
+#prettyprint
 #vectorbt==0.25.4
 #ta
 #pandas_ta
-pymongo
+
 

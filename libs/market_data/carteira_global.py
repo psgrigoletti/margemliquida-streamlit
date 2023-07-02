@@ -99,10 +99,3 @@ class CarteiraGlobal:
             dividendos['DY'] = (dividendos['Dividends']/dividendos['Close'])*100.0
         dividendos.dropna(inplace=True)
         return dividendos
-    
-# cg = CarteiraGlobal("jZscuLc4sN6dPO4FfOiSn7617Meab4B51GdL31ri")
-# div = cg.retornar_dividendos('WEGE3', '2022-01-01', '2023-01-01')
-# cot = cg.retornar_cotacoes('WEGE3', '2022-01-01', '2023-01-01')
-
-# print(div.tail())
-# print(cot.tail())

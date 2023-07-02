@@ -2,18 +2,12 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 from datetime import date
-from st_pages import add_page_title
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-descricao = "Rentabilidades mensais"
-
-# Construção da página
-
-
-def run():
-    st.title(descricao)
+def main():
+    st.title("Rentabilidades mensais")
     mensagens = st.container()
 
     with st.expander("Escolha", expanded=True):
@@ -106,6 +100,3 @@ def run():
             ax.xaxis.tick_top()
             plt.ylabel('')
             st.pyplot(fig)
-
-
-run()

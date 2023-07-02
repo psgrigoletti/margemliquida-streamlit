@@ -16,7 +16,7 @@ authenticator = stauth.Authenticate(
     config['cookie']['name'],
     config['cookie']['key'],
     config['cookie']['expiry_days'],
-    config['preauthorized']
+    None
 )
 
 _, col1, _ = st.columns(3)
@@ -41,6 +41,9 @@ if authentication_status:
         st.write("---")
         st.markdown(f"Usuário: {name}")
         st.markdown("Versão 1.0")
+        st.write("---")
+        st.write("**Encontrou algum problema?**")
+        st.write("[Me avise](https://github.com/psgrigoletti/margemliquida-streamlit/issues/new?title=escreva%20o%20seu%20titulo&body=escreva%20o%20seu%20comentario) por favor.")
 
     Menu.carregar_pagina(pagina)
 elif authentication_status == False:

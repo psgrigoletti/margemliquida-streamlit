@@ -306,7 +306,6 @@ def main():
     </style>
     """, unsafe_allow_html=True)
 
-    adicionar_avisos_dev()
     alertas = st.empty()
     dados = get_resultado()
     setores = fd.setor._setor
