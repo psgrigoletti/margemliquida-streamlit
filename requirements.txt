@@ -7,14 +7,19 @@ streamlit-authenticator==0.2.2
 streamlit_option_menu==0.3.6
 
 # Gerais
+pandas==2.0.3
+numpy==1.25.0
+
+# Fontes de dados
 yfinance==0.2.22
 python-bcb==0.1.9
-pandas==2.0.3
-plotly==5.15.0
-numpy==1.25.0
+sidrapy==0.1.4
 fundamentus==0.2.0
+
+# Gráficos
 matplotlib==3.7.1
 seaborn==0.12.2
+plotly==5.15.0
 
 # Banco de dados
 pymongo==4.4.0
@@ -26,7 +31,6 @@ pymongo==4.4.0
 #python-bcb==0.1.9
 #holidays
 #workalendar
-#sidrapy
 #scipy
 #pandas_market_calendars==4.1.4
 #backtrader
