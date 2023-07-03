@@ -1,12 +1,14 @@
 class Menu:
     labels = ["Inicial",
+              "Carteira",
               "Inflação",
               "Tesouro Direto",
               "Dias Consecutivos",
-              "Factor Investing",
+              "Comparativo de Fundamentos",
               "Panorama de Mercado",
               "Rentabilidades mensais",
-              "Dividendos"]
+              "Dividendos",
+              "Factor Investing"]
 
     def __init__(self):
         pass
@@ -29,7 +31,7 @@ class Menu:
             from paginas.page_dias_consecutivos import main
             main()
 
-        if selecionada == "Factor Investing":
+        if selecionada == "Comparativo de Fundamentos":
             from paginas.page_comparativo_fundamentos import main
             main()
             
@@ -44,3 +46,12 @@ class Menu:
         if selecionada == "Dividendos":
             from paginas.page_dividendos import main
             main()
+
+        if selecionada == "Carteira":
+            from paginas.page_comparador_carteiras import main
+            main()
+            
+        if selecionada == "Factor Investing":
+            from paginas.page_factor_investing import main
+            main()
+        

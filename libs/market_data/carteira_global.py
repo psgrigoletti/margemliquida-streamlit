@@ -14,7 +14,7 @@ class CarteiraGlobal:
         self.headers = {'x-api-key': token}
         
     def retornar_lista_fiis(self):
-        url = f"https://api.carteiraglobal.com/equity/fiis"
+        url = "https://api.carteiraglobal.com/equity/fiis"
         req = requests.get(url, headers = self.headers)
         response = req.json()
         df = pd.DataFrame(response)
@@ -26,7 +26,7 @@ class CarteiraGlobal:
         return tickers
 
     def retornar_lista_acoes(self):
-        url = f"https://api.carteiraglobal.com/equity/stocks"
+        url = "https://api.carteiraglobal.com/equity/stocks"
         req = requests.get(url, headers = self.headers)
         response = req.json()
         df = pd.DataFrame(response)

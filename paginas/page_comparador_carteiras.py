@@ -4,42 +4,40 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 import yfinance as yf
-from st_pages import add_page_title
 from tabulate import tabulate
-from utils.streamlit_utils import adicionar_avisos_dev
-
-
-st.set_page_config(layout="wide")
-add_page_title()
-adicionar_avisos_dev()
-alertas = st.empty()
-
-hoje = date.today()
-ano_passado = date(hoje.year - 1, hoje.month, hoje.day)
-
 
 def mostrar_pagina():
     if 'carteiras' not in st.session_state:
         st.session_state['carteiras'] = {}
 
-    def criar_carteira(cotacoes, alocacoes):
-        cotacao_inicial = cotacoes.iloc[0]
-        pl = cotacoes * (round(alocacoes/cotacao_inicial, 0))
-        # st.write(pl)
-        pl['total'] = pl.sum(axis=1)
-        normalizado = pl/pl.iloc[0]
-        carteira_final = normalizado['total']
-        return carteira_final
+def criar_carteira(cotacoes, alocacoes):
+    cotacao_inicial = cotacoes.iloc[0]
+    pl = cotacoes * (round(alocacoes/cotacao_inicial, 0))
+    # st.write(pl)
+    pl['total'] = pl.sum(axis=1)
+    normalizado = pl/pl.iloc[0]
+    carteira_final = normalizado['total']
+    return carteira_final
 
-    def plotar_grafico(benchmarks, carteiras: dict):
-        import matplotlib.pyplot as plt
-        fig = plt.figure(figsize=(15, 10))
-        for b in benchmarks.values():
-            plt.plot(b)
-        for c in carteiras.values():
-            plt.plot(c)
-        plt.legend(list(benchmarks.keys()) + list(carteiras.keys()))
-        st.pyplot(fig, )
+def plotar_grafico(benchmarks, carteiras: dict):
+    import matplotlib.pyplot as plt
+    fig = plt.figure(figsize=(12, 8))
+    for b in benchmarks.values():
+        plt.plot(b)
+    for c in carteiras.values():
+        plt.plot(c)
+    plt.legend(list(benchmarks.keys()) + list(carteiras.keys()))
+    st.pyplot(fig, )
+
+def main():
+    st.title(":straight_ruler: Comparar Carteira", )
+    
+    mostrar_pagina()
+    alertas = st.empty()
+
+    hoje = date.today()
+    ano_passado = date(hoje.year - 1, hoje.month, hoje.day)
+
 
     with st.expander("**Adicionar carteira**", expanded=False):
         lista_ibovespa = ['RRRP3', 'ALSO3', 'ALPA4', 'ABEV3', 'ARZZ3',
@@ -64,7 +62,7 @@ def mostrar_pagina():
 
         df = pd.DataFrame(columns=["Reais (R$)"], index=[
             a + '.SA' for a in acoes_selecionadas]).transpose()
-        df_editavel = st.experimental_data_editor(df)
+        df_editavel = st.data_editor(df)
 
         if st.button("Adicionar carteira"):
             if len(acoes_selecionadas) <= 1:
@@ -138,13 +136,3 @@ def mostrar_pagina():
 
         # Plota o gráfico
         plotar_grafico(benchmarks_dict, carteiras_dict)
-
-
-if 'logado' in st.session_state:
-    st.write("Logado? " + str(st.session_state['logado']))
-    if st.session_state['logado'] == True:
-        if st.button("Sair"):
-            st.session_state['logado'] = False
-        mostrar_pagina()
-    else:
-        st.write("Faça o login!")
