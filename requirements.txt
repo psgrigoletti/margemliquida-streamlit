@@ -6,6 +6,7 @@ pip==23.1.2
 streamlit==1.24.0
 streamlit-authenticator==0.2.2
 streamlit_option_menu==0.3.6
+extra-streamlit-components==0.1.56
 
 # Gerais
 pandas==2.0.3

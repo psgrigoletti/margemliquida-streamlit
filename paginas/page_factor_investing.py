@@ -1,167 +1,377 @@
-from matplotlib import pyplot as plt
 import streamlit as st
 import pandas as pd
 from libs.market_data.fundamentus.lista import get_df_acoes, get_df_fiis
+import extra_streamlit_components as stx
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
 
 @st.cache_data(show_spinner="Buscando dados fundamentalistas para ações.", ttl=3600)
-def get_resultado_acoes():
+def busca_dados_acoes():
     df = get_df_acoes()
-    df = df[df["Div.Yield"]>0]
-    df = df[df["Cotação"]>0]
-    df = df[df["Liq. Corr."]>0]
-    df = df[df["Liq.2meses"]>0]
+    df = df[df["Div.Yield"] > 0]
+    df = df[df["Cotação"] > 0]
+    df = df[df["Liq. Corr."] > 0]
+    df = df[df["Liq.2meses"] > 0]
+    st.session_state["lista_acoes"] = df
     return df
 
+
 @st.cache_data(show_spinner="Buscando dados fundamentalistas para FIIs.", ttl=3600)
-def get_resultado_fiis():
+def busca_dados_fiis():
     df = get_df_fiis()
     df = df[df["Dividend Yield"] > 0]
     df = df[df["Cotação"] > 0]
     df = df[df["Liquidez"] > 0]
-    return df 
+    st.session_state["lista_fiis"] = df
+    return df
+
+
+def busca_df_fiis_do_cache():
+    if "lista_fiis" not in st.session_state:
+        df = busca_dados_fiis()
+        st.session_state["lista_fiis"] = df
+    else:
+        df = st.session_state["lista_fiis"]
+    return df
+
+
+def busca_df_acoes_do_cache():
+    if "lista_acoes" not in st.session_state:
+        df = busca_dados_acoes()
+        st.session_state["lista_acoes"] = df
+    else:
+        df = st.session_state["lista_acoes"]
+    return df
+
+
+def is_dados_carregados():
+    return "lista_fiis" in st.session_state and "lista_acoes" in st.session_state
+
+
+def mostrar_tab_fiis():
+    st.write("## FIIs")
+    st.markdown("**Filtros iniciais:** Dividend Yield > 0; Cotação > 0; Liquidez > 0")
+
+    filtros = {}
+
+    with st.form("form_fiis"):
+        mostrar_filtros_fiis(filtros)
+        filtrar_fiis = st.form_submit_button("Filtrar")
+
+    if filtrar_fiis:
+        df_fiis_tela = filtrar_df_fiis(filtros)
+
+        tab_detalhes_1, tab_detalhes_2, tab_detalhes_3 = st.tabs(
+            [
+                ":memo: Resultados",
+                ":bar_chart: Gráficos",
+                ":straight_ruler: Estatísticas",
+            ]
+        )
+
+        with tab_detalhes_1:
+            mostrar_tab_resultados(df_fiis_tela)
+
+        with tab_detalhes_2:
+            titulo = "Gráficos sobre os FIIs selecionados"
+            graficos = [
+                "Cotação",
+                "Dividend Yield",
+                "P/VP",
+                "Valor de Mercado",
+                "Liquidez",
+            ]
+
+            mostrar_tab_graficos(df_fiis_tela, titulo, graficos, 3, 2)
+
+        with tab_detalhes_3:
+            mostrar_tab_estatisticas(df_fiis_tela)
+
+
+def mostrar_tab_detalhes():
+    tab_detalhes = stx.tab_bar(
+        data=[
+            stx.TabBarItemData(
+                id="tab_resultados",
+                title="Resultados",
+                description="Resultados",
+            ),
+            stx.TabBarItemData(
+                id="tab_estatisticas",
+                title="Estatísticas",
+                description="Estatísticas",
+            ),
+            stx.TabBarItemData(
+                id="tab_graficos",
+                title="Gráficos",
+                description="Gráficos",
+            ),
+        ],
+        default="tab_resultados",
+        key="tab_detalhes",
+    )
+
+    return tab_detalhes
+
+
+def mostrar_tab_estatisticas(df_tela):
+    st.write("#### Estatísticas")
+    df_stats = pd.DataFrame()
+    df_stats["Menor valor"] = df_tela.min(numeric_only=True)
+    df_stats["Valor médio"] = df_tela.mean(numeric_only=True)
+    df_stats["Desvio padrão"] = df_tela.std(numeric_only=True)
+    df_stats["Maior valor"] = df_tela.max(numeric_only=True)
+
+    st.write(df_stats)
+
+
+def mostrar_tab_graficos(df, titulo, graficos, numero_colunas, numero_linhas):
+    fig = make_subplots(
+        rows=numero_linhas, cols=numero_colunas, subplot_titles=graficos
+    )
+
+    col_atual = 1
+    row_atual = 1
+
+    for g in graficos:
+        fig.add_trace(
+            go.Bar(x=df.index, y=df[g], name=g),
+            row=row_atual,
+            col=col_atual,
+        )
+        fig.add_hline(
+            y=df[g].mean(),
+            line_dash="dot",
+            annotation_text="Média",
+            annotation_position="bottom right",
+            row=row_atual,
+            col=col_atual,
+        )
+
+        if col_atual == numero_colunas:
+            row_atual += 1
+            col_atual = 1
+        else:
+            col_atual += 1
+
+    fig.update_layout(
+        height=800,
+        width=1200,
+        title_text=titulo,
+    )
+
+    st.plotly_chart(fig)
+
+
+def mostrar_tab_resultados(df):
+    st.write("#### " + str(df.count().unique()[0]) + " registros retornados")
+    st.write(df)
+
+
+def mostrar_filtros_acoes(filtros):
+    df_acoes = busca_df_acoes_do_cache().copy()
+    col1, _, col2, _, col3, _ = st.columns([4, 1, 4, 1, 4, 1])
+
+    with col1:
+        menor_cotacao = float(df_acoes["Cotação"].min(numeric_only=True))
+        maior_cotacao = float(df_acoes["Cotação"].max(numeric_only=True))
+
+        filtros["cotacao"] = st.slider(
+            "Cotação",
+            menor_cotacao,
+            maior_cotacao,
+            (menor_cotacao, maior_cotacao),
+            step=1.0,
+            format="R$ %.2f",
+        )
+
+        menor_liquidez = float(df_acoes["Liq. Corr."].min(numeric_only=True))
+        maior_liquidez = float(df_acoes["Liq. Corr."].max(numeric_only=True))
+
+        filtros["Liq. Corr."] = st.slider(
+            "Liquidez Corrente",
+            menor_liquidez,
+            maior_liquidez,
+            (menor_liquidez, maior_liquidez),
+            step=1.0,
+            format="%.2f",
+        )
+
+    with col2:
+        pass
+
+    with col3:
+        pass
+
+
+def mostrar_filtros_fiis(filtros):
+    df_fiis = busca_df_fiis_do_cache().copy()
+    col1, _, col2, _, col3, _ = st.columns([4, 1, 4, 1, 4, 1])
+
+    with col1:
+        segmentos_possiveis = ["Todos"] + list(df_fiis["Segmento"].dropna().unique())
+        filtros["segmento"] = st.selectbox("Segmento:", segmentos_possiveis)
+
+        menor_liquidez = float(df_fiis["Liquidez"].min(numeric_only=True))
+        maior_liquidez = float(df_fiis["Liquidez"].max(numeric_only=True))
+
+        filtros["Liquidez"] = st.slider(
+            "Liquidez",
+            menor_liquidez,
+            maior_liquidez,
+            (menor_liquidez, maior_liquidez),
+            step=1.0,
+            format="%.2f",
+        )
+
+    with col2:
+        menor_cotacao = float(df_fiis["Cotação"].min(numeric_only=True))
+        maior_cotacao = float(df_fiis["Cotação"].max(numeric_only=True))
+
+        filtros["cotacao"] = st.slider(
+            "Cotação",
+            menor_cotacao,
+            maior_cotacao,
+            (menor_cotacao, maior_cotacao),
+            step=1.0,
+            format="R$ %.2f",
+        )
+
+        menor_pvp = float(df_fiis["P/VP"].min(numeric_only=True))
+        maior_pvp = float(df_fiis["P/VP"].max(numeric_only=True))
+
+        filtros["pvp"] = st.slider(
+            "P/VP",
+            menor_pvp,
+            maior_pvp,
+            (menor_pvp, maior_pvp),
+            step=0.1,
+            format="%.2f",
+        )
+
+    with col3:
+        filtros["dy"] = st.slider(
+            "Dividend Yield (%)", 0, 100, (0, 100), step=1, format="%.2f"
+        )
+
+        menor_valor_mercado = (
+            float(df_fiis["Valor de Mercado"].min(numeric_only=True)) / 1000000
+        )
+        maior_valor_mercado = (
+            float(df_fiis["Valor de Mercado"].max(numeric_only=True)) / 1000000
+        )
+
+        filtros["valor_mercado"] = st.slider(
+            "Valor mínimo de Mercado",
+            menor_valor_mercado,
+            maior_valor_mercado,
+            value=menor_valor_mercado,
+            step=1.0,
+            format="%.2f milhões de R$",
+        )
+
+
+def filtrar_df_acoes(filtros):
+    df_tela = busca_df_acoes_do_cache().copy()
+
+    df_tela = df_tela[df_tela["Cotação"] >= filtros["cotacao"][0]]
+    df_tela = df_tela[df_tela["Cotação"] <= filtros["cotacao"][1]]
+
+    df_tela.set_index("Papel", drop=True, inplace=True)
+
+    return df_tela
+
+
+def filtrar_df_fiis(filtros):
+    df_tela = busca_df_fiis_do_cache().copy()
+
+    if filtros["segmento"] != "Todos":
+        df_tela = df_tela[df_tela["Segmento"] == filtros["segmento"]]
+
+    df_tela = df_tela[df_tela["Cotação"] >= filtros["cotacao"][0]]
+    df_tela = df_tela[df_tela["Cotação"] <= filtros["cotacao"][1]]
+
+    df_tela = df_tela[df_tela["Dividend Yield"] >= filtros["dy"][0] / 100]
+    df_tela = df_tela[df_tela["Dividend Yield"] <= filtros["dy"][1] / 100]
+
+    df_tela = df_tela[df_tela["P/VP"] >= filtros["pvp"][0]]
+    df_tela = df_tela[df_tela["P/VP"] <= filtros["pvp"][1]]
+
+    df_tela = df_tela[df_tela["Liquidez"] >= filtros["Liquidez"][0]]
+    df_tela = df_tela[df_tela["Liquidez"] <= filtros["Liquidez"][1]]
+
+    df_tela = df_tela[df_tela["Valor de Mercado"] >= filtros["valor_mercado"] * 1000000]
+
+    df_tela.set_index("Papel", drop=True, inplace=True)
+
+    return df_tela
+
+
+def mostrar_tab_acoes():
+    st.write("## Ações")
+    st.markdown(
+        "**Filtros iniciais:** Dividend Yield > 0; Cotação > 0; Liq. Corr. > 0; Liq.2meses > 0"
+    )
+
+    filtros = {}
+
+    with st.form("form_acoes"):
+        mostrar_filtros_acoes(filtros)
+        filtrar_acoes = st.form_submit_button("Filtrar")
+
+    if filtrar_acoes:
+        df_acoes_tela = filtrar_df_acoes(filtros)
+
+        tab_detalhes_1, tab_detalhes_2, tab_detalhes_3 = st.tabs(
+            [
+                ":memo: Resultados",
+                ":bar_chart: Gráficos",
+                ":straight_ruler: Estatísticas",
+            ]
+        )
+
+        with tab_detalhes_1:
+            mostrar_tab_resultados(df_acoes_tela)
+
+        with tab_detalhes_2:
+            titulo = "Gráficos sobre os Ações selecionadas"
+            graficos = [
+                "Cotação",
+                "P/L",
+                "P/VP",
+                "Div.Yield",
+                "ROIC",
+                "ROE",
+                "Liq. Corr.",
+            ]
+
+            mostrar_tab_graficos(df_acoes_tela, titulo, graficos, 3, 3)
+
+        with tab_detalhes_3:
+            mostrar_tab_estatisticas(df_acoes_tela)
+
 
 def main():
     st.title(":star: Factor Investing")
     mensagens = st.container()
 
-    if st.button("Carregar dados...") or ('lista_fiis' in st.session_state and 'lista_acoes' in st.session_state):
-        
-        tab1, tab2 = st.tabs(["Ações", "FIIs"])
-        with tab1:
-            st.write("## Ações")
-            st.markdown("**Filtros iniciais:** Dividend Yield > 0; Cotação > 0; Liq. Corr. > 0; Liq.2meses > 0") 
+    if st.button("Carregar dados...") or (is_dados_carregados()):
+        tab_geral = stx.tab_bar(
+            data=[
+                stx.TabBarItemData(id="tab_acoes", title="Ações", description="Ações"),
+                stx.TabBarItemData(id="tab_fiis", title="FIIs", description="FIIs"),
+            ],
+            default="tab_acoes",
+            key="tab_geral",
+        )
 
-            if 'lista_acoes' not in st.session_state:
-                df_acoes = get_resultado_acoes()
-                st.session_state['lista_acoes'] = df_acoes
-            else:
-                df_acoes = st.session_state['lista_acoes']
+        busca_df_fiis_do_cache()
+        busca_df_acoes_do_cache()
 
-            st.write(df_acoes)
+        if tab_geral == "tab_acoes":
+            mostrar_tab_acoes()
 
-        with tab2:        
-            st.write("## FIIs")
-            st.markdown("**Filtros iniciais:** Dividend Yield > 0; Cotação > 0; Liquidez > 0")      
-
-            if 'lista_fiis' not in st.session_state:
-                df_fiis = get_resultado_fiis()
-                st.session_state['lista_fiis'] = df_fiis
-            else:
-                df_fiis = st.session_state['lista_fiis']
-
-
-            with st.form("form_fiis"):
-                col1, _, col2, _, col3, _ = st.columns([4,1,4,1,4,1])
-
-                with col1:
-                    segmentos_possiveis = ["Todos"] + list(df_fiis["Segmento"].dropna().unique())
-                    filtro_segmento = st.selectbox("Segmento:", segmentos_possiveis)
-
-                with col2:       
-                    menor_cotacao = float(df_fiis["Cotação"].min(numeric_only=True))
-                    maior_cotacao = float(df_fiis["Cotação"].max(numeric_only=True))
-                    
-                    filtro_cotacao = st.slider("Cotação", menor_cotacao, maior_cotacao,
-                                            (menor_cotacao, maior_cotacao), step=1.0, format="R$ %.2f")
-
-                    menor_pvp = float(df_fiis["P/VP"].min(numeric_only=True))
-                    maior_pvp = float(df_fiis["P/VP"].max(numeric_only=True))
-                    
-                    filtro_pvp = st.slider("P/VP", menor_pvp, maior_pvp,
-                                            (menor_pvp, maior_pvp), step=0.1, format="%.2f")
-
-                with col3:        
-                    filtro_dy = st.slider("Dividend Yield (%)", 0, 100,
-                                            (0, 100), step=1, format="%.2f")
-                    
-                    menor_valor_mercado = float(df_fiis["Valor de Mercado"].min(numeric_only=True))/1000000
-                    maior_valor_mercado = float(df_fiis["Valor de Mercado"].max(numeric_only=True))/1000000
-                    
-                    filtro_valor_mercado = st.slider("Valor mínimo de Mercado", 
-                                                     menor_valor_mercado,
-                                                    maior_valor_mercado, 
-                                                    value=menor_valor_mercado,
-                                                    step=1.0, format="%.2f milhões de R$")
-                    
-                    #pergunta = st.text_input("Pergunta para o ChatGPT:", "Considerando cotação, dy e p/vp, qual melhor ativo para comprar hoje, se tenho 10 mil reais?")
-                        
-                if st.form_submit_button("Filtrar"):
-                    df_fiis_tela = df_fiis.copy()
-                    if filtro_segmento != "Todos":
-                        df_fiis_tela = df_fiis_tela[df_fiis_tela["Segmento"] == filtro_segmento]
-                    df_fiis_tela = df_fiis_tela[df_fiis_tela["Cotação"] >= filtro_cotacao[0]]            
-                    df_fiis_tela = df_fiis_tela[df_fiis_tela["Cotação"] <= filtro_cotacao[1]] 
-                    df_fiis_tela = df_fiis_tela[df_fiis_tela["Dividend Yield"] >= filtro_dy[0]/100]            
-                    df_fiis_tela = df_fiis_tela[df_fiis_tela["Dividend Yield"] <= filtro_dy[1]/100] 
-                    df_fiis_tela = df_fiis_tela[df_fiis_tela["P/VP"] >= filtro_pvp[0]]            
-                    df_fiis_tela = df_fiis_tela[df_fiis_tela["P/VP"] <= filtro_pvp[1]] 
-                    df_fiis_tela = df_fiis_tela[df_fiis_tela["Valor de Mercado"] >= filtro_valor_mercado*1000000]            
-                    df_fiis_tela.set_index('Papel', drop=True, inplace=True)
-                                        
-                    tab_resultado, tab_stats = st.tabs(["Resultado", "Estatísticas"])
-                    
-                    with tab_resultado:
-                        st.write("#### " + str(df_fiis_tela.count().unique()[0]) + " registros retornados")
-                        st.write(df_fiis_tela)
-                        
-                        import plotly.express as px
-                        import plotly.graph_objects as go
-
-                        fiis = df_fiis_tela.index
-
-                        fig = go.Figure(data=[
-                            go.Bar(name='Cotação', x=fiis, y=df_fiis_tela["Cotação"]),
-                            go.Bar(name='DY', x=fiis, y=df_fiis_tela["Dividend Yield"]),
-                            go.Bar(name='P/VP', x=fiis, y=df_fiis_tela["P/VP"]),
-                            go.Bar(name='Valor de Mercado', x=fiis, y=df_fiis_tela["Valor de Mercado"]),                            
-                            go.Bar(name='Liquidez', x=fiis, y=df_fiis_tela["Liquidez"]),                            
-                        ])
-                        # Change the bar mode
-                        fig.update_layout(barmode='group')
-
-
-                        #pd.options.plotting.backend = "plotly"
-                        #fig = px.bar(df_fiis_tela, x= df_fiis_tela.index, y = ['Cotação', 'Dividend Yield', "P/VP", "Valor de Mercado", "Liquidez"])
-                        st.plotly_chart(fig)
-
-                    with tab_stats:
-                        st.write("#### Estatísticas")
-                        df_fiis_stats = pd.DataFrame()
-                        df_fiis_stats["Menor valor"] = df_fiis_tela.min(numeric_only=True)
-                        df_fiis_stats["Valor médio"] = df_fiis_tela.mean(numeric_only=True)
-                        df_fiis_stats["Desvio padrão"] = df_fiis_tela.std(numeric_only=True)
-                        df_fiis_stats["Maior valor"] = df_fiis_tela.max(numeric_only=True)
-
-                        st.write(df_fiis_stats)
-                    
-                    # from pandasai.llm.openai import OpenAI
-                    # from pandasai import PandasAI
-
-                    # OPEN_API_TOKEN = st.secrets["open_api"]["token"]
-
-                    # llm = OpenAI(api_token=OPEN_API_TOKEN)
-                    
-                    # pandas_ai = PandasAI(llm)
-                    
-                    # st.write("### Resposta do ChatGPT")
-                    
-                    # df_ia = pandas_ai(df_fiis_tela, prompt=pergunta)
-                    # st.write(df_ia)
-                
-                
-            # ranking = pd.DataFrame()
-            # ranking['pos'] = range(1,151)
-            # #st.write(ranking)        
-            # ranking['EV/EBIT'] = df[ df['evebit'] > 0 ].sort_values(by=['evebit']).index[:150].values
-            # ranking['ROIC'] = df.sort_values(by=['roic'], ascending=False).index[:150].values
-            # #st.write(ranking)    
-            # ranking = pd.concat([
-            #     ranking.pivot_table(columns='EV/EBIT', values='pos'),
-            #     ranking.pivot_table(columns='ROIC', values='pos')
-            # ])
-            # ranking = ranking.dropna(axis=1).sum()
-            # n_shares = 20
-            # magic_formula = ranking.sort_values()[:n_shares]
-            # st.write(magic_formula)
-        
-        
+        elif tab_geral == "tab_fiis":
+            mostrar_tab_fiis()
