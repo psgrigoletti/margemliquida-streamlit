@@ -1,4 +1,4 @@
-# Ultima revisão: 02/07/2023
+# Ultima revisão: 03/07/2023
 
 pip==23.1.2
 
@@ -9,6 +9,7 @@ streamlit_option_menu==0.3.6
 
 # Gerais
 pandas==2.0.3
+#pandasai==0.6.7 -> minha conta não tem créditos
 numpy==1.25.0
 
 # Datas
