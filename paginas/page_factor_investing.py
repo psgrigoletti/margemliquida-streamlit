@@ -165,6 +165,38 @@ def mostrar_tab_graficos(df, titulo, graficos, numero_colunas, numero_linhas):
     st.plotly_chart(fig)
 
 
+def mostrar_tab_magic_formula(df):
+    manter = ["ROIC", "EV/EBIT"]
+    remover = [col for col in df.columns if col not in manter]
+    df = df.drop(remover, axis=1)
+
+    df["EV/EBIT"] = df["EV/EBIT"].astype(float)
+    df = df[df["EV/EBIT"] > 0]
+    df = df.sort_values(by="EV/EBIT", ascending=True)
+    df["Ranking EV/EBIT"] = range(1, len(df) + 1)
+
+    df["ROIC"] = df["ROIC"].astype(float)
+    df = df[df["ROIC"] > 0]
+    df = df.sort_values(by="ROIC", ascending=False)
+    df["Ranking ROIC"] = range(1, len(df) + 1)
+
+    df["Magic Formula"] = df["Ranking EV/EBIT"] + df["Ranking ROIC"]
+    df["Ranking Magic Formula"] = range(1, len(df) + 1)
+    df = df.sort_values("Ranking Magic Formula", ascending=True)
+
+    col1, col2 = st.columns([2, 6])
+    with col1:
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write("")
+        col1.image("imagens/livro-formula-magica.jpeg", width=250)
+    with col2:
+        st.write("#### " + str(df.count().unique()[0]) + " registros retornados")
+        st.write(df)
+
+
 def mostrar_tab_resultados(df):
     st.write("#### " + str(df.count().unique()[0]) + " registros retornados")
     st.write(df)
@@ -213,6 +245,10 @@ def mostrar_filtros_fiis(filtros):
     with col1:
         segmentos_possiveis = ["Todos"] + list(df_fiis["Segmento"].dropna().unique())
         filtros["segmento"] = st.selectbox("Segmento:", segmentos_possiveis)
+
+        filtros["Ignorar mercado balcão"] = st.checkbox(
+            "Ignorar mercado balcão", help="Ticker terminados em 11B"
+        )
 
         menor_liquidez = float(df_fiis["Liquidez"].min(numeric_only=True))
         maior_liquidez = float(df_fiis["Liquidez"].max(numeric_only=True))
@@ -280,6 +316,12 @@ def filtrar_df_acoes(filtros):
     df_tela = df_tela[df_tela["Cotação"] <= filtros["cotacao"][1]]
 
     df_tela.set_index("Papel", drop=True, inplace=True)
+    df_tela["ROE"] = df_tela["ROE"] * 100.0
+    df_tela["ROIC"] = df_tela["ROIC"] * 100.0
+    df_tela["Div.Yield"] = df_tela["Div.Yield"] * 100.0
+    df_tela["Cresc. Rec.5a"] = df_tela["Cresc. Rec.5a"] * 100.0
+    df_tela["Mrg Ebit"] = df_tela["Mrg Ebit"] * 100.0
+    df_tela["Mrg. Líq."] = df_tela["Mrg. Líq."] * 100.0
 
     return df_tela
 
@@ -289,6 +331,9 @@ def filtrar_df_fiis(filtros):
 
     if filtros["segmento"] != "Todos":
         df_tela = df_tela[df_tela["Segmento"] == filtros["segmento"]]
+
+    if filtros["Ignorar mercado balcão"]:
+        df_tela = df_tela.loc[~df_tela["Papel"].str.endswith("11B")]
 
     df_tela = df_tela[df_tela["Cotação"] >= filtros["cotacao"][0]]
     df_tela = df_tela[df_tela["Cotação"] <= filtros["cotacao"][1]]
@@ -324,11 +369,12 @@ def mostrar_tab_acoes():
     if filtrar_acoes:
         df_acoes_tela = filtrar_df_acoes(filtros)
 
-        tab_detalhes_1, tab_detalhes_2, tab_detalhes_3 = st.tabs(
+        tab_detalhes_1, tab_detalhes_2, tab_detalhes_3, tab_detalhes_4 = st.tabs(
             [
                 ":memo: Resultados",
                 ":bar_chart: Gráficos",
                 ":straight_ruler: Estatísticas",
+                ":magic_wand: Fórmula Mágica",
             ]
         )
 
@@ -351,6 +397,9 @@ def mostrar_tab_acoes():
 
         with tab_detalhes_3:
             mostrar_tab_estatisticas(df_acoes_tela)
+
+        with tab_detalhes_4:
+            mostrar_tab_magic_formula(df_acoes_tela)
 
 
 def main():
