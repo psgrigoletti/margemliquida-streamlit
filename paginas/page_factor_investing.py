@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+import yfinance as yf
 import streamlit as st
 import pandas as pd
 from libs.market_data.fundamentus.lista import get_df_acoes, get_df_fiis
@@ -63,16 +65,25 @@ def mostrar_tab_fiis():
     if filtrar_fiis:
         df_fiis_tela = filtrar_df_fiis(filtros)
 
-        tab_detalhes_1, tab_detalhes_2, tab_detalhes_3 = st.tabs(
+        tab_detalhes_1, tab_detalhes_2, tab_detalhes_3, tab_detalhes_4 = st.tabs(
             [
                 ":memo: Resultados",
                 ":bar_chart: Gráficos",
                 ":straight_ruler: Estatísticas",
+                ":magic_wand: Fórmula Mágica",
             ]
         )
 
         with tab_detalhes_1:
             mostrar_tab_resultados(df_fiis_tela)
+
+            acoes = [i + ".SA" for i in df_fiis_tela.index]
+            pd.options.plotting.backend = "plotly"
+
+            df_fechamento = yf.download(acoes, "2022-01-01")
+            df_fechamento = df_fechamento / df_fechamento.iloc[1]
+            fig = df_fechamento["Adj Close"].plot()
+            st.plotly_chart(fig, use_container_width=True)
 
         with tab_detalhes_2:
             titulo = "Gráficos sobre os FIIs selecionados"
@@ -88,6 +99,9 @@ def mostrar_tab_fiis():
 
         with tab_detalhes_3:
             mostrar_tab_estatisticas(df_fiis_tela)
+
+        with tab_detalhes_4:
+            mostrar_tab_magic_formula_fiis(df_fiis_tela)
 
 
 def mostrar_tab_detalhes():
@@ -165,7 +179,9 @@ def mostrar_tab_graficos(df, titulo, graficos, numero_colunas, numero_linhas):
     st.plotly_chart(fig)
 
 
-def mostrar_tab_magic_formula(df):
+def mostrar_tab_magic_formula_acoes(
+    df,
+):
     manter = ["ROIC", "EV/EBIT"]
     remover = [col for col in df.columns if col not in manter]
     df = df.drop(remover, axis=1)
@@ -194,7 +210,54 @@ def mostrar_tab_magic_formula(df):
         col1.image("imagens/livro-formula-magica.jpeg", width=250)
     with col2:
         st.write("#### " + str(df.count().unique()[0]) + " registros retornados")
-        st.write(df)
+        st.data_editor(
+            df,
+        )
+
+
+def mostrar_tab_magic_formula_fiis(
+    df,
+):
+    manter = ["Dividend Yield", "P/VP"]
+    remover = [col for col in df.columns if col not in manter]
+    df = df.drop(remover, axis=1)
+
+    df["Dividend Yield"] = df["Dividend Yield"].astype(float)
+    df = df[df["Dividend Yield"] > 0]
+    df = df.sort_values(by="Dividend Yield", ascending=False)
+    df["Ranking Dividend Yield"] = range(1, len(df) + 1)
+
+    df["P/VP"] = df["P/VP"].astype(float)
+    df = df[df["P/VP"] > 0]
+    df = df.sort_values(by="P/VP", ascending=True)
+    df["Ranking P/VP"] = range(1, len(df) + 1)
+
+    df["Magic Formula"] = df["Ranking Dividend Yield"] + df["Ranking P/VP"]
+    df["Ranking Magic Formula"] = range(1, len(df) + 1)
+    df = df.sort_values("Ranking Magic Formula", ascending=True)
+
+    col1, col2 = st.columns([2, 6])
+    with col1:
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write("")
+        st.write("")
+        col1.image("imagens/livro-formula-magica.jpeg", width=250)
+    with col2:
+        st.write("#### " + str(df.count().unique()[0]) + " registros retornados")
+        st.data_editor(
+            df,
+            column_config={
+                "Dividend Yield": st.column_config.NumberColumn(
+                    "Dividend Yield",
+                    help="Dividend Yield",
+                    width="small",
+                    required=True,
+                    format="%.2f %%",
+                )
+            },
+        )
 
 
 def mostrar_tab_resultados(df):
@@ -358,6 +421,7 @@ def filtrar_df_fiis(filtros):
     df_tela = df_tela[df_tela["Valor de Mercado"] >= filtros["valor_mercado"] * 1000000]
 
     df_tela.set_index("Papel", drop=True, inplace=True)
+    df_tela["Dividend Yield"] = df_tela["Dividend Yield"] * 100.0
 
     return df_tela
 
@@ -388,6 +452,13 @@ def mostrar_tab_acoes():
 
         with tab_detalhes_1:
             mostrar_tab_resultados(df_acoes_tela)
+            acoes = [i + ".SA" for i in df_acoes_tela.index]
+            pd.options.plotting.backend = "plotly"
+
+            df_fechamento = yf.download(acoes, "2022-01-01")
+            df_fechamento = df_fechamento / df_fechamento.iloc[1]
+            fig = df_fechamento["Adj Close"].plot()
+            st.plotly_chart(fig, use_container_width=True)
 
         with tab_detalhes_2:
             titulo = "Gráficos sobre os Ações selecionadas"
@@ -407,7 +478,7 @@ def mostrar_tab_acoes():
             mostrar_tab_estatisticas(df_acoes_tela)
 
         with tab_detalhes_4:
-            mostrar_tab_magic_formula(df_acoes_tela)
+            mostrar_tab_magic_formula_acoes(df_acoes_tela)
 
 
 def main():

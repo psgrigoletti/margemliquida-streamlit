@@ -42,7 +42,11 @@ class ItemClassificar:
         return f"{self.ticker}: {self.valor}, classificao {self.classificao}"
 
     def __eq__(self, other):
-        return self.ticker == other.ticker and self.valor == other.valor and self.classificao == other.classificao
+        return (
+            self.ticker == other.ticker
+            and self.valor == other.valor
+            and self.classificao == other.classificao
+        )
 
 
 def tranformar_df_em_lista(df: pd.DataFrame):
@@ -61,7 +65,8 @@ def tranformar_df_em_lista(df: pd.DataFrame):
             for numero_coluna, coluna in enumerate(linha):
                 if numero_coluna > 0:
                     lista[numero_linha][numero_coluna] = ItemClassificar(
-                        lista[0][numero_coluna], coluna)
+                        lista[0][numero_coluna], coluna
+                    )
 
     return lista
 
@@ -78,42 +83,73 @@ class Descricoes:
 
 
 detalhes = [
-    {'indice': 'pl', 'nome': 'P/L', 'descricao': Descricoes.DESCRICAO_PL,
-     'link': 'https://statusinvest.com.br/termos/p/p-l', 'ordenacao': 'ASC',
-     'multiplicador': 1},  # Menor valor -> melhor
-
-    {'indice': 'dy', 'nome': 'D.Y', 'descricao': Descricoes.DESCRICAO_DY,
-     'link': 'https://statusinvest.com.br/termos/d/dividend-yield', 'ordenacao': 'DESC',
-     'multiplicador': 100},  # Maior valor -> melhor
-
-    {'indice': 'pvp', 'nome': 'P/VP', 'descricao': Descricoes.DESCRICAO_PVP,
-     'link': 'https://statusinvest.com.br/termos/p/p-vp', 'ordenacao': 'ASC',
-     'multiplicador': 1},  # Menor valor ->melhor
-
-    {'indice': 'roe', 'nome': 'ROE', 'descricao': Descricoes.DESCRICAO_ROE,
-     'link': 'https://statusinvest.com.br/termos/r/roe', 'ordenacao': 'DESC',
-     'multiplicador': 100},  # Maior valor -> melhor
-
-    {'indice': 'roic', 'nome': 'ROIC', 'descricao': Descricoes.DESCRICAO_ROIC,
-     'link': 'https://statusinvest.com.br/termos/r/roic', 'ordenacao': 'DESC',
-     'multiplicador': 100},  # Maior valor -> melhor
-
-    {'indice': 'patrliq', 'nome': 'PATRIMÔNIO LÍQUIDO', 'descricao': Descricoes.DESCRICAO_PATRIMONIO_LIQUIDO,
-     'link': 'https://statusinvest.com.br/termos/p/patrimonio-liquido', 'ordenacao': 'DESC',
-     'multiplicador': 1},  # Maior valor -> melhor
-
-    {'indice': 'mrgliq', 'nome': 'MARGEM LÍQUIDA', 'descricao': Descricoes.DESCRICAO_MARGEM_LIQUIDA,
-     'link': 'https://statusinvest.com.br/termos/m/margem-liquida', 'ordenacao': 'DESC',
-     'multiplicador': 100},  # Maior valor -> melhor
-
-    {'indice': 'pcg', 'nome': 'P/CAPITAL DE GIRO', 'descricao': Descricoes.DESCRICAO_PRECO_SOBRE_CAPITAL_GIRO,
-     'link': 'https://statusinvest.com.br/termos/p/p-capital-giro', 'ordenacao': 'ASC',
-     'multiplicador': 1},  # Menor valor -> melhor
-
+    {
+        "indice": "pl",
+        "nome": "P/L",
+        "descricao": Descricoes.DESCRICAO_PL,
+        "link": "https://statusinvest.com.br/termos/p/p-l",
+        "ordenacao": "ASC",
+        "multiplicador": 1,
+    },  # Menor valor -> melhor
+    {
+        "indice": "dy",
+        "nome": "D.Y",
+        "descricao": Descricoes.DESCRICAO_DY,
+        "link": "https://statusinvest.com.br/termos/d/dividend-yield",
+        "ordenacao": "DESC",
+        "multiplicador": 100,
+    },  # Maior valor -> melhor
+    {
+        "indice": "pvp",
+        "nome": "P/VP",
+        "descricao": Descricoes.DESCRICAO_PVP,
+        "link": "https://statusinvest.com.br/termos/p/p-vp",
+        "ordenacao": "ASC",
+        "multiplicador": 1,
+    },  # Menor valor ->melhor
+    {
+        "indice": "roe",
+        "nome": "ROE",
+        "descricao": Descricoes.DESCRICAO_ROE,
+        "link": "https://statusinvest.com.br/termos/r/roe",
+        "ordenacao": "DESC",
+        "multiplicador": 100,
+    },  # Maior valor -> melhor
+    {
+        "indice": "roic",
+        "nome": "ROIC",
+        "descricao": Descricoes.DESCRICAO_ROIC,
+        "link": "https://statusinvest.com.br/termos/r/roic",
+        "ordenacao": "DESC",
+        "multiplicador": 100,
+    },  # Maior valor -> melhor
+    {
+        "indice": "patrliq",
+        "nome": "PATRIMÔNIO LÍQUIDO",
+        "descricao": Descricoes.DESCRICAO_PATRIMONIO_LIQUIDO,
+        "link": "https://statusinvest.com.br/termos/p/patrimonio-liquido",
+        "ordenacao": "DESC",
+        "multiplicador": 1,
+    },  # Maior valor -> melhor
+    {
+        "indice": "mrgliq",
+        "nome": "MARGEM LÍQUIDA",
+        "descricao": Descricoes.DESCRICAO_MARGEM_LIQUIDA,
+        "link": "https://statusinvest.com.br/termos/m/margem-liquida",
+        "ordenacao": "DESC",
+        "multiplicador": 100,
+    },  # Maior valor -> melhor
+    {
+        "indice": "pcg",
+        "nome": "P/CAPITAL DE GIRO",
+        "descricao": Descricoes.DESCRICAO_PRECO_SOBRE_CAPITAL_GIRO,
+        "link": "https://statusinvest.com.br/termos/p/p-capital-giro",
+        "ordenacao": "ASC",
+        "multiplicador": 1,
+    },  # Menor valor -> melhor
     # TODO: adicionar outros detalhes
     # psr, pa, , pebit, pacl, evebit, evebitda, mrgebit,
     # liqc, liq2m, divbpatr, c5y
-
 ]
 
 
@@ -125,7 +161,8 @@ def transformar_lista_pretty(lista):
     for numero_linha, linha in enumerate(lista_pretty):
         if numero_linha > 0:
             dados_indicador = list(
-                filter(lambda d: d['indice'] == lista_pretty[numero_linha][0], detalhes))[0]
+                filter(lambda d: d["indice"] == lista_pretty[numero_linha][0], detalhes)
+            )[0]
             mk_primeira_coluna = f"[{dados_indicador['nome']}]({dados_indicador['link']}, \"{dados_indicador['descricao']}\")"
 
             lista_pretty[numero_linha][0] = mk_primeira_coluna
@@ -133,14 +170,15 @@ def transformar_lista_pretty(lista):
         for numero_coluna, coluna in enumerate(linha):
             if numero_linha > 0 and numero_coluna > 0:
                 item = coluna
-                item.valor = formatar_valor(str(
-                    float(item.valor)*dados_indicador['multiplicador']))
+                item.valor = formatar_valor(
+                    str(float(item.valor) * dados_indicador["multiplicador"])
+                )
 
-                if item.classificao == '1 lugar':
+                if item.classificao == "1 lugar":
                     item.valor = f"🥇 **{item.valor}**"
-                if item.classificao == '2 lugar':
+                if item.classificao == "2 lugar":
                     item.valor = f"🥈 **{item.valor}**"
-                if item.classificao == '3 lugar':
+                if item.classificao == "3 lugar":
                     item.valor = f"🥉 **{item.valor}**"
 
                 lista_pretty[numero_linha][numero_coluna] = f"{item.valor}"
@@ -168,9 +206,10 @@ def adicionar_linha_medalhas(lista: List):
                     count_terceiro += 1
 
             medalhas.append(
-                f"{count_primeiro} 🥇, {count_segundo} 🥈, {count_terceiro} 🥉")
+                f"{count_primeiro} 🥇, {count_segundo} 🥈, {count_terceiro} 🥉"
+            )
 
-    lista.append(["**Medalhas**"]+medalhas)
+    lista.append(["**Medalhas**"] + medalhas)
     return lista
 
 
@@ -184,38 +223,36 @@ def adicionar_linha_classificacao_final(lista: List):
         i = i.replace("🥉", "")
         ouro, prata, bronze = i.split(",")
         tupla_medalhas.append(
-            (ouro.strip(), prata.strip(), bronze.strip(), lista[0][n+1]))
+            (ouro.strip(), prata.strip(), bronze.strip(), lista[0][n + 1])
+        )
 
     ordenada = list(sorted(tupla_medalhas, reverse=True))
     ordenada = list(map(lambda x: x[3], ordenada))
 
     for ticker in lista[0][1:]:
-        ordem = ordenada.index(ticker)+1
+        ordem = ordenada.index(ticker) + 1
 
         if ordem == 1:
-            classificacao.append(
-                f"<p class=\"icone-maior\" title=\"{ordem}º lugar\">🥇</p>")
+            classificacao.append(f'<p class="icone-maior" title="{ordem}º lugar">🥇</p>')
         elif ordem == 2:
-            classificacao.append(
-                f"<p class=\"icone-maior\" title=\"{ordem}º lugar\">🥈</p>")
+            classificacao.append(f'<p class="icone-maior" title="{ordem}º lugar">🥈</p>')
         elif ordem == 3:
-            classificacao.append(
-                f"<p class=\"icone-maior\" title=\"{ordem}º lugar\">🥉</p>")
+            classificacao.append(f'<p class="icone-maior" title="{ordem}º lugar">🥉</p>')
         else:
-            classificacao.append(
-                f"<p class=\"centralizado\">**{ordem}º lugar**</p>")
+            classificacao.append(f'<p class="centralizado">**{ordem}º lugar**</p>')
 
-    lista.append(["**Classificação final**"]+classificacao)
+    lista.append(["**Classificação final**"] + classificacao)
     return lista
 
 
 def ajustar_cabecalho(lista: List, dados):
     mais_cabecalho = ["**Cotação:**"]
     for numero_coluna, coluna in enumerate(lista[0]):
-        if (numero_coluna > 0):
-            mais_cabecalho.append("R$ " + formatar_valor(
-                dados.loc['cotacao', coluna]))
-        lista[0][numero_coluna] = f"[{coluna}](https://www.fundamentus.com.br/detalhes.php?papel={coluna})"
+        if numero_coluna > 0:
+            mais_cabecalho.append("R$ " + formatar_valor(dados.loc["cotacao", coluna]))
+        lista[0][
+            numero_coluna
+        ] = f"[{coluna}](https://www.fundamentus.com.br/detalhes.php?papel={coluna})"
     lista.insert(1, mais_cabecalho)
     return lista
 
@@ -224,10 +261,11 @@ def classificar_numeros_lista(df: pd.DataFrame, detalhes):
     lista_completa = tranformar_df_em_lista(df)
 
     for numero_linha, linha in enumerate(lista_completa):
-        if (numero_linha > 0):  # desconsiderar a linha com o título das colunas
+        if numero_linha > 0:  # desconsiderar a linha com o título das colunas
             indice_linha = linha[0]
-            ordem = list(filter(lambda o: o['indice'] ==
-                                indice_linha, detalhes))[0]['ordenacao']
+            ordem = list(filter(lambda o: o["indice"] == indice_linha, detalhes))[0][
+                "ordenacao"
+            ]
 
             for numero_coluna, coluna in enumerate(linha):
                 if numero_coluna > 0:  # desconsiderar coluna 0
@@ -238,8 +276,11 @@ def classificar_numeros_lista(df: pd.DataFrame, detalhes):
                     linha_sem_o_item.remove(coluna)
 
                     for item2 in linha_sem_o_item:
-                        if (ordem == "ASC" and float(item2.valor) < float(coluna.valor)) or \
-                           (ordem == "DESC" and float(item2.valor) > float(coluna.valor)):
+                        if (
+                            ordem == "ASC" and float(item2.valor) < float(coluna.valor)
+                        ) or (
+                            ordem == "DESC" and float(item2.valor) > float(coluna.valor)
+                        ):
                             quantos += 1
 
                     coluna.classificao = f"{quantos+1} lugar"
@@ -249,17 +290,17 @@ def classificar_numeros_lista(df: pd.DataFrame, detalhes):
 
 def formatar_valor(valor: str):
     valor = float(valor)
-    return "{:,.2f}".format(valor).replace('.', 'X').replace(',', '.').replace('X', ',')
+    return "{:,.2f}".format(valor).replace(".", "X").replace(",", ".").replace("X", ",")
 
 
 def validar(papeis_selecionados, indicadores_selecionados, alertas):
-    if (len(papeis_selecionados) == 0):
+    if len(papeis_selecionados) == 0:
         with alertas:
             st.error(icon="🚨", body="Selecione pelo menos um ticker.")
         st.stop()
-        
+
     print(type(indicadores_selecionados))
-    if (len(indicadores_selecionados) == 0):
+    if len(indicadores_selecionados) == 0:
         with alertas:
             st.error(icon="🚨", body="Selecione pelo menos um indicador.")
         st.stop()
@@ -268,31 +309,41 @@ def validar(papeis_selecionados, indicadores_selecionados, alertas):
 def gerar_tabela(dados, papeis_selecionados, indicadores_selecionados):
     dados_filtrados = dados[papeis_selecionados]
     detalhes_filtrados = list(
-        filter(lambda x: x['nome'] in indicadores_selecionados, detalhes))
-    dados_filtrados = dados_filtrados.loc[dados_filtrados.index.isin(
-        det['indice'] for det in detalhes_filtrados)]
+        filter(lambda x: x["nome"] in indicadores_selecionados, detalhes)
+    )
+    dados_filtrados = dados_filtrados.loc[
+        dados_filtrados.index.isin(det["indice"] for det in detalhes_filtrados)
+    ]
     retorno = transformar_lista_pretty(
-        classificar_numeros_lista(dados_filtrados, detalhes))
+        classificar_numeros_lista(dados_filtrados, detalhes)
+    )
     retorno = adicionar_linha_medalhas(retorno)
     retorno = adicionar_linha_classificacao_final(retorno)
     retorno = ajustar_cabecalho(retorno, dados)
-    alinhamento = ("right",)*len(retorno[0])
+    alinhamento = ("right",) * len(retorno[0])
     retorno_markdown = tabulate(
-        retorno, headers="firstrow", tablefmt='pipe', showindex=False, colalign=alinhamento)
+        retorno,
+        headers="firstrow",
+        tablefmt="pipe",
+        showindex=False,
+        colalign=alinhamento,
+    )
     st.write(retorno_markdown, unsafe_allow_html=True)
 
 
 def gerar_observacoes():
     st.write("------")
     st.write(
-        "Observação: Dados do site [Fundamentus](https://www.fundamentus.com.br/). Baseado no comparador existente no site [Status Invest](https://statusinvest.com.br/cliente/comparar-acoes/).")
+        "Observação: Dados do site [Fundamentus](https://www.fundamentus.com.br/). Baseado no comparador existente no site [Status Invest](https://statusinvest.com.br/cliente/comparar-acoes/)."
+    )
 
 
 def main():
-    st.title(":tophat: Factor Investing")
+    st.title(":tophat: Comparador de Fundamentos")
     mensagens = st.container()
 
-    st.markdown("""
+    st.markdown(
+        """
     <style>
     .icone-maior {
         font-size: 25pt !important;
@@ -304,20 +355,24 @@ def main():
         text-align: center !important;
     }
     </style>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     alertas = st.empty()
     dados = get_resultado()
     setores = fd.setor._setor
     dados = dados.transpose()
-    lista_indicadores = list(map(lambda i: i['nome'], detalhes))
+    lista_indicadores = list(map(lambda i: i["nome"], detalhes))
 
     form = st.form("form")
 
-    papeis_selecionados = form.multiselect(
-        'Selecione o(s) ticker(s):', dados.columns)
+    papeis_selecionados = form.multiselect("Selecione o(s) ticker(s):", dados.columns)
     indicadores_selecionados = form.multiselect(
-        'Selecione o(s) indicadore(s):', lista_indicadores.copy(), lista_indicadores.copy())
+        "Selecione o(s) indicadore(s):",
+        lista_indicadores.copy(),
+        lista_indicadores.copy(),
+    )
 
     if form.form_submit_button("Comparar"):
         validar(papeis_selecionados, indicadores_selecionados, alertas)
