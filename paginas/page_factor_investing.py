@@ -247,7 +247,12 @@ def mostrar_filtros_fiis(filtros):
         filtros["segmento"] = st.selectbox("Segmento:", segmentos_possiveis)
 
         filtros["Ignorar mercado balcão"] = st.checkbox(
-            "Ignorar mercado balcão", help="Ticker terminados em 11B"
+            "Ignorar mercado balcão", help="Ignorar tickers terminados em 11B"
+        )
+
+        filtros["Ignorar FIIs tijolo monoativo"] = st.checkbox(
+            "Ignorar FIIs tijolo monoativo",
+            help="Ignorar FIIs de tijolo que tenham apenas um ativo",
         )
 
         menor_liquidez = float(df_fiis["Liquidez"].min(numeric_only=True))
@@ -334,6 +339,9 @@ def filtrar_df_fiis(filtros):
 
     if filtros["Ignorar mercado balcão"]:
         df_tela = df_tela.loc[~df_tela["Papel"].str.endswith("11B")]
+
+    if filtros["Ignorar FIIs tijolo monoativo"]:
+        df_tela = df_tela[df_tela["Qtd de imóveis"] != 1]
 
     df_tela = df_tela[df_tela["Cotação"] >= filtros["cotacao"][0]]
     df_tela = df_tela[df_tela["Cotação"] <= filtros["cotacao"][1]]
