@@ -1,3 +1,4 @@
+import math
 import matplotlib.pyplot as plt
 import yfinance as yf
 import streamlit as st
@@ -27,6 +28,34 @@ def busca_dados_fiis():
     df = df[df["Cotação"] > 0]
     df = df[df["Liquidez"] > 0]
     st.session_state["lista_fiis"] = df
+    return df
+
+
+@st.cache_data(show_spinner="Buscando dados no Yahoo Finance.", ttl=3600)
+def buscar_dados_yahoo(tickers, data_inicial, data_final):
+    df = yf.download(tickers, data_inicial, data_final)
+    return df["Adj Close"]
+
+
+# @st.cache_data(show_spinner="Buscando dados no Carteira Global.", ttl=3600)
+def buscar_dados_carteira_global(tickers, data_inicial, data_final):
+    from libs.market_data.carteira_global import CarteiraGlobal
+
+    cg = CarteiraGlobal()
+    cg.setar_token(st.secrets["carteira_global"]["x_api_key"])
+    df = cg.retonar_cotacoes_fechamento_fiis(tickers, data_inicial, data_final)
+    return df
+
+
+# @st.cache_data(show_spinner="Buscando dados do IFIX na Carteira Global.", ttl=3600)
+def buscar_dados_ifix_carteira_global(data_inicial, data_final):
+    from libs.market_data.carteira_global import CarteiraGlobal
+
+    ID_IFIX = 20
+    cg = CarteiraGlobal()
+    cg.setar_token(st.secrets["carteira_global"]["x_api_key"])
+    df = cg.retonar_dados_indice(ID_IFIX, data_inicial, data_final)
+    df.rename(columns={"Close": "IFIX"}, inplace=True)
     return df
 
 
@@ -80,9 +109,19 @@ def mostrar_tab_fiis():
             acoes = [i + ".SA" for i in df_fiis_tela.index]
             pd.options.plotting.backend = "plotly"
 
-            df_fechamento = yf.download(acoes, "2022-01-01")
+            df_fechamento = buscar_dados_carteira_global(
+                acoes, "2022-01-01", "2023-07-07"
+            )
+            # TODO: fazer essa funcao usando a carteira global
+            df_ifix = buscar_dados_ifix_carteira_global("2022-01-01", "2023-07-07")
+            df_fechamento = df_ifix.merge(
+                df_fechamento, left_index=True, right_index=True, how="inner"
+            )
             df_fechamento = df_fechamento / df_fechamento.iloc[1]
-            fig = df_fechamento["Adj Close"].plot()
+
+            fig = df_fechamento.plot()
+            fig.update_traces(line_width=5, selector=dict(name="IFIX"))
+            fig.update_layout(legend_title_text="Tickers")
             st.plotly_chart(fig, use_container_width=True)
 
         with tab_detalhes_2:
@@ -310,37 +349,38 @@ def mostrar_filtros_fiis(filtros):
         filtros["segmento"] = st.selectbox("Segmento:", segmentos_possiveis)
 
         filtros["Ignorar mercado balcão"] = st.checkbox(
-            "Ignorar mercado balcão", help="Ignorar tickers terminados em 11B"
+            "Ignorar mercado balcão", True, help="Ignorar tickers terminados em 11B"
         )
 
         filtros["Ignorar FIIs tijolo monoativo"] = st.checkbox(
             "Ignorar FIIs tijolo monoativo",
+            True,
             help="Ignorar FIIs de tijolo que tenham apenas um ativo",
         )
 
-        menor_liquidez = float(df_fiis["Liquidez"].min(numeric_only=True))
-        maior_liquidez = float(df_fiis["Liquidez"].max(numeric_only=True))
+        menor_liquidez = math.trunc(float(df_fiis["Liquidez"].min(numeric_only=True)))
+        maior_liquidez = math.trunc(float(df_fiis["Liquidez"].max(numeric_only=True)))
 
-        filtros["Liquidez"] = st.slider(
-            "Liquidez",
+        filtros["Liquidez mínima"] = st.number_input(
+            "Liquidez mínima em R$",
             menor_liquidez,
             maior_liquidez,
-            (menor_liquidez, maior_liquidez),
-            step=1.0,
-            format="%.2f",
+            500000,
+            step=10000,
+            help="Volume médio diário em R$ de negociação do FII, considerando os últimos 2 meses",
         )
 
     with col2:
-        menor_cotacao = float(df_fiis["Cotação"].min(numeric_only=True))
-        maior_cotacao = float(df_fiis["Cotação"].max(numeric_only=True))
+        menor_cotacao = math.trunc(float(df_fiis["Cotação"].min(numeric_only=True)))
+        maior_cotacao = math.trunc(float(df_fiis["Cotação"].max(numeric_only=True)))
 
         filtros["cotacao"] = st.slider(
-            "Cotação",
+            "Cotação em R$",
             menor_cotacao,
             maior_cotacao,
-            (menor_cotacao, maior_cotacao),
-            step=1.0,
-            format="R$ %.2f",
+            (50, 1000),
+            step=10,
+            format="R$ %.0f",
         )
 
         menor_pvp = float(df_fiis["P/VP"].min(numeric_only=True))
@@ -350,30 +390,30 @@ def mostrar_filtros_fiis(filtros):
             "P/VP",
             menor_pvp,
             maior_pvp,
-            (menor_pvp, maior_pvp),
+            (0.7, 1.4),
             step=0.1,
-            format="%.2f",
+            format="%.2f%%",
         )
 
     with col3:
         filtros["dy"] = st.slider(
-            "Dividend Yield (%)", 0, 100, (0, 100), step=1, format="%.2f"
+            "Dividend Yield (%)", 0, 100, (8, 100), step=1, format="%.2f %%"
         )
 
-        menor_valor_mercado = (
+        menor_valor_mercado = math.trunc(
             float(df_fiis["Valor de Mercado"].min(numeric_only=True)) / 1000000
         )
-        maior_valor_mercado = (
+        maior_valor_mercado = math.trunc(
             float(df_fiis["Valor de Mercado"].max(numeric_only=True)) / 1000000
         )
 
-        filtros["valor_mercado"] = st.slider(
-            "Valor mínimo de Mercado",
+        filtros["valor_mercado"] = st.number_input(
+            "Valor mínimo de mercado em bilhões de RS",
             menor_valor_mercado,
             maior_valor_mercado,
-            value=menor_valor_mercado,
-            step=1.0,
-            format="%.2f milhões de R$",
+            value=500,
+            step=100,
+            help="Valor mínimo de mercado em bilhões de RS",
         )
 
 
@@ -415,8 +455,7 @@ def filtrar_df_fiis(filtros):
     df_tela = df_tela[df_tela["P/VP"] >= filtros["pvp"][0]]
     df_tela = df_tela[df_tela["P/VP"] <= filtros["pvp"][1]]
 
-    df_tela = df_tela[df_tela["Liquidez"] >= filtros["Liquidez"][0]]
-    df_tela = df_tela[df_tela["Liquidez"] <= filtros["Liquidez"][1]]
+    df_tela = df_tela[df_tela["Liquidez"] >= float(filtros["Liquidez mínima"])]
 
     df_tela = df_tela[df_tela["Valor de Mercado"] >= filtros["valor_mercado"] * 1000000]
 
