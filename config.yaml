@@ -4,6 +4,10 @@ credentials:
             email: pablo@email
             name: Pablo
             password: $2b$12$fWk5jwO7rY1Guzg6ZlFY1.593Ry4UF3o3uDeaaobwLYpQJFDlBVM2
+        guest:
+            email: guest@email
+            name: Anônimo
+            password: $2b$12$yflRg6v7OV1aCj62sqVGQe3q3SbemGJcozI0seXdUlbuFITyGhWaW
 cookie:
     expiry_days: 30
     key: random_signature_key # Must be string
