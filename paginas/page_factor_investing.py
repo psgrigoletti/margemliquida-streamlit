@@ -3,7 +3,12 @@ import matplotlib.pyplot as plt
 import yfinance as yf
 import streamlit as st
 import pandas as pd
-from libs.market_data.fundamentus.lista import get_df_acoes, get_df_fiis
+from libs.market_data.fundamentus.lista import (
+    get_df_acoes,
+    get_df_fiis,
+    get_df_setores,
+    get_df_acoes_do_setor,
+)
 import extra_streamlit_components as stx
 import plotly.express as px
 import plotly.graph_objects as go
@@ -37,17 +42,17 @@ def buscar_dados_yahoo(tickers, data_inicial, data_final):
     return df["Adj Close"]
 
 
-# @st.cache_data(show_spinner="Buscando dados no Carteira Global.", ttl=3600)
+@st.cache_data(show_spinner="Buscando dados no Carteira Global.", ttl=3600)
 def buscar_dados_carteira_global(tickers, data_inicial, data_final):
     from libs.market_data.carteira_global import CarteiraGlobal
 
     cg = CarteiraGlobal()
     cg.setar_token(st.secrets["carteira_global"]["x_api_key"])
-    df = cg.retonar_cotacoes_fechamento_fiis(tickers, data_inicial, data_final)
+    df = cg.retonar_cotacoes_fechamento(tickers, data_inicial, data_final)
     return df
 
 
-# @st.cache_data(show_spinner="Buscando dados do IFIX na Carteira Global.", ttl=3600)
+@st.cache_data(show_spinner="Buscando dados do IFIX na Carteira Global.", ttl=3600)
 def buscar_dados_ifix_carteira_global(data_inicial, data_final):
     from libs.market_data.carteira_global import CarteiraGlobal
 
@@ -56,6 +61,18 @@ def buscar_dados_ifix_carteira_global(data_inicial, data_final):
     cg.setar_token(st.secrets["carteira_global"]["x_api_key"])
     df = cg.retonar_dados_indice(ID_IFIX, data_inicial, data_final)
     df.rename(columns={"Close": "IFIX"}, inplace=True)
+    return df
+
+
+@st.cache_data(show_spinner="Buscando dados do IBOV na Carteira Global.", ttl=3600)
+def buscar_dados_ibov_carteira_global(data_inicial, data_final):
+    from libs.market_data.carteira_global import CarteiraGlobal
+
+    ID_IBOV = 2
+    cg = CarteiraGlobal()
+    cg.setar_token(st.secrets["carteira_global"]["x_api_key"])
+    df = cg.retonar_dados_indice(ID_IBOV, data_inicial, data_final)
+    df.rename(columns={"Close": "IBOV"}, inplace=True)
     return df
 
 
@@ -107,22 +124,26 @@ def mostrar_tab_fiis():
             mostrar_tab_resultados(df_fiis_tela)
 
             acoes = [i + ".SA" for i in df_fiis_tela.index]
-            pd.options.plotting.backend = "plotly"
 
-            df_fechamento = buscar_dados_carteira_global(
-                acoes, "2022-01-01", "2023-07-07"
-            )
-            # TODO: fazer essa funcao usando a carteira global
-            df_ifix = buscar_dados_ifix_carteira_global("2022-01-01", "2023-07-07")
-            df_fechamento = df_ifix.merge(
-                df_fechamento, left_index=True, right_index=True, how="inner"
-            )
-            df_fechamento = df_fechamento / df_fechamento.iloc[1]
+            if len(acoes) <= 15:
+                pd.options.plotting.backend = "plotly"
 
-            fig = df_fechamento.plot()
-            fig.update_traces(line_width=5, selector=dict(name="IFIX"))
-            fig.update_layout(legend_title_text="Tickers")
-            st.plotly_chart(fig, use_container_width=True)
+                df_fechamento = buscar_dados_carteira_global(
+                    acoes, "2022-01-01", "2023-07-07"
+                )
+                # TODO: fazer essa funcao usando a carteira global
+                df_ifix = buscar_dados_ifix_carteira_global("2022-01-01", "2023-07-07")
+                df_fechamento = df_ifix.merge(
+                    df_fechamento, left_index=True, right_index=True, how="inner"
+                )
+                df_fechamento = df_fechamento / df_fechamento.iloc[1]
+
+                fig = df_fechamento.plot()
+                fig.update_traces(line_width=5, selector=dict(name="IFIX"))
+                fig.update_layout(legend_title_text="Tickers")
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("O gráfico só é gerado para 15 ativos ou menos.")
 
         with tab_detalhes_2:
             titulo = "Gráficos sobre os FIIs selecionados"
@@ -249,9 +270,7 @@ def mostrar_tab_magic_formula_acoes(
         col1.image("imagens/livro-formula-magica.jpeg", width=250)
     with col2:
         st.write("#### " + str(df.count().unique()[0]) + " registros retornados")
-        st.data_editor(
-            df,
-        )
+        st.write(df)
 
 
 def mostrar_tab_magic_formula_fiis(
@@ -285,18 +304,7 @@ def mostrar_tab_magic_formula_fiis(
         col1.image("imagens/livro-formula-magica.jpeg", width=250)
     with col2:
         st.write("#### " + str(df.count().unique()[0]) + " registros retornados")
-        st.data_editor(
-            df,
-            column_config={
-                "Dividend Yield": st.column_config.NumberColumn(
-                    "Dividend Yield",
-                    help="Dividend Yield",
-                    width="small",
-                    required=True,
-                    format="%.2f %%",
-                )
-            },
-        )
+        st.write(df)
 
 
 def mostrar_tab_resultados(df):
@@ -306,9 +314,18 @@ def mostrar_tab_resultados(df):
 
 def mostrar_filtros_acoes(filtros):
     df_acoes = busca_df_acoes_do_cache().copy()
-    col1, _, col2, _, col3, _ = st.columns([4, 1, 4, 1, 4, 1])
+    col1, _, col2, _, col3, _ = st.columns([6, 1, 4, 1, 4, 1])
 
     with col1:
+        setores_possiveis_ordenados = sorted(
+            get_df_setores()["Setor"], key=lambda x: int(x.split(" - ")[0])
+        )
+        # setores_possiveis = ["Todos"] + list(setores_possiveis_ordenados)
+
+        filtros["setores"] = st.multiselect(
+            "Setor(es):", setores_possiveis_ordenados, []
+        )
+
         menor_cotacao = float(df_acoes["Cotação"].min(numeric_only=True))
         maior_cotacao = float(df_acoes["Cotação"].max(numeric_only=True))
 
@@ -345,8 +362,9 @@ def mostrar_filtros_fiis(filtros):
     col1, _, col2, _, col3, _ = st.columns([4, 1, 4, 1, 4, 1])
 
     with col1:
-        segmentos_possiveis = ["Todos"] + list(df_fiis["Segmento"].dropna().unique())
-        filtros["segmento"] = st.selectbox("Segmento:", segmentos_possiveis)
+        segmentos_possiveis = list(df_fiis["Segmento"].dropna().unique())
+        segmentos_possiveis.sort()
+        filtros["segmentos"] = st.multiselect("Segmento(s):", segmentos_possiveis, [])
 
         filtros["Ignorar mercado balcão"] = st.checkbox(
             "Ignorar mercado balcão", True, help="Ignorar tickers terminados em 11B"
@@ -420,6 +438,13 @@ def mostrar_filtros_fiis(filtros):
 def filtrar_df_acoes(filtros):
     df_tela = busca_df_acoes_do_cache().copy()
 
+    if filtros["setores"] != []:
+        setores = [i.split(" - ")[0] for i in filtros["setores"]]
+        tickers_do_setor = []
+        for setor in setores:
+            tickers_do_setor += list(get_df_acoes_do_setor(setor))
+        df_tela = df_tela[df_tela["Papel"].isin(tickers_do_setor)]
+
     df_tela = df_tela[df_tela["Cotação"] >= filtros["cotacao"][0]]
     df_tela = df_tela[df_tela["Cotação"] <= filtros["cotacao"][1]]
 
@@ -437,8 +462,8 @@ def filtrar_df_acoes(filtros):
 def filtrar_df_fiis(filtros):
     df_tela = busca_df_fiis_do_cache().copy()
 
-    if filtros["segmento"] != "Todos":
-        df_tela = df_tela[df_tela["Segmento"] == filtros["segmento"]]
+    if filtros["segmentos"] != []:
+        df_tela = df_tela[df_tela["Segmento"].isin(filtros["segmentos"])]
 
     if filtros["Ignorar mercado balcão"]:
         df_tela = df_tela.loc[~df_tela["Papel"].str.endswith("11B")]
@@ -492,12 +517,30 @@ def mostrar_tab_acoes():
         with tab_detalhes_1:
             mostrar_tab_resultados(df_acoes_tela)
             acoes = [i + ".SA" for i in df_acoes_tela.index]
-            pd.options.plotting.backend = "plotly"
 
-            df_fechamento = yf.download(acoes, "2022-01-01")
-            df_fechamento = df_fechamento / df_fechamento.iloc[1]
-            fig = df_fechamento["Adj Close"].plot()
-            st.plotly_chart(fig, use_container_width=True)
+            if len(acoes) <= 15:
+                pd.options.plotting.backend = "plotly"
+
+                df_fechamento = buscar_dados_carteira_global(
+                    acoes, "2022-01-01", "2023-07-07"
+                )
+                df_ibov = buscar_dados_ibov_carteira_global("2022-01-01", "2023-07-07")
+                df_fechamento = df_ibov.merge(
+                    df_fechamento, left_index=True, right_index=True, how="inner"
+                )
+                df_fechamento = df_fechamento / df_fechamento.iloc[1]
+
+                fig = df_fechamento.plot()
+                fig.update_traces(line_width=5, selector=dict(name="IBOV"))
+                fig.update_layout(legend_title_text="Tickers")
+                st.plotly_chart(fig, use_container_width=True)
+            else:
+                st.info("O gráfico só é gerado para 15 ativos ou menos.")
+
+            # st.write("Detalhes")
+            # from fundamentus import get_papel
+
+            # st.write(get_papel(list(df_acoes_tela.index)))
 
         with tab_detalhes_2:
             titulo = "Gráficos sobre os Ações selecionadas"

@@ -1,7 +1,8 @@
-from bs4 import BeautifulSoup as bs
+from bs4 import BeautifulSoup
 import pandas as pd
 import requests
-import libs.market_data.fundamentus.utils as utils
+from .utils import perc_to_float
+import fundamentus as fd
 
 hdr = {
     "User-agent": "Mozilla/5.0 (Windows; U; Windows NT 6.1; rv:2.2) Gecko/20110201",
@@ -10,14 +11,27 @@ hdr = {
 }
 
 
-# def get_df_setores(hdr=hdr):
-#     url = "https://www.fundamentus.com.br/buscaavancada.php"
-#     content = requests.get(url, headers=hdr)
-#     setores = bs.find("select", {"name": "City"})["content"]
-#     print(setores)
+def get_df_setores(hdr=hdr):
+    url = "https://www.fundamentus.com.br/buscaavancada.php"
+    response = requests.get(url, headers=hdr)
+    soup = BeautifulSoup(response.text, "html.parser")
+    select = soup.find("select", {"name": "setor"})
+    options = select.find_all("option")
+
+    options_list = []
+    for option in options:
+        option_value = option.get("value")
+        option_text = option.text
+        if option_value and option_text:
+            options_list.append(option_value + " - " + option_text)
+
+    df = pd.DataFrame(options_list, columns=["Setor"])
+    return df
 
 
-# get_df_setores()
+def get_df_acoes_do_setor(id_setor):
+    df = fd.list_papel_setor(id_setor)
+    return df
 
 
 def get_df_fiis(hdr=hdr):
@@ -27,10 +41,10 @@ def get_df_fiis(hdr=hdr):
         content.text, decimal=",", thousands=".", attrs={"id": "tabelaResultado"}
     )[0]
 
-    df["Dividend Yield"] = utils.perc_to_float(df["Dividend Yield"])
-    df["FFO Yield"] = utils.perc_to_float(df["FFO Yield"])
-    df["Cap Rate"] = utils.perc_to_float(df["Cap Rate"])
-    df["Vacância Média"] = utils.perc_to_float(df["Vacância Média"])
+    df["Dividend Yield"] = perc_to_float(df["Dividend Yield"])
+    df["FFO Yield"] = perc_to_float(df["FFO Yield"])
+    df["Cap Rate"] = perc_to_float(df["Cap Rate"])
+    df["Vacância Média"] = perc_to_float(df["Vacância Média"])
 
     return df
 
@@ -42,11 +56,11 @@ def get_df_acoes(hdr=hdr):
         content.text, decimal=",", thousands=".", attrs={"id": "resultado"}
     )[0]
 
-    df["Div.Yield"] = utils.perc_to_float(df["Div.Yield"])
-    df["Mrg Ebit"] = utils.perc_to_float(df["Mrg Ebit"])
-    df["Mrg. Líq."] = utils.perc_to_float(df["Mrg. Líq."])
-    df["ROIC"] = utils.perc_to_float(df["ROIC"])
-    df["ROE"] = utils.perc_to_float(df["ROE"])
-    df["Cresc. Rec.5a"] = utils.perc_to_float(df["Cresc. Rec.5a"])
+    df["Div.Yield"] = perc_to_float(df["Div.Yield"])
+    df["Mrg Ebit"] = perc_to_float(df["Mrg Ebit"])
+    df["Mrg. Líq."] = perc_to_float(df["Mrg. Líq."])
+    df["ROIC"] = perc_to_float(df["ROIC"])
+    df["ROE"] = perc_to_float(df["ROE"])
+    df["Cresc. Rec.5a"] = perc_to_float(df["Cresc. Rec.5a"])
 
     return df

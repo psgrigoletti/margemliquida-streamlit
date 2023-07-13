@@ -68,7 +68,7 @@ class CarteiraGlobal:
         print(tickers)
         return tickers
 
-    def retonar_cotacoes_fechamento_fiis(self, tickers, data_inicial, data_final):
+    def retonar_cotacoes_fechamento(self, tickers, data_inicial, data_final):
         df = None
 
         for t in tickers:
