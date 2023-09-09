@@ -1,3 +1,4 @@
 chromium
 firefox-esr
 wkhtmltopdf
+msttcorefonts
