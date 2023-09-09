@@ -1,4 +1,4 @@
 chromium
 firefox-esr
 wkhtmltopdf
-msttcorefonts
+ttf-mscorefonts-installer
