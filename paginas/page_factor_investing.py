@@ -366,16 +366,19 @@ def mostrar_filtros_fiis(filtros):
         segmentos_possiveis.sort()
         filtros["segmentos"] = st.multiselect("Segmento(s):", segmentos_possiveis, [])
 
+    with col2:
         filtros["Ignorar mercado balcão"] = st.checkbox(
             "Ignorar mercado balcão", True, help="Ignorar tickers terminados em 11B"
         )
 
+    with col2:
         filtros["Ignorar FIIs tijolo monoativo"] = st.checkbox(
             "Ignorar FIIs tijolo monoativo",
             True,
             help="Ignorar FIIs de tijolo que tenham apenas um ativo",
         )
 
+    with st.expander("**Liquidez**"):
         menor_liquidez = math.trunc(float(df_fiis["Liquidez"].min(numeric_only=True)))
         maior_liquidez = math.trunc(float(df_fiis["Liquidez"].max(numeric_only=True)))
 
@@ -388,7 +391,7 @@ def mostrar_filtros_fiis(filtros):
             help="Volume médio diário em R$ de negociação do FII, considerando os últimos 2 meses",
         )
 
-    with col2:
+    with st.expander("**Cotação**"):
         menor_cotacao = math.trunc(float(df_fiis["Cotação"].min(numeric_only=True)))
         maior_cotacao = math.trunc(float(df_fiis["Cotação"].max(numeric_only=True)))
 
@@ -401,8 +404,13 @@ def mostrar_filtros_fiis(filtros):
             format="R$ %.0f",
         )
 
+    with st.expander("**P/VP**"):
         menor_pvp = float(df_fiis["P/VP"].min(numeric_only=True))
         maior_pvp = float(df_fiis["P/VP"].max(numeric_only=True))
+
+        texto_pvp = ""
+
+        st.write(texto_pvp)
 
         filtros["pvp"] = st.slider(
             "P/VP",
@@ -413,11 +421,7 @@ def mostrar_filtros_fiis(filtros):
             format="%.2f%%",
         )
 
-    with col3:
-        filtros["dy"] = st.slider(
-            "Dividend Yield (%)", 0, 100, (8, 100), step=1, format="%.2f %%"
-        )
-
+    with st.expander("**Valor de Mercado**"):
         menor_valor_mercado = math.trunc(
             float(df_fiis["Valor de Mercado"].min(numeric_only=True)) / 1000000
         )
@@ -425,14 +429,28 @@ def mostrar_filtros_fiis(filtros):
             float(df_fiis["Valor de Mercado"].max(numeric_only=True)) / 1000000
         )
 
-        filtros["valor_mercado"] = st.number_input(
-            "Valor mínimo de mercado em bilhões de RS",
-            menor_valor_mercado,
-            maior_valor_mercado,
-            value=500,
-            step=100,
-            help="Valor mínimo de mercado em bilhões de RS",
-        )
+        col1_valor_mercado, _, _ = st.columns([2, 2, 6])
+
+        with col1_valor_mercado:
+            filtros["valor_mercado"] = st.number_input(
+                "Valor mínimo de mercado em bilhões de RS",
+                menor_valor_mercado,
+                maior_valor_mercado,
+                value=500,
+                step=100,
+                help="Valor mínimo de mercado em bilhões de RS",
+            )
+
+    with st.expander("**Dividend Yield**"):
+        col1_dy, col2_dy, _ = st.columns([2, 2, 6])
+        with col1_dy:
+            filtros["dy_minimo"] = st.number_input(
+                "Dividend Yield (%) mínimo", 0, 100, step=1
+            )
+        with col2_dy:
+            filtros["dy_maximo"] = st.number_input(
+                "Dividend Yield (%) máximo", 0, 100, step=1
+            )
 
 
 def filtrar_df_acoes(filtros):

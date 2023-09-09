@@ -1,17 +1,17 @@
 # Ultima revisão: 03/07/2023
 
-pip==23.1.2
+pip==23.2.1
 
 # Interface
-streamlit==1.24.0
-streamlit-authenticator==0.2.2
+streamlit==1.26.0
+streamlit-authenticator==0.2.3
 streamlit_option_menu==0.3.6
-extra-streamlit-components==0.1.56
+extra-streamlit-components==0.1.60
 
 # Gerais
-pandas==2.0.3
+pandas==2.1.0
 #pandasai==0.6.7 -> minha conta não tem créditos
-numpy==1.25.0
+numpy==1.25.2
 
 # Datas
 pandas_market_calendars==4.1.4
@@ -22,11 +22,13 @@ yfinance==0.2.22
 python-bcb==0.1.9
 sidrapy==0.1.4
 fundamentus==0.2.0
+quantstats==0.0.62
 
 # Gráficos
 matplotlib==3.7.1
 seaborn==0.12.2
 plotly==5.15.0
+imgkit
 
 # Banco de dados
 pymongo==4.4.0
