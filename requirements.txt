@@ -23,6 +23,7 @@ python-bcb==0.1.9
 sidrapy==0.1.4
 fundamentus==0.2.0
 quantstats==0.0.62
+IPython
 
 # Gráficos
 matplotlib==3.7.1

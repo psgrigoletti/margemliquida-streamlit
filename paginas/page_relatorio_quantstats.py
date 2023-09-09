@@ -68,15 +68,15 @@ def main():
         qs.extend_pandas()
 
         # fetch the daily returns for a stock
-        stock = yf.download(ticker, start=data_inicial, interval="1d")[
-            "Close"
-        ].pct_change()
+        stock = yf.download(ticker, start=data_inicial, interval="1d")
+        stock.rename(columns={"Close": ticker}, inplace=True)
+        stock = stock[ticker].pct_change()
         stock = stock.dropna()
         # stock.index = pd.to_datetime(stock.index)
 
-        index = yf.download(indice, start=data_inicial, interval="1d")[
-            "Close"
-        ].pct_change()
+        index = yf.download(indice, start=data_inicial, interval="1d")
+        index.rename(columns={"Close": indice}, inplace=True)
+        index = index[indice].pct_change()
         index = index.dropna()
         # index.index = pd.to_datetime(index.index)
 
