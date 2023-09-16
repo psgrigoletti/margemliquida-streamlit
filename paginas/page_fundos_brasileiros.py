@@ -1,3 +1,4 @@
+from typing import List
 import streamlit as st
 import zipfile
 import io
@@ -35,20 +36,134 @@ def data_anterior(data):
     return data_anterior_formatada
 
 
-@st.cache_data
+@st.cache_data(ttl=3600, show_spinner="Carregando fundos com as maiores baixas...")
+def carregar_fundos_maiores_baixas(mes, ano, maior_data_dos_dados, quantidade):
+    cotas_normalizadas = carregar_cotas_normalizadas(mes, ano)
+    baixas = (
+        cotas_normalizadas.sort_values(maior_data_dos_dados, ascending=True)[
+            : int(quantidade)
+        ][maior_data_dos_dados]
+        - 1
+    ) * 100
+    # st.write(baixas)
+    fundo_df_baixa = pd.DataFrame(
+        columns=["Retornos", "Nome do Fundo", "Classe", "Patrimônio Líquido"]
+    )
+    for cnpj in baixas.index:
+        fundo = carregar_dados_cadastrais_de([cnpj])
+        if esta_nos_dados_cadastrais(cnpj):
+            fundo_df_baixa.loc[cnpj] = [
+                baixas[baixas.index == cnpj].values[0],
+                fundo["DENOM_SOCIAL"].values[0],
+                fundo["CLASSE"].values[0],
+                fundo["VL_PATRIM_LIQ"].values[0],
+            ]
+        else:
+            fundo_df_baixa.loc[cnpj] = [
+                baixas[baixas.index == cnpj].values[0],
+                "NAO ENCONTRADO",
+                "NAO ENCONTRADO",
+                "NAO ENCONTRADO",
+            ]
+    return fundo_df_baixa
+
+
+@st.cache_data(ttl=3600, show_spinner="Carregando fundos com as maiores altas...")
+def carregar_fundos_maiores_altas(mes, ano, maior_data_dos_dados, quantidade):
+    cotas_normalizadas = carregar_cotas_normalizadas(mes, ano)
+    altas = (
+        cotas_normalizadas.sort_values(maior_data_dos_dados, ascending=False)[
+            : int(quantidade)
+        ][maior_data_dos_dados]
+        - 1
+    ) * 100
+    # st.write(altas)
+    fundo_df_alta = pd.DataFrame(
+        columns=["Retornos", "Nome do Fundo", "Classe", "Patrimônio Líquido"]
+    )
+    # st.write(fundo_df_alta)
+    for cnpj in altas.index:
+        fundo = carregar_dados_cadastrais_de([cnpj])
+        # st.write(fundo)
+        # print("LISTA DE FUNDOS ALTA")
+        # print("Vai pesquisar: " + cnpj)
+        # print("Quantidade registros retornados: " + str(len(fundo)))
+        # print(fundo)
+
+        if esta_nos_dados_cadastrais(cnpj):
+            fundo_df_alta.loc[cnpj] = [
+                altas[altas.index == cnpj].values[0],
+                fundo["DENOM_SOCIAL"].values[0],
+                fundo["CLASSE"].values[0],
+                fundo["VL_PATRIM_LIQ"].values[0],
+            ]
+        else:
+            fundo_df_alta.loc[cnpj] = [
+                altas[altas.index == cnpj].values[0],
+                "NAO ENCONTRADO",
+                "NAO ENCONTRADO",
+                "NAO ENCONTRADO",
+            ]
+    return fundo_df_alta
+
+
+@st.cache_data(ttl=3600, show_spinner="Carregando dados cadastrais da CVM...")
 def carregar_todos_dados_cadastrais():
     url = "http://dados.cvm.gov.br/dados/FI/CAD/DADOS/cad_fi.csv"
-    cadastral = pd.read_csv(url, sep=";", encoding="ISO-8859-1")
+    cadastral = pd.read_csv(
+        url,
+        sep=";",
+        encoding="ISO-8859-1",
+        dtype={
+            14: str,
+            17: str,
+            18: str,
+            20: str,
+            22: str,
+            24: str,
+            27: str,
+            37: str,
+            38: str,
+            39: str,
+            40: str,
+        },
+    )
+    cadastral = cadastral[~cadastral["SIT"].str.contains("CANCELADA")]
+    # print(
+    #     "Retornando informações cadastrais de "
+    #     + str(len(cadastral))
+    #     + " fundos (não cancelados)"
+    # )
     return cadastral
 
 
-def carregar_dados_cadastrais_de(cnpjs: list):
+@st.cache_data(ttl=3600, show_spinner="Carregando dados cadastrais dos gestores...")
+def carregar_lista_de_gestores():
     cadastral = carregar_todos_dados_cadastrais()
-    cadastral = cadastral[~cadastral["SIT"].str.contains("CANCELADA")]
-    return cadastral[cadastral["CNPJ_FUNDO"].isin(cnpjs)]
+    cadastral.sort_values(by=["GESTOR"], inplace=True)
+    cadastral = cadastral[cadastral["GESTOR"].notna()]
+    gestores = cadastral["GESTOR"].unique()
+    return gestores
 
 
-@st.cache_data
+# @st.cache_data(
+#     ttl=3600, show_spinner="Carregando dados cadastrais de um ou mais CNPJs..."
+# )
+
+
+def esta_nos_dados_cadastrais(cnpj):
+    cadastral = carregar_todos_dados_cadastrais()
+    filtrado = cadastral[cadastral["CNPJ_FUNDO"] == cnpj]
+    return len(filtrado) > 0
+
+
+def carregar_dados_cadastrais_de(cnpjs):
+    cadastral = carregar_todos_dados_cadastrais()
+    filtrado = cadastral[cadastral["CNPJ_FUNDO"].isin(cnpjs)]
+    return filtrado
+
+
+@st.cache_data(ttl=3600, show_spinner="Carregando informes diários da CVM...")
 def carregar_dados_informes_diarios(mes, ano):
     # try:
     arquivo = f"inf_diario_fi_{ano}{mes}.csv"
@@ -90,7 +205,7 @@ def carregar_dados_informes_diarios(mes, ano):
     #     st.stop()
 
 
-@st.cache_data
+@st.cache_data(ttl=3600, show_spinner="Carregando cotas normalizadas...")
 def carregar_cotas_normalizadas(mes, ano):
     informes_diarios = carregar_dados_informes_diarios(mes, ano)
     filtro = informes_diarios[informes_diarios["NR_COTST"] > 1000]
@@ -109,13 +224,15 @@ def main():
     st.write("**Fonte**: _http://dados.cvm.gov.br_")
     mensagens = st.container()
 
-    col1, col2, col3, _ = st.columns([1, 1, 1, 4])
+    col1, col2, col3, col4 = st.columns([1, 1, 1, 4])
     with col1:
         mes = st.text_input("Mês (formato MM)", "08")
     with col2:
         ano = st.text_input("Ano (formado YYYY)", "2023")
     with col3:
         quantidade = st.text_input("Quantidade", "10")
+    with col4:
+        gestores = st.selectbox("Gestores", carregar_lista_de_gestores())
 
     if st.button("Carregar dados..."):
         if not mes_ano_no_passado(mes, ano):
@@ -168,27 +285,10 @@ def main():
             st.write(
                 f"### :heavy_dollar_sign: {quantidade} fundos que mais subiram no período selecionado ({mes}/{ano})"
             )
-            cotas_normalizadas = carregar_cotas_normalizadas(mes, ano)
-            altas = (
-                cotas_normalizadas.sort_values(maior_data_dos_dados, ascending=False)[
-                    : int(quantidade)
-                ][maior_data_dos_dados]
-                - 1
-            ) * 100
-            # st.write(altas)
-            fundo_df_alta = pd.DataFrame(
-                columns=["Retornos", "Nome do Fundo", "Classe", "Patrimônio Líquido"]
+
+            fundo_df_alta = carregar_fundos_maiores_altas(
+                mes, ano, maior_data_dos_dados, quantidade
             )
-            # st.write(fundo_df_alta)
-            for cnpj in altas.index:
-                fundo = carregar_dados_cadastrais_de([cnpj])
-                # st.write(fundo)
-                fundo_df_alta.loc[cnpj] = [
-                    altas[altas.index == cnpj].values[0],
-                    fundo["DENOM_SOCIAL"].values[0],
-                    fundo["CLASSE"].values[0],
-                    fundo["VL_PATRIM_LIQ"].values[0],
-                ]
             fig1 = plt.figure(figsize=(10, 4))
             sns.barplot(
                 data=fundo_df_alta, x=fundo_df_alta.index, y=fundo_df_alta["Retornos"]
@@ -202,24 +302,10 @@ def main():
             st.write(
                 f"### :poop: {quantidade} fundos que mais caíram no período selecionado ({mes}/{ano})"
             )
-            cotas_normalizadas = carregar_cotas_normalizadas(mes, ano)
-            baixas = (
-                cotas_normalizadas.sort_values(maior_data_dos_dados, ascending=True)[
-                    : int(quantidade)
-                ][maior_data_dos_dados]
-                - 1
-            ) * 100
-            fundo_df_baixa = pd.DataFrame(
-                columns=["Retornos", "Nome do Fundo", "Classe", "Patrimônio Líquido"]
+            fundo_df_baixa = carregar_fundos_maiores_baixas(
+                mes, ano, maior_data_dos_dados, quantidade
             )
-            for cnpj in baixas.index:
-                fundo = carregar_dados_cadastrais_de([cnpj])
-                fundo_df_baixa.loc[cnpj] = [
-                    baixas[baixas.index == cnpj].values[0],
-                    fundo["DENOM_SOCIAL"].values[0],
-                    fundo["CLASSE"].values[0],
-                    fundo["VL_PATRIM_LIQ"].values[0],
-                ]
+
             fig2 = plt.figure(figsize=(10, 4))
             sns.barplot(
                 data=fundo_df_baixa,
