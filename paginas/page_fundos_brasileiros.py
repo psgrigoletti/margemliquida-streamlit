@@ -146,6 +146,15 @@ def carregar_lista_de_gestores():
     return gestores
 
 
+@st.cache_data(ttl=3600, show_spinner="Carregando dados cadastrais das classes...")
+def carregar_lista_de_classes():
+    cadastral = carregar_todos_dados_cadastrais()
+    cadastral.sort_values(by=["CLASSE"], inplace=True)
+    cadastral = cadastral[cadastral["CLASSE"].notna()]
+    classes = cadastral["CLASSE"].unique()
+    return classes
+
+
 # @st.cache_data(
 #     ttl=3600, show_spinner="Carregando dados cadastrais de um ou mais CNPJs..."
 # )
@@ -232,7 +241,15 @@ def main():
     with col3:
         quantidade = st.text_input("Quantidade", "10")
     with col4:
-        gestores = st.selectbox("Gestores", carregar_lista_de_gestores())
+        gestor = st.selectbox(
+            "Gestor", carregar_lista_de_gestores(), index=-1, placeholder="Selecione"
+        )
+        classe = st.selectbox(
+            "Classe",
+            [" "] + carregar_lista_de_classes(),
+            index=-1,
+            placeholder="Selecione",
+        )
 
     if st.button("Carregar dados..."):
         if not mes_ano_no_passado(mes, ano):
