@@ -14,26 +14,31 @@ pandas==2.1.0
 numpy==1.25.2
 
 # Datas
-pandas_market_calendars==4.1.4
+pandas_market_calendars==4.3.1
 workalendar==17.0.0
 
 # Fontes de dados
-yfinance==0.2.22
-python-bcb==0.1.9
+yfinance==0.2.28
+python-bcb==0.2.0
 sidrapy==0.1.4
 fundamentus==0.2.0
 quantstats==0.0.62
-IPython
+IPython==8.15.0
 
 # Gráficos
-matplotlib==3.7.1
+matplotlib==3.7.3
 seaborn==0.12.2
-plotly==5.15.0
-imgkit
+plotly==5.17.0
+imgkit==1.2.3
 
 # Banco de dados
-pymongo==4.4.0
+pymongo==4.5.0
 
+# IA
+# flair==0.12.2
+# gdown==4.4.0
+# mpld3==0.3
+# tensorflow==2.13.0
 # Não sei bem...
 #jinja2==3.1.2
 #seleniumbase

@@ -11,6 +11,7 @@ class Menu:
         "Dividendos",
         "Factor Investing",
         "Relatório QuantStats",
+        "Fundos Brasileiros",
     ]
 
     def __init__(self):
@@ -21,54 +22,37 @@ class Menu:
         if selecionada == "Inicial":
             from paginas.page_inicial import main
 
-            main()
-
         if selecionada == "Inflação":
             from paginas.page_inflacao import main
-
-            main()
 
         if selecionada == "Tesouro Direto":
             from paginas.page_tesouro_direto import main
 
-            main()
-
         if selecionada == "Dias Consecutivos":
             from paginas.page_dias_consecutivos import main
-
-            main()
 
         if selecionada == "Comparativo de Fundamentos":
             from paginas.page_comparativo_fundamentos import main
 
-            main()
-
         if selecionada == "Panorama de Mercado":
             from paginas.page_panorama_mercado import main
-
-            main()
 
         if selecionada == "Rentabilidades mensais":
             from paginas.page_rentabilidades_mensais import main
 
-            main()
-
         if selecionada == "Dividendos":
             from paginas.page_dividendos import main
-
-            main()
 
         if selecionada == "Carteira":
             from paginas.page_comparador_carteiras import main
 
-            main()
-
         if selecionada == "Factor Investing":
             from paginas.page_factor_investing import main
-
-            main()
 
         if selecionada == "Relatório QuantStats":
             from paginas.page_relatorio_quantstats import main
 
-            main()
+        if selecionada == "Fundos Brasileiros":
+            from paginas.page_fundos_brasileiros import main
+
+        main()
