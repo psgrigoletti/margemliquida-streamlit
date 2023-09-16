@@ -242,12 +242,11 @@ def main():
         quantidade = st.text_input("Quantidade", "10")
     with col4:
         gestor = st.selectbox(
-            "Gestor", carregar_lista_de_gestores(), index=-1, placeholder="Selecione"
+            "Gestor", carregar_lista_de_gestores(), placeholder="Selecione"
         )
         classe = st.selectbox(
             "Classe",
             [" "] + carregar_lista_de_classes(),
-            index=-1,
             placeholder="Selecione",
         )
 
