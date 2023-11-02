@@ -1,6 +1,6 @@
 # Ultima revisão: 03/07/2023
 
-pip==23.2.1
+pip==23.3
 
 # Interface
 streamlit==1.26.0
