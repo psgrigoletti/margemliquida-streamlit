@@ -1,8 +1,9 @@
 import streamlit as st
 import yfinance as yf
 import pandas as pd
-from datetime import date
-import plotly.graph_objects as go
+
+# from datetime import date
+# import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 import seaborn as sns
 

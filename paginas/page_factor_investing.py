@@ -1,5 +1,5 @@
 import math
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import yfinance as yf
 import streamlit as st
 import pandas as pd
@@ -10,7 +10,7 @@ from libs.market_data.fundamentus.lista import (
     get_df_acoes_do_setor,
 )
 import extra_streamlit_components as stx
-import plotly.express as px
+#import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
