@@ -13,7 +13,7 @@ def atualizar_dados_relatorio_focus(data_atual):
 
 
 def main():
-    st.title("Relatório FOCUS")
+    st.title(":memo: Relatório FOCUS")
     mensagens = st.container()
 
     agora = DataHoraUtils.retorna_data_atual_formato_ddmmyyyy()

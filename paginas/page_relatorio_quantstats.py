@@ -8,7 +8,7 @@ import pandas as pd
 
 
 def main():
-    st.title(":flag-br: Relatório QuantStats")
+    st.title(":chart_with_upwards_trend: Relatório QuantStats")
     alertas = st.empty()
     col1, col2, col3 = st.columns(3)
     with col1:
