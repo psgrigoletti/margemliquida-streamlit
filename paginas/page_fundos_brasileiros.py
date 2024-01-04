@@ -63,7 +63,7 @@ def carregar_fundos_maiores_baixas(mes, ano, maior_data_dos_dados, quantidade):
                 baixas[baixas.index == cnpj].values[0],
                 "NAO ENCONTRADO",
                 "NAO ENCONTRADO",
-                "NAO ENCONTRADO",
+                0,
             ]
     return fundo_df_baixa
 
@@ -102,7 +102,7 @@ def carregar_fundos_maiores_altas(mes, ano, maior_data_dos_dados, quantidade):
                 altas[altas.index == cnpj].values[0],
                 "NAO ENCONTRADO",
                 "NAO ENCONTRADO",
-                "NAO ENCONTRADO",
+                0,
             ]
     return fundo_df_alta
 
@@ -129,6 +129,8 @@ def carregar_todos_dados_cadastrais():
         },
     )
     cadastral = cadastral[~cadastral["SIT"].str.contains("CANCELADA")]
+    cadastral = cadastral[~cadastral["DENOM_SOCIAL"].str.contains("NAO ENCONTRADO")]
+
     # print(
     #     "Retornando informações cadastrais de "
     #     + str(len(cadastral))
@@ -235,20 +237,20 @@ def main():
 
     col1, col2, col3, col4 = st.columns([1, 1, 1, 4])
     with col1:
-        mes = st.text_input("Mês (formato MM)", "08")
+        mes = st.text_input("Mês (formato MM)", "12")
     with col2:
         ano = st.text_input("Ano (formado YYYY)", "2023")
     with col3:
         quantidade = st.text_input("Quantidade", "10")
-    with col4:
-        gestor = st.selectbox(
-            "Gestor", carregar_lista_de_gestores(), placeholder="Selecione"
-        )
-        classe = st.selectbox(
-            "Classe",
-            [" "] + carregar_lista_de_classes(),
-            placeholder="Selecione",
-        )
+    # with col4:
+    #     gestor = st.selectbox(
+    #         "Gestor", carregar_lista_de_gestores(), placeholder="Selecione"
+    #     )
+    #     classe = st.selectbox(
+    #         "Classe",
+    #         [" "] + carregar_lista_de_classes(),
+    #         placeholder="Selecione",
+    #     )
 
     if st.button("Carregar dados..."):
         if not mes_ano_no_passado(mes, ano):
@@ -311,6 +313,8 @@ def main():
             )
             locs, labels = plt.xticks()
             plt.setp(labels, rotation=80)
+            plt.xlabel("CNPJ")
+
             st.write(fundo_df_alta)
             st.pyplot(fig1)
 
@@ -330,5 +334,7 @@ def main():
             ).figure
             locs, labels = plt.xticks()
             plt.setp(labels, rotation=80)
+            plt.xlabel("CNPJ")
+
             st.write(fundo_df_baixa)
             st.pyplot(fig2)

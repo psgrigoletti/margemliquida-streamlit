@@ -88,7 +88,9 @@ class CarteiraGlobal:
                     df = pd.DataFrame(retorno)
             except:
                 logging.log(logging.ERROR, f"Erro ao buscar cotações de {t_sem_sa}")
-        df.fillna(method="ffill", inplace=True)
+
+        if df is not None:
+            df.fillna(method="ffill", inplace=True)
         return df
 
     def retonar_dados_fiis(self, ticker):

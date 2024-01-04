@@ -1,107 +1,77 @@
-import time
 import streamlit as st
-import pandas as pd
 import yfinance as yf
-from datetime import datetime, timedelta
-from libs.tesouro_direto import TesouroDireto
-
-
-# @st.cache_data(show_spinner="Carregando dados...", ttl=60*5)
-# def atualizar_dados_tesouro_direto(data_atual):
-#     td = TesouroDireto()
-#     td.atualizar_graficos()
-#     return td
-
-
-def carregar_dados(mensagens):
-    print("carregar")
-
-
-#     delta = 0
-#     if time.tzname[0] == "UTC":
-#         delta = 3
-#     agora = datetime.today() - timedelta(hours=delta, minutes=0)
-#     agora = agora.strftime('%d/%m/%Y')
-
-#     td = atualizar_dados_tesouro_direto(agora)
-
-#     with mensagens:
-#         st.success("Dados carregados com sucesso!")
-
-#     selic, ipca, pre = st.tabs(["SELIC", ":dragon: IPCA+", "PREFIXADO"])
-
-#     with selic:
-#         st.markdown("## Tesouro SELIC")
-#         st.plotly_chart(td.retornar_grafico_precos_tesouro_selic(),
-#                         use_container_width=True)
-#         st.plotly_chart(td.retornar_grafico_taxas_tesouro_selic(),
-#                         use_container_width=True)
-
-#     with ipca:
-#         st.markdown("## Tesouro IPCA+")
-#         st.plotly_chart(td.retornar_grafico_precos_tesouro_ipca(),
-#                         use_container_width=True)
-#         st.plotly_chart(td.retornar_grafico_taxas_tesouro_ipca(),
-#                         use_container_width=True)
-
-#     with pre:
-#         st.markdown("## Tesouro PREFIXADO")
-#         st.plotly_chart(td.retornar_grafico_precos_tesouro_pre(),
-#                         use_container_width=True)
-#         st.plotly_chart(td.retornar_grafico_taxas_tesouro_pre(),
-#                         use_container_width=True)
+import quantstats as qs
+import imgkit
+import uuid
+import os
+import pandas as pd
 
 
 def main():
     st.title(":flag-br: Relatório QuantStats")
-    mensagens = st.container()
+    alertas = st.empty()
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        ticker = st.text_input("Ticker", "BBSE3.SA")
 
-    ticker = st.text_input("Ticker", "BBSE3.SA")
-    indice = st.text_input("Índice", "BOVA11.SA")
-    data_inicial = st.text_input("Data inicial", "2023-01-01")
+    with col2:
+        indice = st.text_input("Índice", "BOVA11.SA")
 
-    if st.button("Carregar dados..."):
-        carregar_dados(mensagens)
-        import quantstats as qs
+    with col3:
+        data_inicial = st.text_input("Data inicial", "2023-01-01")
 
-        # extend pandas functionality with metrics, etc.
-        qs.extend_pandas()
+    if st.button("Gerar relatórios"):
+        ticker = ticker.upper()
+        if not ticker.endswith(".SA"):
+            ticker = ticker + ".SA"
 
-        # fetch the daily returns for a stock
-        stock = yf.download(ticker, start=data_inicial, interval="1d")
-        stock.rename(columns={"Close": ticker}, inplace=True)
-        stock = stock[ticker].pct_change()
-        stock = stock.dropna()
-        # stock.index = pd.to_datetime(stock.index)
+        indice = indice.upper()
+        if not indice.endswith(".SA"):
+            indice = indice + ".SA"
 
-        index = yf.download(indice, start=data_inicial, interval="1d")
-        index.rename(columns={"Close": indice}, inplace=True)
-        index = index[indice].pct_change()
-        index = index.dropna()
-        # index.index = pd.to_datetime(index.index)
+        with st.spinner("Gerando os relatórios, aguarde..."):
+            qs.extend_pandas()
 
-        # show sharpe ratio
+            # fetch the daily returns for a stock
+            stock = yf.download(ticker, start=data_inicial, interval="1d")
+            stock.rename(columns={"Close": ticker}, inplace=True)
+            stock = stock[ticker].pct_change()
+            stock = stock.dropna()
 
-        tab_resumo, tab_completo = st.tabs(["Resumo", "Completo"])
+            index = yf.download(indice, start=data_inicial, interval="1d")
+            index.rename(columns={"Close": indice}, inplace=True)
+            index = index[indice].pct_change()
+            index = index.dropna()
 
-        qs.stats.sharpe(stock)
+            tab_resumo, tab_completo = st.tabs(["Resumo", "Completo"])
 
-        # or using extend_pandas() :)
-        stock.sharpe()
-        fig = qs.plots.snapshot(stock, title=f"{ticker} Performance", show=False)
+            qs.stats.sharpe(stock)
+            stock.sharpe()
+            fig = qs.plots.snapshot(stock, title=f"{ticker} Performance", show=False)
 
-        with tab_resumo:
-            st.write(fig)
+            with tab_resumo:
+                st.write(fig)
 
-        with tab_completo:
-            html = qs.reports.html(
-                stock,
-                index,
-                output="quantstats-tearsheet.html",
-                download_filename="quantstats-tearsheet.html",
-            )
+            with tab_completo:
+                myuuid = uuid.uuid4()
 
-            import imgkit
+                arquivo_html = f"quantstats-tearsheet-{myuuid}.html"
+                arquivo_jpg = f"quantstats-tearsheet-{myuuid}.jpg"
 
-            imgkit.from_file("quantstats-tearsheet.html", "quantstats-tearsheet.jpg")
-            st.image("quantstats-tearsheet.jpg")
+                pd.options.plotting.backend = "matplotlib"
+
+                _ = qs.reports.html(
+                    stock,
+                    index,
+                    output=arquivo_html,
+                    download_filename=arquivo_html,
+                )
+
+                imgkit.from_file(arquivo_html, arquivo_jpg)
+                st.image(arquivo_jpg)
+
+                os.remove(arquivo_html)
+                os.remove(arquivo_jpg)
+
+                with alertas:
+                    st.success("Relatórios gerados com sucesso.", icon="✅")

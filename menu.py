@@ -10,7 +10,8 @@ class Menu:
         "Rentabilidades mensais",
         "Dividendos",
         "Factor Investing",
-        "Markowitz - Fronteira Eficiente",
+        "Relatório FOCUS",
+        # "Markowitz - Fronteira Eficiente",
         "Relatório QuantStats",
         "Fundos Brasileiros",
     ]
@@ -58,5 +59,8 @@ class Menu:
 
         if selecionada == "Markowitz - Fronteira Eficiente":
             from paginas.page_markowitz import main
+
+        if selecionada == "Relatório FOCUS":
+            from paginas.page_relatorio_focus import main
 
         main()

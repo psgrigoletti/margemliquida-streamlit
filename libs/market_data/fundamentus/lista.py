@@ -37,8 +37,13 @@ def get_df_acoes_do_setor(id_setor):
 def get_df_fiis(hdr=hdr):
     url = "https://www.fundamentus.com.br/fii_resultado.php"
     content = requests.get(url, headers=hdr)
+    from io import StringIO
+
     df = pd.read_html(
-        content.text, decimal=",", thousands=".", attrs={"id": "tabelaResultado"}
+        StringIO(str(content.text)),
+        decimal=",",
+        thousands=".",
+        attrs={"id": "tabelaResultado"},
     )[0]
 
     df["Dividend Yield"] = perc_to_float(df["Dividend Yield"])
@@ -52,8 +57,14 @@ def get_df_fiis(hdr=hdr):
 def get_df_acoes(hdr=hdr):
     url = "https://www.fundamentus.com.br/resultado.php"
     content = requests.get(url, headers=hdr)
+
+    from io import StringIO
+
     df = pd.read_html(
-        content.text, decimal=",", thousands=".", attrs={"id": "resultado"}
+        StringIO(str(content.text)),
+        decimal=",",
+        thousands=".",
+        attrs={"id": "resultado"},
     )[0]
 
     df["Div.Yield"] = perc_to_float(df["Div.Yield"])

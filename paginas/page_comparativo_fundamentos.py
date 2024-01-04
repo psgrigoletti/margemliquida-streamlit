@@ -1,17 +1,21 @@
-import datetime
-import os
-from datetime import date
-from pprint import pprint
+# import datetime
+# import os
+# from datetime import date
+# from pprint import pprint
 from typing import List
 
 import fundamentus as fd
-import numpy as np
+
+# import numpy as np
 import pandas as pd
-import plotly.graph_objects as go
+
+# import plotly.graph_objects as go
 import streamlit as st
-import yfinance as yf
+
+# import yfinance as yf
 from tabulate import tabulate
-from utils.streamlit_utils import adicionar_avisos_dev
+
+# from utils.streamlit_utils import adicionar_avisos_dev
 
 
 @st.cache_data(show_spinner="Buscando todos os dados fundamentalistas...", ttl=3600)
@@ -294,15 +298,14 @@ def formatar_valor(valor: str):
 
 
 def validar(papeis_selecionados, indicadores_selecionados, alertas):
-    if len(papeis_selecionados) == 0:
+    if len(papeis_selecionados) <= 1:
         with alertas:
-            st.error(icon="🚨", body="Selecione pelo menos um ticker.")
+            st.error(icon="🚨", body="Selecione pelo menos 2 tickers.")
         st.stop()
 
-    print(type(indicadores_selecionados))
     if len(indicadores_selecionados) == 0:
         with alertas:
-            st.error(icon="🚨", body="Selecione pelo menos um indicador.")
+            st.error(icon="🚨", body="Selecione pelo menos 1 indicador.")
         st.stop()
 
 
@@ -340,7 +343,7 @@ def gerar_observacoes():
 
 def main():
     st.title(":tophat: Comparador de Fundamentos")
-    mensagens = st.container()
+    # mensagens = st.container()
 
     st.markdown(
         """
@@ -361,7 +364,7 @@ def main():
 
     alertas = st.empty()
     dados = get_resultado()
-    setores = fd.setor._setor
+    # setores = fd.setor._setor
     dados = dados.transpose()
     lista_indicadores = list(map(lambda i: i["nome"], detalhes))
 
@@ -378,3 +381,5 @@ def main():
         validar(papeis_selecionados, indicadores_selecionados, alertas)
         gerar_tabela(dados, papeis_selecionados, indicadores_selecionados)
         gerar_observacoes()
+        with alertas:
+            st.success("Comparação gerada com sucesso", icon="✅")

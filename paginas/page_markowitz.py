@@ -27,7 +27,9 @@ def main():
     ## Formulário
 
     col1, col2, col3 = st.columns([1, 1, 1])
-    tickers = col1.text_input("Tickers separados por espaço:", "")
+    tickers = col1.text_input(
+        "Tickers separados por espaço (sem .SA):", "PETR3 BBSE3 VALE5"
+    )
     data_inicial = col2.date_input("Data inicial:", datetime.date(2018, 1, 1))
     data_final = col3.date_input("Data final:", datetime.datetime.now())
 
@@ -46,7 +48,7 @@ def main():
         tabela_pesos = np.zeros((numero_carteiras, len(lista_acoes)))
 
         for k in range(numero_carteiras):
-            pesos = np.random.random(len(lista_acoes))
+            pesos = np.random.Generator(len(lista_acoes))
             pesos = pesos / np.sum(pesos)
             tabela_pesos[k, :] = pesos
 

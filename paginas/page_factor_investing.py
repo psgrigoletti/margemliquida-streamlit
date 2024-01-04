@@ -125,14 +125,14 @@ def mostrar_tab_fiis():
 
             acoes = [i + ".SA" for i in df_fiis_tela.index]
 
-            if len(acoes) <= 15:
+            if len(acoes) > 0 and len(acoes) <= 15:
                 pd.options.plotting.backend = "plotly"
 
                 df_fechamento = buscar_dados_carteira_global(
-                    acoes, "2022-01-01", "2023-07-07"
+                    acoes, "2022-01-01", "2023-12-31"
                 )
                 # TODO: fazer essa funcao usando a carteira global
-                df_ifix = buscar_dados_ifix_carteira_global("2022-01-01", "2023-07-07")
+                df_ifix = buscar_dados_ifix_carteira_global("2022-01-01", "2023-12-31")
                 df_fechamento = df_ifix.merge(
                     df_fechamento, left_index=True, right_index=True, how="inner"
                 )
@@ -445,11 +445,11 @@ def mostrar_filtros_fiis(filtros):
         col1_dy, col2_dy, _ = st.columns([2, 2, 6])
         with col1_dy:
             filtros["dy_minimo"] = st.number_input(
-                "Dividend Yield (%) mínimo", 0, 100, step=1
+                "Dividend Yield (%) mínimo", 0, 100, 6, step=1
             )
         with col2_dy:
             filtros["dy_maximo"] = st.number_input(
-                "Dividend Yield (%) máximo", 0, 100, step=1
+                "Dividend Yield (%) máximo", 0, 100, 12, step=1
             )
 
 
@@ -492,8 +492,8 @@ def filtrar_df_fiis(filtros):
     df_tela = df_tela[df_tela["Cotação"] >= filtros["cotacao"][0]]
     df_tela = df_tela[df_tela["Cotação"] <= filtros["cotacao"][1]]
 
-    df_tela = df_tela[df_tela["Dividend Yield"] >= filtros["dy"][0] / 100]
-    df_tela = df_tela[df_tela["Dividend Yield"] <= filtros["dy"][1] / 100]
+    df_tela = df_tela[df_tela["Dividend Yield"] >= filtros["dy_minimo"] / 100]
+    df_tela = df_tela[df_tela["Dividend Yield"] <= filtros["dy_maximo"] / 100]
 
     df_tela = df_tela[df_tela["P/VP"] >= filtros["pvp"][0]]
     df_tela = df_tela[df_tela["P/VP"] <= filtros["pvp"][1]]
@@ -583,23 +583,19 @@ def mostrar_tab_acoes():
 
 def main():
     st.title(":star: Factor Investing")
-    mensagens = st.container()
+    alertas = st.empty()
 
     if st.button("Carregar dados...") or (is_dados_carregados()):
-        tab_geral = stx.tab_bar(
-            data=[
-                stx.TabBarItemData(id="tab_acoes", title="Ações", description="Ações"),
-                stx.TabBarItemData(id="tab_fiis", title="FIIs", description="FIIs"),
-            ],
-            default="tab_acoes",
-            key="tab_geral",
-        )
+        tab_acoes, tab_fiis = st.tabs(["Ações", "FIIs"])
 
         busca_df_fiis_do_cache()
         busca_df_acoes_do_cache()
 
-        if tab_geral == "tab_acoes":
+        with tab_acoes:
             mostrar_tab_acoes()
 
-        elif tab_geral == "tab_fiis":
+        with tab_fiis:
             mostrar_tab_fiis()
+
+        with alertas:
+            st.success("Filtros carregados com sucesso!")
