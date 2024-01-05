@@ -4,9 +4,10 @@
 - exercitar os aprendizados no curso [Python para Mercado Financeiro](https://hotmart.com/pt-br/marketplace/produtos/python-para-mercado-financeiro/) da [Trading com Dados](https://tradingcomdados.com/).
 - aprender a usar a biblioteca [Streamlit](https://streamlit.io/) bem como o ambiente [Streamlit Cloud](https://streamlit.io/cloud).
 
-# :computer: Para rodar localmente
+# :computer: Para você rodar localmente:
 
 - clonar o repositório
+  - git clone ... 
 - entrar na pasta margemliquida-streamlit
 - se quiser crie um env para isolar as dependências desta aplicação
 - baixar as dependências
@@ -16,12 +17,15 @@
 - acessar no navegador a url http://localhost:8501/
   - ```usuário: guest | senha: guest```
 
-# :computer: Para acessar a app deployada na [Streamlit Cloud](https://streamlit.io/cloud)
-- acessar no navegador a url [margemliquida.streamlit.app](https://margemliquida.streamlit.app/)
+# :computer: Para você acessar a app na [Streamlit Cloud](https://streamlit.io/cloud):
+- acessar no navegador a url [https://margemliquida.streamlit.app/](https://margemliquida.streamlit.app/)
   - ```usuário: guest | senha: guest```
 
-# :bug: Todo list:
-...
+# :bug: Issues para bugs ou features:
+- Encontrou bugs ou deseja novas funcionalidades? [Clique aqui](https://github.com/psgrigoletti/margemliquida-streamlit/issues/new) e abra uma issue.
+
+# :construction: Todo list:
+- Em construção
 
 # :pill: Links úteis:
 - [Streamlit - Site oficial](http://streamlit.io) 
