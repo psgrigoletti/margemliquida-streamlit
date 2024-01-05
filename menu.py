@@ -10,6 +10,7 @@ class Menu:
         "Rentabilidades mensais",
         "Dividendos",
         "Screening",
+        "Composição dos índices",
         "Relatório FOCUS",
         # "Markowitz - Fronteira Eficiente",
         "Relatório QuantStats",
@@ -62,5 +63,8 @@ class Menu:
 
         if selecionada == "Relatório FOCUS":
             from paginas.page_relatorio_focus import main
+
+        if selecionada == "Composição dos índices":
+            from paginas.page_composicao_indices import main
 
         main()

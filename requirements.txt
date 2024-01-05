@@ -41,7 +41,8 @@ pymongo==4.6.1
 # tensorflow==2.13.0
 # Não sei bem...
 #jinja2==3.1.2
-#seleniumbase
+selenium==4.16.0
+kaleido
 #webdriver-manager
 #holidays
 #scipy

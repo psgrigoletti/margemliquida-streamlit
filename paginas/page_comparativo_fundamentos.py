@@ -334,17 +334,18 @@ def gerar_tabela(dados, papeis_selecionados, indicadores_selecionados):
     st.write(retorno_markdown, unsafe_allow_html=True)
 
 
-def gerar_observacoes():
-    st.write("------")
+def gerar_observacoes(papeis_selecionados):
+    url_papeis = ",".join(papeis_selecionados).lower().strip()
     st.write(
-        "Observação: Dados do site [Fundamentus](https://www.fundamentus.com.br/). Baseado no comparador existente no site [Status Invest](https://statusinvest.com.br/cliente/comparar-acoes/)."
+        f"[Ver esta comparação no site StatusInvest](https://statusinvest.com.br/cliente/comparar-acoes/{url_papeis})"
     )
 
 
 def main():
     st.title(":tophat: Comparador de Fundamentos")
+    st.write("**Fonte**: https://www.fundamentus.com.br/")
     st.write(
-        "**Fonte**: https://www.fundamentus.com.br/"
+        "Baseado no comparador existente no site [Status Invest](https://statusinvest.com.br/cliente/comparar-acoes/)."
     )
     # mensagens = st.container()
 
@@ -383,6 +384,7 @@ def main():
     if form.form_submit_button("Comparar"):
         validar(papeis_selecionados, indicadores_selecionados, alertas)
         gerar_tabela(dados, papeis_selecionados, indicadores_selecionados)
-        gerar_observacoes()
+        gerar_observacoes(papeis_selecionados)
+
         with alertas:
             st.success("Comparação gerada com sucesso", icon="✅")
