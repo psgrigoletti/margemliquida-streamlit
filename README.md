@@ -22,7 +22,7 @@
   - para logar use ```usuário: guest | senha: guest```
 
 # Criar usuários
-- Ajuste o arquivo config.yaml de acordo com essas [instruções](https://blog.streamlit.io/streamlit-authenticator-part-1-adding-an-authentication-component-to-your-app/).
+- Ajuste o arquivo config.yaml de acordo com as [instruções](https://blog.streamlit.io/streamlit-authenticator-part-1-adding-an-authentication-component-to-your-app/).
 
 # :bug: Issues para bugs ou features:
 - Encontrou bugs ou deseja novas funcionalidades? [Clique aqui](https://github.com/psgrigoletti/margemliquida-streamlit/issues/new) e abra uma issue.
