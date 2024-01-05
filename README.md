@@ -18,6 +18,10 @@ Versão: 0.0.1
 - acessar no navegador a url http://localhost:8501/
   - usuário: guest | senha: guest
 
+# Para acessar a app deployada na [Streamlit Cloud](https://streamlit.io/cloud)
+- acessar no navegador a url [margemliquida.streamlit.app](https://margemliquida.streamlit.app/)
+  - usuário: guest | senha: guest
+
 ## Contato:
 **Pablo Grigoletti** - psgrigoletti@gmail.com
 
