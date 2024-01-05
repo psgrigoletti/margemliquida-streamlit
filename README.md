@@ -1,25 +1,28 @@
 # margemliquida-streamlit (eternamente versão: 0.0.1)
 
 # :bulb: Aplicação criada para:
-- exercitar os aprendizados no curso [Python para Mercado Financeiro](https://hotmart.com/pt-br/marketplace/produtos/python-para-mercado-financeiro/) da [Trading com Dados](https://tradingcomdados.com/).
-- aprender a usar a biblioteca [Streamlit](https://streamlit.io/) bem como o ambiente [Streamlit Cloud](https://streamlit.io/cloud).
+- Exercitar os aprendizados no curso [Python para Mercado Financeiro](https://hotmart.com/pt-br/marketplace/produtos/python-para-mercado-financeiro/) da [Trading com Dados](https://tradingcomdados.com/).
+- Aprender a usar a biblioteca [Streamlit](https://streamlit.io/) bem como o ambiente [Streamlit Cloud](https://streamlit.io/cloud).
 
 # :computer: Para você rodar localmente:
 
-- clonar o repositório:
+- Clonar o repositório:
   - ```git clone git@github.com:psgrigoletti/margemliquida-streamlit.git``` 
-- entrar na pasta margemliquida-streamlit
-- se quiser, crie um env para isolar as dependências desta aplicação
-- baixar as dependências:
+- Entrar na pasta margemliquida-streamlit
+- Se quiser, crie um env para isolar as dependências desta aplicação
+- Baixar as dependências:
   - ```$ pip install -r requirements.txt ```
-- executar o comando para iniciar o streamlit:
+- Executar o comando para iniciar o streamlit:
   - ```$ streamlit run streamlit_app.py```
-- acessar no navegador a url [http://localhost:8501](http://localhost:8501/):
+- Acessar no navegador a url [http://localhost:8501](http://localhost:8501/):
   - para logar use ```usuário: guest | senha: guest```
 
 # :computer: Para você acessar na [Streamlit Cloud](https://streamlit.io/cloud):
-- acessar no navegador a url [https://margemliquida.streamlit.app/](https://margemliquida.streamlit.app/)
+- Acessar no navegador a url [https://margemliquida.streamlit.app/](https://margemliquida.streamlit.app/)
   - para logar use ```usuário: guest | senha: guest```
+
+# Criar usuários
+- Ajuste o arquivo config.yaml de acordo com essas [instruções](https://blog.streamlit.io/streamlit-authenticator-part-1-adding-an-authentication-component-to-your-app/).
 
 # :bug: Issues para bugs ou features:
 - Encontrou bugs ou deseja novas funcionalidades? [Clique aqui](https://github.com/psgrigoletti/margemliquida-streamlit/issues/new) e abra uma issue.
@@ -35,4 +38,4 @@
 - [Trading com Dados](https://www.tradingcomdados.com.br/)
 
 # :email: Contato:
-**Pablo Grigoletti** - ```psgrigoletti@gmail.com```
+**Pablo Souza Grigoletti** - ```psgrigoletti@gmail.com```
