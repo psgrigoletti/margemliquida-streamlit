@@ -1,14 +1,21 @@
 # margemliquida-streamlit
 
-Aplicação criada para exercitar os aprendizados no curso Python para Mercado Financeiro.
-Aprender a usar a biblioteca [Streamlit](https://streamlit.io/) bem como o ambiente [Streamlit Cloud](https://streamlit.io/cloud).
+Aplicação criada para:
+- exercitar os aprendizados no curso [Python para Mercado Financeiro](https://hotmart.com/pt-br/marketplace/produtos/python-para-mercado-financeiro/) da [**Trading com Dados**](https://tradingcomdados.com/).
+- aprender a usar a biblioteca [Streamlit](https://streamlit.io/) bem como o ambiente [Streamlit Cloud](https://streamlit.io/cloud).
 
-Versão: 0.0.1 - 04/01/2024
+Versão: 0.0.1
 
-## Curso:
-**Trading com Dados**: https://tradingcomdados.com/
+# Para rodar localmente
 
-**Curso Python para Mercado Financeiro**: https://hotmart.com/pt-br/marketplace/produtos/python-para-mercado-financeiro/
+- clonar o repositório
+- entrar na pasta margemliquida-streamlit
+- se quiser crie um env para isolar as dependências desta aplicação
+- baixar as dependências
+  - $ pip install -r requirements.txt 
+- executar o comando
+  - $ streamlit run streamlit_app.py
+- acessar no navegador a url http://localhost:8501/
 
 ## Contato:
 **Pablo Grigoletti** - psgrigoletti@gmail.com
