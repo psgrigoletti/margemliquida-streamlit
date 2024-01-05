@@ -6,20 +6,20 @@
 
 # :computer: Para você rodar localmente:
 
-- clonar o repositório
-  - git clone ... 
+- clonar o repositório:
+  - ```git clone git@github.com:psgrigoletti/margemliquida-streamlit.git``` 
 - entrar na pasta margemliquida-streamlit
-- se quiser crie um env para isolar as dependências desta aplicação
-- baixar as dependências
+- se quiser, crie um env para isolar as dependências desta aplicação
+- baixar as dependências:
   - ```$ pip install -r requirements.txt ```
-- executar o comando
+- executar o comando para iniciar o streamlit:
   - ```$ streamlit run streamlit_app.py```
-- acessar no navegador a url http://localhost:8501/
-  - ```usuário: guest | senha: guest```
+- acessar no navegador a url [http://localhost:8501](http://localhost:8501/):
+  - para logar use ```usuário: guest | senha: guest```
 
 # :computer: Para você acessar na [Streamlit Cloud](https://streamlit.io/cloud):
 - acessar no navegador a url [https://margemliquida.streamlit.app/](https://margemliquida.streamlit.app/)
-  - ```usuário: guest | senha: guest```
+  - para logar use ```usuário: guest | senha: guest```
 
 # :bug: Issues para bugs ou features:
 - Encontrou bugs ou deseja novas funcionalidades? [Clique aqui](https://github.com/psgrigoletti/margemliquida-streamlit/issues/new) e abra uma issue.
