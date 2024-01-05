@@ -16,6 +16,7 @@ Versão: 0.0.1
 - executar o comando
   - $ streamlit run streamlit_app.py
 - acessar no navegador a url http://localhost:8501/
+  - usuário: guest | senha: guest
 
 ## Contato:
 **Pablo Grigoletti** - psgrigoletti@gmail.com
