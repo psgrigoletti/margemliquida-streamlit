@@ -10,6 +10,9 @@ import seaborn as sns
 
 def main():
     st.title(":chart_with_upwards_trend: Rentabilidades mensais")
+    st.write(
+        "**Fonte**: https://finance.yahoo.com/ via [yfinance](https://pypi.org/project/yfinance/)"
+    )
     alertas = st.empty()
 
     opcoes = st.radio("Selecione", ["Índices", "Ações"])

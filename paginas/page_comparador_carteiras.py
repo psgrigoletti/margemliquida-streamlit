@@ -43,6 +43,9 @@ def main():
     st.title(
         ":straight_ruler: Comparar Carteira",
     )
+    st.write(
+        "**Fonte**: https://finance.yahoo.com/ via [yfinance](https://pypi.org/project/yfinance/)"
+    )
 
     mostrar_pagina()
     alertas = st.empty()

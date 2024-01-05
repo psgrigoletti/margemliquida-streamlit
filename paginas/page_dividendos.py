@@ -139,6 +139,7 @@ def main():
     st.title(
         ":heavy_dollar_sign: Dividendos",
     )
+    st.write("**Fonte**: _https://api.carteiraglobal.com_")
     mensagens = st.container()
 
     ## Formulário

@@ -130,7 +130,6 @@ def carregar_todos_dados_cadastrais():
     )
     cadastral = cadastral[~cadastral["SIT"].str.contains("CANCELADA")]
     cadastral = cadastral[~cadastral["DENOM_SOCIAL"].str.contains("NAO ENCONTRADO")]
-
     # print(
     #     "Retornando informações cadastrais de "
     #     + str(len(cadastral))
@@ -233,7 +232,7 @@ def carregar_cotas_normalizadas(mes, ano):
 def main():
     st.title(":flag-br: Fundos Brasileiros")
     st.write("**Fonte**: _http://dados.cvm.gov.br_")
-    mensagens = st.container()
+    alertas = st.container()
 
     col1, col2, col3, col4 = st.columns([1, 1, 1, 4])
     with col1:
@@ -254,10 +253,18 @@ def main():
 
     if st.button("Carregar dados..."):
         if not mes_ano_no_passado(mes, ano):
-            mensagens.error("Informe um mês ano que já tenha encerrado", icon="🚨")
+            with alertas:
+                st.error("Informe um mês ano que já tenha encerrado", icon="🚨")
             st.stop()
 
-        informes_diarios = carregar_dados_informes_diarios(mes, ano)
+        try:
+            informes_diarios = carregar_dados_informes_diarios(mes, ano)
+        except:
+            with alertas:
+                frase = "Erro ao buscar dados de http://dados.cvm.gov.br. Tente mais tarde..."
+                st.error(frase, icon="🚨")
+            st.stop()
+
         maior_data_dos_dados = informes_diarios["DT_COMPTC"].max()
         # maior_data_dos_dados = data_anterior(maior_data_dos_dados)
 

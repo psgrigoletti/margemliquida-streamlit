@@ -9,7 +9,7 @@ class Menu:
         "Panorama de Mercado",
         "Rentabilidades mensais",
         "Dividendos",
-        "Factor Investing",
+        "Screening",
         "Relatório FOCUS",
         # "Markowitz - Fronteira Eficiente",
         "Relatório QuantStats",
@@ -48,8 +48,8 @@ class Menu:
         if selecionada == "Carteira":
             from paginas.page_comparador_carteiras import main
 
-        if selecionada == "Factor Investing":
-            from paginas.page_factor_investing import main
+        if selecionada == "Screening":
+            from paginas.page_screening import main
 
         if selecionada == "Relatório QuantStats":
             from paginas.page_relatorio_quantstats import main

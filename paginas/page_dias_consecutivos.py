@@ -43,6 +43,9 @@ def validar_parametros(ticker, data_inicial, data_final, dias_analise, mensagens
 
 def main():
     st.title(":calendar: Dias Consecutivos")
+    st.write(
+        "**Fonte**: https://finance.yahoo.com/ via [yfinance](https://pypi.org/project/yfinance/)"
+    )
     mensagens = st.container()
 
     col1, col2, col3 = st.columns(3)

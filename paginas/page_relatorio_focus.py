@@ -14,7 +14,10 @@ def atualizar_dados_relatorio_focus(data_atual):
 
 def main():
     st.title(":memo: Relatório FOCUS")
-    mensagens = st.container()
+    st.write(
+        "**Fonte**: _https://www.bcb.gov.br/_ via [python-bcb](https://pypi.org/project/python-bcb/)"
+    )
+    alertas = st.container()
 
     agora = DataHoraUtils.retorna_data_atual_formato_ddmmyyyy()
     try:

@@ -55,6 +55,8 @@ def carregar_dados(mensagens):
 
 def main():
     st.title(":flag-br: Tesouro Direto")
+    st.write("**Fonte**: https://www.tesourotransparente.gov.br/")
+
     mensagens = st.container()
 
     if st.button("Carregar dados..."):

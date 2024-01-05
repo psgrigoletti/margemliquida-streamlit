@@ -52,6 +52,9 @@ def gerar_valor(dict_tickers, df_info, numero_item):
 
 def main():
     st.title(":coffee: Panorama de Mercado")
+    st.write(
+        "**Fonte**: https://finance.yahoo.com/ via [yfinance](https://pypi.org/project/yfinance/)"
+    )
     mensagens = st.container()
 
     if st.button("Carregar dados..."):

@@ -343,6 +343,9 @@ def gerar_observacoes():
 
 def main():
     st.title(":tophat: Comparador de Fundamentos")
+    st.write(
+        "**Fonte**: https://www.fundamentus.com.br/"
+    )
     # mensagens = st.container()
 
     st.markdown(
