@@ -17,7 +17,7 @@
 - acessar no navegador a url http://localhost:8501/
   - ```usuário: guest | senha: guest```
 
-# :computer: Para você acessar a app na [Streamlit Cloud](https://streamlit.io/cloud):
+# :computer: Para você acessar na [Streamlit Cloud](https://streamlit.io/cloud):
 - acessar no navegador a url [https://margemliquida.streamlit.app/](https://margemliquida.streamlit.app/)
   - ```usuário: guest | senha: guest```
 
