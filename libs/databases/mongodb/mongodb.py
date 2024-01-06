@@ -23,5 +23,5 @@ def consultarUsuarioPorNome(db, nome):
     return usuario
 
 
-u = consultarUsuarioPorNome(db, "psgrigoletti")
-print(u)
+# u = consultarUsuarioPorNome(db, "psgrigoletti")
+# print(u)
