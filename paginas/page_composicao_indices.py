@@ -67,11 +67,25 @@ def busca_carteira_teorica(indice, espera=6):
     )
 
 
-def conserta_setores(setor):
+def corrigir_setores_ibov(setor):
     if setor == "Cons N  Básico" or setor == "Cons N Cíclico":
         return "Consumo Não-Cíclico"
     if setor == "Financ e Outros" or setor == "Financeiro e Outros":
         return "Financeiro"
+    if setor == "Utilidade Públ":
+        return "Utilidade Pública"
+    if setor == "Diverso":
+        return "Diversos"
+    if setor == "Holdings Divers":
+        return "Holdings Diversas"
+    if setor == "Mats Básicos":
+        return "Materiais Básicos"
+    if setor == "Tec.Informação":
+        return "Tecnologia da Informação"
+    if setor == "Telecomunicaçã":
+        return "Telecomunicação"
+    if setor == "Bens Indls":
+        return "Bens Industriais"
     else:
         return setor
 
@@ -91,6 +105,7 @@ def buscar_dados_fundsexplorer():
     sleep(8)
     html_content = wd.page_source
     fiis_fundsexplorer = pd.read_html(StringIO(str(html_content)), encoding="utf-8")[0]
+    fiis_fundsexplorer.rename(columns={"Fundos": "Código"}, inplace=True)
     return fiis_fundsexplorer
 
 
@@ -99,7 +114,7 @@ def buscar_dados_ibov():
     ibov = busca_carteira_teorica("IBOV")
     ibov["Subsetor"] = ibov["Setor"].apply(lambda s: s[s.rfind("/") + 1 :].strip())
     ibov["Setor"] = ibov["Setor"].apply(lambda s: s[: s.rfind("/")].strip())
-    ibov["Setor"] = ibov["Setor"].apply(conserta_setores)
+    ibov["Setor"] = ibov["Setor"].apply(corrigir_setores_ibov)
     return ibov
 
 
@@ -114,26 +129,28 @@ def main():
 
     if st.button("Carregar dados..."):
         with alertas:
-            st.info("O carregamento dos dados pode demorar um pouco... aguarde...")
+            st.info(
+                "O carregamento dos dados pode demorar um pouco... aguarde...",
+                icon="⌛",
+            )
         tab_ibov, tab_ifix = st.tabs(["IBOV", "IFIX"])
         with tab_ifix:
             st.title("IFIX")
             tab_ifix1, tab_ifix2, tab_ifix3, tab_ifix4, tab_ifix5 = st.tabs(
                 [
-                    "Dados B3",
-                    "Dados fundexplorer",
-                    "Dados consolidados",
-                    "Gráfico sunburst",
-                    "Gráfico treemap",
+                    ":memo: Dados B3",
+                    ":memo: Dados fundsexplorer",
+                    ":memo: Dados consolidados",
+                    ":bar_chart: Gráfico sunburst",
+                    ":bar_chart: Gráfico treemap",
                 ]
             )
 
             ibov = buscar_dados_ibov()
             ifix = buscar_dados_ifix()
             funds = buscar_dados_fundsexplorer()
-            funds.rename(columns={"Fundos": "Código"}, inplace=True)
             ifix_final = pd.merge(ifix, funds, how="left", on="Código")
-            ifix_final["Setor"] = ifix_final["Setor"].fillna("Indefinido")
+            ifix_final["Setor"] = ifix_final["Setor"].fillna("?")
 
             with tab_ifix1:
                 st.write(ifix)
@@ -176,9 +193,9 @@ def main():
             st.title("IBOV")
             tab_ibov1, tab_ibov2, tab_ibov3 = st.tabs(
                 [
-                    "Dados B3",
-                    "Gráfico sunburst",
-                    "Gráfico treemap",
+                    ":memo: Dados B3",
+                    ":bar_chart: Gráfico sunburst",
+                    ":bar_chart: Gráfico treemap",
                 ]
             )
 
