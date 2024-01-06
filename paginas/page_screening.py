@@ -1,5 +1,7 @@
 import math
+from requests_cache import DO_NOT_CACHE, CachedSession
 
+session = CachedSession(expire_after=DO_NOT_CACHE)
 # import matplotlib.pyplot as plt
 import yfinance as yf
 import streamlit as st

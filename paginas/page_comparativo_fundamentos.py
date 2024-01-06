@@ -16,6 +16,9 @@ import streamlit as st
 from tabulate import tabulate
 
 # from utils.streamlit_utils import adicionar_avisos_dev
+from requests_cache import DO_NOT_CACHE, CachedSession
+
+session = CachedSession(expire_after=DO_NOT_CACHE)
 
 
 @st.cache_data(show_spinner="Buscando todos os dados fundamentalistas...", ttl=3600)

@@ -54,18 +54,28 @@ def get_df_fiis(hdr=hdr):
     return df
 
 
-def get_df_acoes(hdr=hdr):
+def get_df_acoes(hdr=hdr, formato_original=False):
     url = "https://www.fundamentus.com.br/resultado.php"
     content = requests.get(url, headers=hdr)
 
     from io import StringIO
 
-    df = pd.read_html(
-        StringIO(str(content.text)),
-        decimal=",",
-        thousands=".",
-        attrs={"id": "resultado"},
-    )[0]
+    if formato_original:
+        df = pd.read_html(
+            StringIO(str(content.text)),
+            decimal=",",
+            thousands=".",
+            attrs={"id": "resultado"},
+        )[0]
+
+    else:
+        df = pd.read_html(
+            StringIO(str(content.text)),
+            decimal=",",
+            thousands=".",
+            attrs={"id": "resultado"},
+            header=0,
+        )[0]
 
     df["Div.Yield"] = perc_to_float(df["Div.Yield"])
     df["Mrg Ebit"] = perc_to_float(df["Mrg Ebit"])

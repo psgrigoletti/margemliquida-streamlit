@@ -15,6 +15,7 @@ class Menu:
         # "Markowitz - Fronteira Eficiente",
         "Relatório QuantStats",
         "Fundos Brasileiros",
+        "Minha Lib Fundamentus",
     ]
 
     def __init__(self):
@@ -66,5 +67,8 @@ class Menu:
 
         if selecionada == "Composição dos índices":
             from paginas.page_composicao_indices import main
+
+        if selecionada == "Minha Lib Fundamentus":
+            from paginas.page_minha_lib_fundamentus import main
 
         main()

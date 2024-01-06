@@ -120,7 +120,7 @@ def buscar_dados_ibov():
 
 def main():
     st.title(
-        ":straight_ruler: Composição dos índices",
+        ":flashlight: Composição dos índices (IBOV e IFIX)",
     )
     st.write(
         "**Fonte**: https://b3.com.br e https://www.fundsexplorer.com.br/ via [selenium](https://pypi.org/project/selenium/)"
