@@ -6,6 +6,7 @@
 [![Pylint](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pylint.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pylint.yml)
 [![Pyre](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pyre.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pyre.yml)
 [![Pysa](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pysa.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pysa.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 # margemliquida-streamlit (eternamente versão: 0.0.1)
 
