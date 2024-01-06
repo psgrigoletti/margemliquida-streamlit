@@ -1,4 +1,4 @@
-[![example workflow](https://github.com/psgrigoletti/margemliquida-streamlit/workflows/main.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions)
+[![Python application](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/application.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/application.yml)
 [![Codecov](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/codecov.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/codecov.yml)
 [![CodeQL](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/github-code-scanning/codeql)
 [![Dependency Review](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/dependency-review.yml)
