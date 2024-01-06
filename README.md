@@ -1,4 +1,5 @@
 [![Codecov](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/codecov.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/codecov.yml)
+[![CodeQL](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/github-code-scanning/codeql)
 
 # margemliquida-streamlit (eternamente versão: 0.0.1)
 
