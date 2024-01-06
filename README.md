@@ -51,6 +51,9 @@
 - [Projeto Awesome Streamlit](http://awesome-streamlit.org)
 - [Trading com Dados](https://www.tradingcomdados.com.br/)
 
+# :bookmark: Usei
+- https://wkrzywiec.medium.com/how-to-write-good-quality-python-code-with-github-actions-2f635a2ab09a
+
 # :email: Contato:
 - Quer contribuir neste projeto?
 - Apenas trocar ideias?
