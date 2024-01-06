@@ -29,6 +29,8 @@
 
 # :construction: Todo list:
 - Em construção
+- Usar https://pypi.org/project/pyettj/
+- Usar https://riskfolio-lib.readthedocs.io/
 
 # :pill: Links úteis:
 - [Streamlit - Site oficial](http://streamlit.io) 

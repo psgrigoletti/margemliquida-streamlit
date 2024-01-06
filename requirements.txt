@@ -16,6 +16,7 @@ numpy==1.26.3
 # Datas
 pandas_market_calendars==4.3.1
 workalendar==17.0.0
+pandas_datareader
 
 # Fontes de dados
 yfinance==0.2.33
@@ -24,6 +25,7 @@ sidrapy==0.1.4
 fundamentus==0.2.0
 quantstats==0.0.62
 IPython==8.19.0
+#pyettj==0.3.0
 
 # Gráficos
 matplotlib==3.8.2
@@ -34,6 +36,10 @@ imgkit==1.2.3
 # Banco de dados
 pymongo==4.6.1
 
+# Importação de notas
+pdfplumber==0.10.3
+xlsxwriter==3.1.9
+
 # IA
 # flair==0.12.2
 # gdown==4.4.0
@@ -42,7 +48,7 @@ pymongo==4.6.1
 # Não sei bem...
 #jinja2==3.1.2
 selenium==4.16.0
-kaleido
+#kaleido
 #webdriver-manager
 #holidays
 #scipy

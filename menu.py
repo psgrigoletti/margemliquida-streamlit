@@ -3,6 +3,7 @@ class Menu:
         "Inicial",
         "Carteira",
         "Inflação",
+        "Juros no Brasil",
         "Tesouro Direto",
         "Dias Consecutivos",
         "Comparativo de Fundamentos",
@@ -16,6 +17,7 @@ class Menu:
         "Relatório QuantStats",
         "Fundos Brasileiros",
         "Minha Lib Fundamentus",
+        "Importador de Notas",
     ]
 
     def __init__(self):
@@ -28,6 +30,9 @@ class Menu:
 
         if selecionada == "Inflação":
             from paginas.page_inflacao import main
+
+        if selecionada == "Juros no Brasil":
+            from paginas.page_juros_brasil import main
 
         if selecionada == "Tesouro Direto":
             from paginas.page_tesouro_direto import main
@@ -70,5 +75,8 @@ class Menu:
 
         if selecionada == "Minha Lib Fundamentus":
             from paginas.page_minha_lib_fundamentus import main
+
+        if selecionada == "Importador de Notas":
+            from paginas.page_importador_notas import main
 
         main()

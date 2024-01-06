@@ -174,7 +174,7 @@ def main():
             st.session_state["carteiras"] = []
 
     with st.expander("**Outros parâmetros**", expanded=False):
-        lista_benchmarks_disponiveis = ["^BVSP", "USDBRL=X", "SPY"]
+        lista_benchmarks_disponiveis = ["^BVSP", "USDBRL=X", "SPY", "^IRX"]
         benchmarks_selecionados = st.multiselect(
             "Selecione os benchmarks", lista_benchmarks_disponiveis
         )
