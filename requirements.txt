@@ -1,4 +1,4 @@
-# Ultima revisão: 03/07/2023
+# Ultima revisão: 06/01/2024
 
 pip==23.3.2
 
@@ -6,17 +6,18 @@ pip==23.3.2
 streamlit==1.29.0
 streamlit-authenticator==0.2.3
 streamlit_option_menu==0.3.6
-extra-streamlit-components==0.1.60
+#extra-streamlit-components==0.1.60
 
 # Gerais
 pandas==2.1.4
-#pandasai==0.6.7 -> minha conta não tem créditos
 numpy==1.26.3
 
 # Datas
 pandas_market_calendars
 workalendar==17.0.0
-pandas_datareader==0.10.0
+
+# Web scraping
+selenium==4.16.0
 
 # Fontes de dados
 yfinance==0.2.33
@@ -24,8 +25,6 @@ python-bcb==0.2.0
 sidrapy==0.1.4
 fundamentus==0.2.0
 quantstats==0.0.62
-IPython==8.19.0
-#pyettj==0.3.0
 
 # Gráficos
 matplotlib==3.8.2
@@ -40,6 +39,9 @@ pymongo==4.6.1
 pdfplumber==0.10.3
 xlsxwriter==3.1.9
 
+# Backtesting
+# vectorbt
+
 # IA
 # flair==0.12.2
 # gdown==4.4.0
@@ -47,7 +49,6 @@ xlsxwriter==3.1.9
 # tensorflow==2.13.0
 # Não sei bem...
 #jinja2==3.1.2
-selenium==4.16.0
 #kaleido
 #webdriver-manager
 #holidays
@@ -56,8 +57,9 @@ selenium==4.16.0
 #backtrader_plotting
 #tabulate==0.9.0
 #prettyprint
-#vectorbt==0.25.4
 #ta
 #pandas_ta
-
-
+#pandasai==0.6.7 -> minha conta não tem créditos
+#pyettj==0.3.0
+#IPython==8.19.0
+#pandas_datareader==0.10.0
