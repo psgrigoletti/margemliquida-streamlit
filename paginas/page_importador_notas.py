@@ -9,6 +9,20 @@ def retornar_df_das_notas(uploaded_files):
     return df
 
 
+def validar_arquivos(uploaded_files):
+    nomes_arquivos = [uploaded_file.name for uploaded_file in uploaded_files]
+    if len(set(nomes_arquivos)) != len(nomes_arquivos):
+        st.error(
+            "Foram selecionados arquivos com mesmo nome. Deixe apenas um arquivo de cada nota."
+        )
+        st.stop()
+
+    for nome_arquivo in nomes_arquivos:
+        if not nome_arquivo.lower().endswith((".pdf")):
+            st.error(f"O arquivo '{nome_arquivo}' não possui a extensão .pdf.")
+            st.stop()
+
+
 def main():
     st.title(
         ":book: Importador de notas",
@@ -19,12 +33,7 @@ def main():
         "Escolha suas notas em formato PDF (*.pdf)", accept_multiple_files=True
     )
 
-    nomes_arquivos = [uploaded_file.name for uploaded_file in uploaded_files]
-    if len(set(nomes_arquivos)) != len(nomes_arquivos):
-        st.error(
-            "Foram selecionados arquivos com mesmo nome. Deixe apenas um arquivo de cada nota."
-        )
-        st.stop()
+    validar_arquivos(uploaded_files)
 
     from libs.importador.importador_fii import df_2_excel
 

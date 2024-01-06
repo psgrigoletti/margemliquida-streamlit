@@ -90,7 +90,7 @@ class CarteiraGlobal:
                 logging.log(logging.ERROR, f"Erro ao buscar cotações de {t_sem_sa}")
 
         if df is not None:
-            df.fillna(method="ffill", inplace=True)
+            df.ffill(inplace=True)
         return df
 
     def retonar_dados_fiis(self, ticker):

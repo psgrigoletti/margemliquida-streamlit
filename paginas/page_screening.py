@@ -261,8 +261,8 @@ def mostrar_tab_magic_formula_acoes(
     df["Ranking ROIC"] = range(1, len(df) + 1)
 
     df["Magic Formula"] = df["Ranking EV/EBIT"] + df["Ranking ROIC"]
+    df = df.sort_values("Magic Formula", ascending=True)
     df["Ranking Magic Formula"] = range(1, len(df) + 1)
-    df = df.sort_values("Ranking Magic Formula", ascending=True)
 
     col1, col2 = st.columns([2, 6])
     with col1:
@@ -295,8 +295,8 @@ def mostrar_tab_magic_formula_fiis(
     df["Ranking P/VP"] = range(1, len(df) + 1)
 
     df["Magic Formula"] = df["Ranking Dividend Yield"] + df["Ranking P/VP"]
+    df = df.sort_values("Magic Formula", ascending=True)
     df["Ranking Magic Formula"] = range(1, len(df) + 1)
-    df = df.sort_values("Ranking Magic Formula", ascending=True)
 
     col1, col2 = st.columns([2, 6])
     with col1:
@@ -544,9 +544,9 @@ def mostrar_tab_acoes():
                 pd.options.plotting.backend = "plotly"
 
                 df_fechamento = buscar_dados_carteira_global(
-                    acoes, "2022-01-01", "2023-07-07"
+                    acoes, "2022-01-01", "2023-12-31"
                 )
-                df_ibov = buscar_dados_ibov_carteira_global("2022-01-01", "2023-07-07")
+                df_ibov = buscar_dados_ibov_carteira_global("2022-01-01", "2023-12-31")
                 df_fechamento = df_ibov.merge(
                     df_fechamento, left_index=True, right_index=True, how="inner"
                 )

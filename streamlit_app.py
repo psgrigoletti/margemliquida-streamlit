@@ -26,7 +26,7 @@ with col1:
 
 if authentication_status:
     with st.sidebar:
-        st.markdown("### Sistema MargemLíquida")
+        st.markdown("## :bank: Sistema MargemLíquida :bank:")
 
         pagina = option_menu(
             menu_title=None,  # required
