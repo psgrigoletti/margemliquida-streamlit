@@ -16,7 +16,7 @@ numpy==1.26.3
 # Datas
 pandas_market_calendars==4.3.3
 workalendar==17.0.0
-#pandas_datareader
+pandas_datareader==0.10.0
 
 # Fontes de dados
 yfinance==0.2.33
