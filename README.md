@@ -12,8 +12,8 @@
 # margemliquida-streamlit (eternamente versão: 0.0.1)
 
 # :bulb: Aplicação criada para:
-- Exercitar os aprendizados no curso [Python para Mercado Financeiro](https://hotmart.com/pt-br/marketplace/produtos/python-para-mercado-financeiro/) da [Trading com Dados](https://tradingcomdados.com/).
-- Aprender a usar a biblioteca [Streamlit](https://streamlit.io/) bem como o ambiente [Streamlit Cloud](https://streamlit.io/cloud).
+- Exercitar os aprendizados do curso [Python para Mercado Financeiro](https://hotmart.com/pt-br/marketplace/produtos/python-para-mercado-financeiro/) da [Trading com Dados](https://tradingcomdados.com/).
+- Aprender a usar a biblioteca [Streamlit](https://streamlit.io/), bem como o ambiente [Streamlit Cloud](https://streamlit.io/cloud).
 
 # :computer: Para você rodar localmente:
 
