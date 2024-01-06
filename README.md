@@ -21,7 +21,7 @@
 - Acessar no navegador a url [https://margemliquida.streamlit.app/](https://margemliquida.streamlit.app/)
   - para logar use ```usuário: guest | senha: guest```
 
-# Criar usuários
+# Para você criar seus próprios usuários:
 - Ajuste o arquivo config.yaml de acordo com as [instruções](https://blog.streamlit.io/streamlit-authenticator-part-1-adding-an-authentication-component-to-your-app/).
 
 # :bug: Issues para bugs ou features:
@@ -41,4 +41,10 @@
 - [Trading com Dados](https://www.tradingcomdados.com.br/)
 
 # :email: Contato:
+- Quer contribuir neste projeto?
+- Apenas trocar ideias?
+- Realizar novos projetos juntos?
+
+Entre em contato!
+
 **Pablo Souza Grigoletti** - ```psgrigoletti@gmail.com```
