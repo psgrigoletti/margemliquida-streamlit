@@ -29,7 +29,7 @@
 
 # :construction: Todo list:
 - Em construção
-- Separar a lógica da "camada de apresentação", de forma que seja possível reutilizar as implementações com outros frontend
+- Separar melhor a "camada da lógica de negócio" da "camada de apresentação", de forma que seja possível reutilizar as implementações com outros frontend
 - Usar https://pypi.org/project/pyettj/
 - Usar https://riskfolio-lib.readthedocs.io/
 
