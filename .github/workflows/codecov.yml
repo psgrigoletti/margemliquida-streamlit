@@ -21,14 +21,17 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest
+          pip install flake8 pytest,
+          pip install pytest-cov
+          pip install --user codecov
           pip install -r requirements.txt  # ou o comando para instalar suas dependências
 
       - name: Run tests and generate coverage report
         run: |
-          python -m pytest  # ou o comando para executar seus testes e gerar relatório de cobertura
+          python -m pytest # ou o comando para executar seus testes e gerar relatório de cobertura
+          codecov -t ${{ secrets.CODECOV_TOKEN }}
 
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}  # Configure o CODECOV_TOKEN em suas configurações de GitHub Secrets
+      #- name: Upload coverage to Codecov
+      #  uses: codecov/codecov-action@v2
+      #  with:
+      #    token: ${{ secrets.CODECOV_TOKEN }}  # Configure o CODECOV_TOKEN em suas configurações de GitHub Secrets
