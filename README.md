@@ -1,4 +1,5 @@
 [![Python application](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/application.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/application.yml)
+[![CodeFactor](https://www.codefactor.io/repository/github/psgrigoletti/margemliquida-streamlit/badge)](https://www.codefactor.io/repository/github/psgrigoletti/margemliquida-streamlit)
 [![Codecov](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/codecov.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/codecov.yml)
 [![codecov](https://codecov.io/gh/psgrigoletti/margemliquida-streamlit/graph/badge.svg?token=8XSEKSF7WE)](https://codecov.io/gh/psgrigoletti/margemliquida-streamlit)
 [![CodeQL](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/github-code-scanning/codeql)
