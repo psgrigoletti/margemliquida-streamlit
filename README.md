@@ -3,6 +3,7 @@
 [![Dependency Review](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/dependency-review.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/dependency-review.yml)
 [![Pylint](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pylint.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pylint.yml)
 [![Pyre](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pyre.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pyre.yml)
+[![Pysa](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pysa.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/pysa.yml)
 
 # margemliquida-streamlit (eternamente versão: 0.0.1)
 
