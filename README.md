@@ -1,3 +1,5 @@
+[![Codecov](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/codecov.yml/badge.svg)](https://github.com/psgrigoletti/margemliquida-streamlit/actions/workflows/codecov.yml)
+
 # margemliquida-streamlit (eternamente versão: 0.0.1)
 
 # :bulb: Aplicação criada para:
