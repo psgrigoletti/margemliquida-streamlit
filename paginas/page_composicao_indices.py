@@ -68,7 +68,11 @@ def busca_carteira_teorica(indice, espera=6):
 
 
 def corrigir_setores_ibov(setor):
-    if setor == "Cons N  Básico" or setor == "Cons N Cíclico":
+    if (
+        setor == "Cons N  Básico"
+        or setor == "Cons N Cíclico"
+        or setor == "Cons N Ciclico"
+    ):
         return "Consumo Não-Cíclico"
     if setor == "Financ e Outros" or setor == "Financeiro e Outros":
         return "Financeiro"

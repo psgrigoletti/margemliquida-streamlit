@@ -6,27 +6,25 @@ import yaml
 from yaml.loader import SafeLoader
 from menu import Menu
 
-st.set_page_config(layout="wide")
+st.set_page_config(page_title="Sistema Margem Líquida", layout="wide")
 
-with open('./config.yaml') as file:
+with open("./config.yaml") as file:
     config = yaml.load(file, Loader=SafeLoader)
 
 authenticator = stauth.Authenticate(
-    config['credentials'],
-    config['cookie']['name'],
-    config['cookie']['key'],
-    config['cookie']['expiry_days'],
-    None
+    config["credentials"],
+    config["cookie"]["name"],
+    config["cookie"]["key"],
+    config["cookie"]["expiry_days"],
+    None,
 )
 
 _, col1, _ = st.columns(3)
 with col1:
     mensagens = st.empty()
-    name, authentication_status, username = authenticator.login(
-        'Login', 'main')
+    name, authentication_status, username = authenticator.login("Login", "main")
 
 if authentication_status:
-
     with st.sidebar:
         st.markdown("### Sistema MargemLíquida")
 
@@ -43,12 +41,14 @@ if authentication_status:
         st.markdown("Versão 1.0")
         st.write("---")
         st.write("**Encontrou algum problema?**")
-        st.write("[Me avise](https://github.com/psgrigoletti/margemliquida-streamlit/issues/new?title=escreva%20o%20seu%20titulo&body=escreva%20o%20seu%20comentario) por favor.")
+        st.write(
+            "[Me avise](https://github.com/psgrigoletti/margemliquida-streamlit/issues/new?title=escreva%20o%20seu%20titulo&body=escreva%20o%20seu%20comentario) por favor."
+        )
 
     Menu.carregar_pagina(pagina)
 elif authentication_status == False:
     with mensagens:
-        st.error('Usuário/senha estão incorretos.')
+        st.error("Usuário/senha estão incorretos.")
 elif authentication_status == None:
     with mensagens:
-        st.warning('Por favor, informe usuário e senha.')
+        st.warning("Por favor, informe usuário e senha.")
