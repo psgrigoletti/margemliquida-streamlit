@@ -120,12 +120,12 @@ if authentication_status:
         #         descricao = nome_arquivo
         #     descricoes.append(descricao)
 
-        pagina_selecionada = st.selectbox("Menu:", lista_nomes_arquivos_paginas)
+        # pagina_selecionada = st.selectbox("Menu:", lista_nomes_arquivos_paginas)
 
         # st.button(descricao)
 
-    if pagina_selecionada:
-        arquivos[lista_nomes_arquivos_paginas.index(pagina_selecionada)].run()
+    # if pagina_selecionada:
+    #     arquivos[lista_nomes_arquivos_paginas.index(pagina_selecionada)].run()
 
 elif authentication_status == False:
     st.error("Usuário/senha estão incorretos.")

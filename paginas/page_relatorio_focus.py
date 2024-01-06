@@ -24,7 +24,8 @@ def main():
         rf = atualizar_dados_relatorio_focus(agora)
     except Exception:
         frase = "Erro ao buscar os dados do Banco Central do Brasil."
-        mensagens.error(frase, icon="🚨")
+        with alertas:
+            st.error(frase, icon="🚨")
         st.stop()
 
     selic, ipca = st.tabs(["SELIC", ":dragon: IPCA+"])
