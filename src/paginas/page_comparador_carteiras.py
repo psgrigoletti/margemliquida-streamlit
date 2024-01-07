@@ -196,7 +196,8 @@ def main():
 
         if not data_inicial or not data_final:
             with alertas:
-                st.error(icon="🚨", body="Data inicial e final são obrigatórias.")
+                frase = "Data inicial e final são obrigatórias."
+                st.error(icon="🚨", body=frase)
                 st.stop()
 
         # Criar dicionário com os benchmarks

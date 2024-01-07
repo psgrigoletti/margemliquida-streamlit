@@ -1,8 +1,15 @@
-from typing import List
+""" _summary_
+
+Returns:
+    _type_: _description_
+"""
 import unittest
+from typing import List
 
 
 class ItemClassificar:
+    """_summary_"""
+
     def __init__(self, ticker, valor, classificao=None):
         self.ticker = ticker
         self.valor = valor
@@ -20,6 +27,11 @@ class ItemClassificar:
 
 
 def retornar_lista_inicial():
+    """retornar_lista_inicial _summary_
+
+    Returns:
+        _type_: _description_
+    """
     return [
         ItemClassificar("ACAO1", 10.5),
         ItemClassificar("ACAO2", 5.3),
@@ -31,6 +43,11 @@ def retornar_lista_inicial():
 
 
 def retornar_lista_asc():
+    """retornar_lista_asc _summary_
+
+    Returns:
+        _type_: _description_
+    """
     return [
         ItemClassificar("ACAO1", 10.5, "5 lugar"),
         ItemClassificar("ACAO2", 5.3, "4 lugar"),
@@ -42,6 +59,11 @@ def retornar_lista_asc():
 
 
 def retornar_lista_desc():
+    """retornar_lista_desc _summary_
+
+    Returns:
+        _type_: _description_
+    """
     return [
         ItemClassificar("ACAO1", 10.5, "2 lugar"),
         ItemClassificar("ACAO2", 5.3, "3 lugar"),
@@ -53,6 +75,15 @@ def retornar_lista_desc():
 
 
 def classificar_numeros(lista: List[ItemClassificar], ordem):
+    """classificar_numeros _summary_
+
+    Args:
+        lista (List[ItemClassificar]): _description_
+        ordem (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     for item in lista:
         quantos = 0
         lista_sem_o_item = lista.copy()
@@ -67,20 +98,21 @@ def classificar_numeros(lista: List[ItemClassificar], ordem):
 
 
 class TestClassificador(unittest.TestCase):
+    """TestClassificador _summary_
+
+    Args:
+        unittest (_type_): _description_
+    """
+
     def test_ordem_asc(self):
+        """test_ordem_asc _summary_"""
         lista = retornar_lista_inicial()
         # menor->maior, menor eh o campeão
         resultado = classificar_numeros(lista, "ASC")
         self.assertEqual(resultado, retornar_lista_asc())
 
     def test_ordem_desc(self):
+        """test_ordem_desc _summary_"""
         lista = retornar_lista_inicial()
         resultado = classificar_numeros(lista, "DESC")  # maior eh o campeão
         self.assertEqual(resultado, retornar_lista_desc())
-
-
-# if __name__ == '__main__':
-#     unittest.main()
-
-
-# print(xpi.analise("cyre3"))

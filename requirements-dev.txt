@@ -1,3 +1,4 @@
 # Testes
 pytest
 pytest-cov
+black
