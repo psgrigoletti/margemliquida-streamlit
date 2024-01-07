@@ -7,9 +7,7 @@ class ValidacoesUtils:
     """Classe utilitária para validações"""
 
     @staticmethod
-    def validar_condicao(
-        condicao_erro: bool, onde: st.empty, mensagem_erro: str
-    ) -> None:
+    def validar_condicao(condicao_erro: bool, onde, mensagem_erro: str) -> None:
         """validar_condicao _summary_
 
         Args:
