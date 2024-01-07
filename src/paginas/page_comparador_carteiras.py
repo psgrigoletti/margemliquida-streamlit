@@ -7,7 +7,7 @@ import pandas as pd
 import streamlit as st
 import yfinance as yf
 
-from src.utils.validacoes_utils import ValidacoesUtils
+from utils.validacoes_utils import ValidacoesUtils
 
 # from tabulate import tabulate
 
