@@ -7,7 +7,7 @@ currently being supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 0.0.1   | :white_check_mark: |
+| [v0.0.1-alpha](https://github.com/psgrigoletti/margemliquida-streamlit/releases/tag/v0.0.1-alpha)   | :white_check_mark: |
 
 ## Reporting a Vulnerability
 
