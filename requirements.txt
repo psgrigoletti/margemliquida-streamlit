@@ -12,6 +12,9 @@ streamlit_option_menu==0.3.6
 pandas==2.1.4
 numpy==1.26.3
 
+# Utils
+Deprecated==1.2.14
+
 # Datas
 pandas_market_calendars
 workalendar==17.0.0
