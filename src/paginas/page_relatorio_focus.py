@@ -8,7 +8,7 @@ import logging
 def atualizar_dados_relatorio_focus(data_atual):
     logging.log(logging.INFO, "Buscando dados do BCB")
     rf = RelatorioFocus()
-    rf.atualizar_atualizar_dados()
+    rf.atualizar_dados()
     return rf
 
 

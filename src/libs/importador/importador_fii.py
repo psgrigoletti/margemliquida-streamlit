@@ -1,8 +1,5 @@
-import os
-from pathlib import Path
-import pdfplumber
-import xlsxwriter
 import re
+import pdfplumber
 import pandas as pd
 
 tiposObservacoes = {
