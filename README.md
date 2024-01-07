@@ -24,8 +24,7 @@
 - Baixar as dependências:
   - ```$ pip install -r requirements.txt ```
 - Executar o comando para iniciar o streamlit:
-  - ```$ cd src```   
-  - ```$ streamlit run streamlit_app.py```
+  - ```$ streamlit run src/streamlit_app.py```
 - Acessar no navegador a url [http://localhost:8501](http://localhost:8501/):
   - para logar use ```usuário: guest | senha: guest```
 
