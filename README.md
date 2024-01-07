@@ -38,6 +38,14 @@
 # :bug: Issues para bugs ou features:
 - Encontrou bugs ou deseja novas funcionalidades? [Clique aqui](https://github.com/psgrigoletti/margemliquida-streamlit/issues/new) e abra uma issue.
 
+# :computer: Ambiente dev sugerido:
+- [VS Code](https://code.visualstudio.com/)
+- Extensões:
+  - Pylint	https://marketplace.visualstudio.com/items?itemName=ms-python.pylint
+  - flake8	https://marketplace.visualstudio.com/items?itemName=ms-python.flake8
+  - mypy	https://marketplace.visualstudio.com/items?itemName=ms-python.mypy-type-checker
+  - https://code.visualstudio.com/docs/python/linting
+
 # :construction: Todo list:
 - Em construção
 - Separar melhor a "camada da lógica de negócio" da "camada de apresentação", de forma que seja possível reutilizar as implementações com outros frontend
