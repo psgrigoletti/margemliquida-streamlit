@@ -44,7 +44,6 @@
   - Pylint	https://marketplace.visualstudio.com/items?itemName=ms-python.pylint
   - flake8	https://marketplace.visualstudio.com/items?itemName=ms-python.flake8
   - mypy	https://marketplace.visualstudio.com/items?itemName=ms-python.mypy-type-checker
-  - https://code.visualstudio.com/docs/python/linting
 
 # :construction: Todo list:
 - Em construção
@@ -61,6 +60,7 @@
 
 # :bookmark: Links que usei e me ajudaram:
 - https://wkrzywiec.medium.com/how-to-write-good-quality-python-code-with-github-actions-2f635a2ab09a
+- https://code.visualstudio.com/docs/python/linting
 
 # :email: Contato:
 - Quer contribuir neste projeto?
