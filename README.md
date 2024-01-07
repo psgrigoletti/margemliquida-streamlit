@@ -32,7 +32,7 @@
 - Acessar no navegador a url [https://margemliquida.streamlit.app/](https://margemliquida.streamlit.app/)
   - para logar use ```usuário: guest | senha: guest```
 
-# Para você criar seus próprios usuários:
+# :construction_worker_man: Para você criar seus próprios usuários:
 - Ajuste o arquivo config.yaml de acordo com as [instruções](https://blog.streamlit.io/streamlit-authenticator-part-1-adding-an-authentication-component-to-your-app/).
 
 # :bug: Issues para bugs ou features:
