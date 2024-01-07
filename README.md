@@ -60,6 +60,7 @@
 
 # :bookmark: Links que usei e me ajudaram:
 - https://wkrzywiec.medium.com/how-to-write-good-quality-python-code-with-github-actions-2f635a2ab09a
+- https://code.visualstudio.com/docs/python/python-tutorial
 - https://code.visualstudio.com/docs/python/linting
 
 # :email: Contato:
