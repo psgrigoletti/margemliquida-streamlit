@@ -1,4 +1,5 @@
 import math
+from ast import Dict
 
 import extra_streamlit_components as stx
 import pandas as pd
@@ -9,33 +10,28 @@ from plotly.subplots import make_subplots
 from requests_cache import DO_NOT_CACHE, CachedSession
 
 from libs.market_data.carteira_global import CarteiraGlobal
-from libs.market_data.fundamentus.lista import (
-    get_df_acoes,
-    get_df_acoes_do_setor,
-    get_df_fiis,
-    get_df_setores,
-)
+from libs.market_data.fundamentus import lista
 
 session = CachedSession(expire_after=DO_NOT_CACHE)
 
 
 @st.cache_data(show_spinner="Buscando dados fundamentalistas para ações.", ttl=3600)
 def busca_dados_acoes():
-    df = get_df_acoes()
-    df = df[df["Div.Yield"] > 0]
-    df = df[df["Cotação"] > 0]
-    df = df[df["Liq. Corr."] > 0]
-    df = df[df["Liq.2meses"] > 0]
+    df = lista.get_df_acoes()
+    # df = df[df["Div.Yield"] > 0]
+    # df = df[df["Cotação"] > 0]
+    # df = df[df["Liq. Corr."] > 0]
+    # df = df[df["Liq.2meses"] > 0]
     st.session_state["lista_acoes"] = df
     return df
 
 
 @st.cache_data(show_spinner="Buscando dados fundamentalistas para FIIs.", ttl=3600)
 def busca_dados_fiis():
-    df = get_df_fiis()
-    df = df[df["Dividend Yield"] > 0]
-    df = df[df["Cotação"] > 0]
-    df = df[df["Liquidez"] > 0]
+    df = lista.get_df_fiis()
+    # df = df[df["Dividend Yield"] > 0]
+    # df = df[df["Cotação"] > 0]
+    # df = df[df["Liquidez"] > 0]
     st.session_state["lista_fiis"] = df
     return df
 
@@ -56,7 +52,6 @@ def buscar_dados_carteira_global(tickers, data_inicial, data_final):
 
 @st.cache_data(show_spinner="Buscando dados do IFIX na Carteira Global.", ttl=3600)
 def buscar_dados_ifix_carteira_global(data_inicial, data_final):
-
     ID_IFIX = 20
     cg = CarteiraGlobal()
     cg.setar_token(st.secrets["carteira_global"]["x_api_key"])
@@ -67,8 +62,6 @@ def buscar_dados_ifix_carteira_global(data_inicial, data_final):
 
 @st.cache_data(show_spinner="Buscando dados do IBOV na Carteira Global.", ttl=3600)
 def buscar_dados_ibov_carteira_global(data_inicial, data_final):
-    from libs.market_data.carteira_global import CarteiraGlobal
-
     ID_IBOV = 2
     cg = CarteiraGlobal()
     cg.setar_token(st.secrets["carteira_global"]["x_api_key"])
@@ -101,7 +94,7 @@ def is_dados_carregados():
 
 def mostrar_tab_fiis():
     st.write("## FIIs")
-    st.markdown("**Filtros iniciais:** Dividend Yield > 0; Cotação > 0; Liquidez > 0")
+    # st.markdown("**Filtros iniciais:** Dividend Yield > 0; Cotação > 0; Liquidez > 0")
 
     filtros = {}
 
@@ -315,47 +308,107 @@ def mostrar_tab_resultados(df):
 
 def mostrar_filtros_acoes(filtros):
     df_acoes = busca_df_acoes_do_cache().copy()
-    col1, _, col2, _, col3, _ = st.columns([6, 1, 4, 1, 4, 1])
+
+    df_acoes["ROE"] = df_acoes["ROE"] * 100.0
+    df_acoes["ROIC"] = df_acoes["ROIC"] * 100.0
+    df_acoes["Div.Yield"] = df_acoes["Div.Yield"] * 100.0
+    df_acoes["Cresc. Rec.5a"] = df_acoes["Cresc. Rec.5a"] * 100.0
+    df_acoes["Mrg Ebit"] = df_acoes["Mrg Ebit"] * 100.0
+    df_acoes["Mrg. Líq."] = df_acoes["Mrg. Líq."] * 100.0
+
+    col1, _, col2, _, col3, _ = st.columns([4, 1, 4, 1, 4, 1])
 
     with col1:
         setores_possiveis_ordenados = sorted(
-            get_df_setores()["Setor"], key=lambda x: int(x.split(" - ")[0])
+            lista.get_df_setores()["Setor"], key=lambda x: int(x.split(" - ")[0])
         )
-        # setores_possiveis = ["Todos"] + list(setores_possiveis_ordenados)
 
         filtros["setores"] = st.multiselect(
             "Setor(es):", setores_possiveis_ordenados, []
         )
 
-        menor_cotacao = float(df_acoes["Cotação"].min(numeric_only=True))
-        maior_cotacao = float(df_acoes["Cotação"].max(numeric_only=True))
-
-        filtros["cotacao"] = st.slider(
-            "Cotação",
-            menor_cotacao,
-            maior_cotacao,
-            (menor_cotacao, maior_cotacao),
-            step=1.0,
-            format="R$ %.2f",
+        filtros["Cotação"] = retonar_item_filtro(
+            df_acoes, "Cotação", "input_number", help="Valor em R$", format=None
         )
 
-        menor_liquidez = float(df_acoes["Liq. Corr."].min(numeric_only=True))
-        maior_liquidez = float(df_acoes["Liq. Corr."].max(numeric_only=True))
-
-        filtros["Liq. Corr."] = st.slider(
-            "Liquidez Corrente",
-            menor_liquidez,
-            maior_liquidez,
-            (menor_liquidez, maior_liquidez),
-            step=1.0,
-            format="%.2f",
+        filtros["Liq. Corr."] = retonar_item_filtro(
+            df_acoes, "Liq. Corr.", "input_number", help=None, format=None
         )
 
     with col2:
-        pass
+        filtros["ROE"] = retonar_item_filtro(
+            df_acoes, "ROE", "input_number", help=None, format=None
+        )
+        filtros["P/VP"] = retonar_item_filtro(
+            df_acoes, "P/VP", "input_number", help=None, format=None
+        )
+        filtros["Div.Yield"] = retonar_item_filtro(
+            df_acoes, "Div.Yield", "input_number", help=None, format=None
+        )
 
     with col3:
-        pass
+        filtros["P/L"] = retonar_item_filtro(
+            df_acoes, "P/L", "input_number", help=None, format=None
+        )
+        filtros["ROIC"] = retonar_item_filtro(
+            df_acoes, "ROIC", "input_number", help=None, format=None
+        )
+        filtros["EV/EBIT"] = retonar_item_filtro(
+            df_acoes, "EV/EBIT", "input_number", help=None, format=None
+        )
+
+
+def retonar_item_filtro(df, coluna: str, widget: str, help=None, format=None) -> Dict:
+    if coluna not in df.columns:
+        st.error(f"Coluna {coluna} não existe no DataFrame")
+        st.stop()
+
+    if widget is None:
+        widget = "slider"
+
+    if widget.lower() not in ["slider", "input_number"]:
+        st.error(f"Widget {widget} não é slider ou input_number")
+        st.stop()
+
+    menor = float(df[coluna].min(numeric_only=True))
+    maior = float(df[coluna].max(numeric_only=True))
+
+    if widget == "slider":
+        filtro_min, filtro_max = st.slider(
+            coluna,
+            menor,
+            maior,
+            (menor, maior),
+            step=1.0,
+            format=format,
+            help=help,
+            key=f"{coluna}_slider",
+        )
+
+    else:
+        col_min, col_max = st.columns(2)
+        with col_min:
+            filtro_min = st.number_input(
+                f"{coluna} mínimo",
+                min_value=menor,
+                value=menor,
+                step=1.0,
+                key=f"{coluna}_min",
+            )
+        with col_max:
+            filtro_max = st.number_input(
+                f"{coluna} máximo",
+                max_value=maior,
+                value=maior,
+                step=1.0,
+                help=help,
+                key=f"{coluna}_max",
+            )
+
+    return {
+        "minimo": filtro_min,
+        "maximo": filtro_max,
+    }
 
 
 def mostrar_filtros_fiis(filtros):
@@ -455,17 +508,32 @@ def mostrar_filtros_fiis(filtros):
 
 
 def filtrar_df_acoes(filtros):
+    """Função que recebe os filtros e
+    retorna o Dataframe de ações filtrado.
+    """
     df_tela = busca_df_acoes_do_cache().copy()
 
     if filtros["setores"] != []:
         setores = [i.split(" - ")[0] for i in filtros["setores"]]
         tickers_do_setor = []
         for setor in setores:
-            tickers_do_setor += list(get_df_acoes_do_setor(setor))
+            tickers_do_setor += list(lista.get_df_acoes_do_setor(setor))
         df_tela = df_tela[df_tela["Papel"].isin(tickers_do_setor)]
 
-    df_tela = df_tela[df_tela["Cotação"] >= filtros["cotacao"][0]]
-    df_tela = df_tela[df_tela["Cotação"] <= filtros["cotacao"][1]]
+    df_tela = df_tela[df_tela["Cotação"] >= filtros["Cotação"].get("minimo")]
+    df_tela = df_tela[df_tela["Cotação"] <= filtros["Cotação"].get("maximo")]
+    df_tela = df_tela[df_tela["ROE"] >= filtros["ROE"].get("minimo")]
+    df_tela = df_tela[df_tela["ROE"] <= filtros["ROE"].get("maximo")]
+    df_tela = df_tela[df_tela["ROIC"] >= filtros["ROIC"].get("minimo")]
+    df_tela = df_tela[df_tela["ROIC"] <= filtros["ROIC"].get("maximo")]
+    df_tela = df_tela[df_tela["P/L"] >= filtros["P/L"].get("minimo")]
+    df_tela = df_tela[df_tela["P/L"] <= filtros["P/L"].get("maximo")]
+    df_tela = df_tela[df_tela["P/VP"] >= filtros["P/VP"].get("minimo")]
+    df_tela = df_tela[df_tela["P/VP"] <= filtros["P/VP"].get("maximo")]
+    df_tela = df_tela[df_tela["Div.Yield"] >= filtros["Div.Yield"].get("minimo")]
+    df_tela = df_tela[df_tela["Div.Yield"] <= filtros["Div.Yield"].get("maximo")]
+    df_tela = df_tela[df_tela["EV/EBIT"] >= filtros["EV/EBIT"].get("minimo")]
+    df_tela = df_tela[df_tela["EV/EBIT"] <= filtros["EV/EBIT"].get("maximo")]
 
     df_tela.set_index("Papel", drop=True, inplace=True)
     df_tela["ROE"] = df_tela["ROE"] * 100.0
@@ -479,6 +547,9 @@ def filtrar_df_acoes(filtros):
 
 
 def filtrar_df_fiis(filtros):
+    """Função que recebe os filtros e
+    retorna o Dataframe de FIIs filtrado.
+    """
     df_tela = busca_df_fiis_do_cache().copy()
 
     if filtros["segmentos"] != []:
@@ -511,9 +582,9 @@ def filtrar_df_fiis(filtros):
 
 def mostrar_tab_acoes():
     st.write("## Ações")
-    st.markdown(
-        "**Filtros iniciais:** Dividend Yield > 0; Cotação > 0; Liq. Corr. > 0; Liq.2meses > 0"
-    )
+    # st.markdown(
+    #     "**Filtros iniciais:** Dividend Yield > 0; Cotação > 0; Liq. Corr. > 0; Liq.2meses > 0"
+    # )
 
     filtros = {}
 

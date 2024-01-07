@@ -6,7 +6,6 @@ import pandas as pd
 # import plotly.graph_objects as go
 import streamlit as st
 import yfinance as yf
-
 from utils.validacoes_utils import ValidacoesUtils
 
 # from tabulate import tabulate
