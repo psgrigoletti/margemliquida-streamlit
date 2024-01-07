@@ -45,7 +45,7 @@ class DadosCVM:
         try:
             req = requests.get(url)
             arquivo_zip = zipfile.ZipFile(io.BytesIO(req.content))
-            print("Sucesso ao baixar o arquivo de " + url)
+            print("Sucesso ao baixar o arquivo de " + url, icon="✅")
         except:
             print("Erro ao buscar o arquivo de " + url)
             arquivo_zip = None

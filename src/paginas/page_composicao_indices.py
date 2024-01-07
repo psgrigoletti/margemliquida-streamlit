@@ -236,4 +236,4 @@ def main():
                 st.write(fig2_ibov)
         with alertas:
             st.empty()
-            st.success("Dados carregados com sucesso...")
+            st.success("Dados carregados com sucesso...", icon="✅")

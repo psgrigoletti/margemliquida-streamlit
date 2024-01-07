@@ -1,6 +1,7 @@
 import time
-import streamlit as st
 from datetime import datetime, timedelta
+
+import streamlit as st
 from libs.tesouro_direto import TesouroDireto
 
 
@@ -21,7 +22,7 @@ def carregar_dados(mensagens):
     td = atualizar_dados_tesouro_direto(agora)
 
     with mensagens:
-        st.success("Dados carregados com sucesso!")
+        st.success("Dados carregados com sucesso!", icon="✅")
 
     selic, ipca, pre = st.tabs(["SELIC", ":dragon: IPCA+", "PREFIXADO"])
 

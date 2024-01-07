@@ -56,7 +56,7 @@ class Menu:
             from paginas.page_comparador_carteiras import main
 
         if selecionada == "Screening":
-            from paginas.page_screening import main
+            from paginas.page_screening.page_screening import main
 
         if selecionada == "Relatório QuantStats":
             from paginas.page_relatorio_quantstats import main
