@@ -64,8 +64,8 @@ class Menu:
         if selecionada == "Fundos Brasileiros":
             from paginas.page_fundos_brasileiros import main
 
-        if selecionada == "Markowitz - Fronteira Eficiente":
-            from paginas.page_markowitz import main
+        # if selecionada == "Markowitz - Fronteira Eficiente":
+        #     from paginas.page_markowitz import main
 
         if selecionada == "Relatório FOCUS":
             from paginas.page_relatorio_focus import main

@@ -1,0 +1,25 @@
+{
+  "site_package_search_strategy": "pep561",
+  "source_directories": [
+    "./src/"
+  ],
+  "search_path": [
+    {"site-package": "pandas"},
+    {"site-package": "fundamentus"},
+    {"site-package": "sidrapy"},
+    {"site-package": "yfinance"},
+    {"site-package": "seaborn"},
+    {"site-package": "bcb"},
+    {"site-package": "extra_streamlit_components"},
+    {"site-package": "matplotlib"},
+    {"site-package": "xlsxwriter"},
+    {"site-package": "pandas_market_calendars"},
+    {"site-package": "plotly"},
+    {"site-package": "imgkit"},
+    {"site-package": "quantstats"},
+    {"site-package": "backtrader"},
+    {"site-package": "workalendar"},
+    {"site-package": "streamlit_option_menu"},
+    {"site-package": "streamlit_authenticator"}
+  ]
+}

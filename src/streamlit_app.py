@@ -16,7 +16,7 @@ authenticator = stauth.Authenticate(
     config["cookie"]["name"],
     config["cookie"]["key"],
     config["cookie"]["expiry_days"],
-    None,
+    [],
 )
 
 _, col1, _ = st.columns(3)

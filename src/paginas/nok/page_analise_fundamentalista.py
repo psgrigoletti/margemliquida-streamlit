@@ -2,10 +2,11 @@ from libs.analise_fundamentalista import AnaliseFundamentalista
 from libs.dados_cvm import DadosCVM
 
 import streamlit as st
-from st_pages import Page, Section, show_pages, add_page_title
+
+# from st_pages import Page, Section, show_pages, add_page_title
 from utils.data_hora_utils import DataHoraUtils
 
-add_page_title()
+# add_page_title()
 
 
 def buscar_demonstrativos(

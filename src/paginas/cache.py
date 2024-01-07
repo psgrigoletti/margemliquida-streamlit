@@ -1,6 +1,5 @@
 import yfinance as yf
 import streamlit as st
-import pandas as pd
 from libs.market_data.fundamentus.lista import (
     get_df_acoes,
     get_df_fiis,

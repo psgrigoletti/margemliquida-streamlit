@@ -295,7 +295,7 @@ def classificar_numeros_lista(df: pd.DataFrame, detalhes):
     return lista_completa
 
 
-def formatar_valor(valor: str):
+def formatar_valor(valor):
     valor = float(valor)
     return "{:,.2f}".format(valor).replace(".", "X").replace(",", ".").replace("X", ",")
 
