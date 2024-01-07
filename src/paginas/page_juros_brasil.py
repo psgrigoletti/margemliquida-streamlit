@@ -1,7 +1,7 @@
-import streamlit as st
-from bcb import sgs
 import matplotlib.pyplot as plt
 import pandas as pd
+import streamlit as st
+from bcb import sgs
 
 
 def main():

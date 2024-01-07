@@ -1,12 +1,13 @@
+import os
+from io import StringIO
+from time import sleep
+
+import pandas as pd
+import plotly.express as px
 import streamlit as st
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
-from time import sleep
-import pandas as pd
-import os
-import plotly.express as px
-from io import StringIO
+from selenium.webdriver.firefox.options import Options
 
 
 def configura_webdriver_firefox():

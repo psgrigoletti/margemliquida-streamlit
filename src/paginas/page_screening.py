@@ -1,22 +1,22 @@
 import math
+
+import extra_streamlit_components as stx
+import pandas as pd
+import plotly.graph_objects as go
+import streamlit as st
+import yfinance as yf
+from plotly.subplots import make_subplots
 from requests_cache import DO_NOT_CACHE, CachedSession
 
-session = CachedSession(expire_after=DO_NOT_CACHE)
-# import matplotlib.pyplot as plt
-import yfinance as yf
-import streamlit as st
-import pandas as pd
+from libs.market_data.carteira_global import CarteiraGlobal
 from libs.market_data.fundamentus.lista import (
     get_df_acoes,
+    get_df_acoes_do_setor,
     get_df_fiis,
     get_df_setores,
-    get_df_acoes_do_setor,
 )
-import extra_streamlit_components as stx
 
-# import plotly.express as px
-import plotly.graph_objects as go
-from plotly.subplots import make_subplots
+session = CachedSession(expire_after=DO_NOT_CACHE)
 
 
 @st.cache_data(show_spinner="Buscando dados fundamentalistas para ações.", ttl=3600)
@@ -48,8 +48,6 @@ def buscar_dados_yahoo(tickers, data_inicial, data_final):
 
 @st.cache_data(show_spinner="Buscando dados no Carteira Global.", ttl=3600)
 def buscar_dados_carteira_global(tickers, data_inicial, data_final):
-    from libs.market_data.carteira_global import CarteiraGlobal
-
     cg = CarteiraGlobal()
     cg.setar_token(st.secrets["carteira_global"]["x_api_key"])
     df = cg.retonar_cotacoes_fechamento(tickers, data_inicial, data_final)
@@ -58,7 +56,6 @@ def buscar_dados_carteira_global(tickers, data_inicial, data_final):
 
 @st.cache_data(show_spinner="Buscando dados do IFIX na Carteira Global.", ttl=3600)
 def buscar_dados_ifix_carteira_global(data_inicial, data_final):
-    from libs.market_data.carteira_global import CarteiraGlobal
 
     ID_IFIX = 20
     cg = CarteiraGlobal()

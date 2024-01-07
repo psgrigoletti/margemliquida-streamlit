@@ -1,13 +1,13 @@
-from typing import List
-import streamlit as st
-import zipfile
 import io
-import requests
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-
+import zipfile
 from datetime import datetime, timedelta
+from typing import List
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import requests
+import seaborn as sns
+import streamlit as st
 
 
 def mes_ano_no_passado(mes, ano):
@@ -259,7 +259,7 @@ def main():
 
         try:
             informes_diarios = carregar_dados_informes_diarios(mes, ano)
-        except:
+        except Exception:
             with alertas:
                 frase = "Erro ao buscar dados de http://dados.cvm.gov.br. Tente mais tarde..."
                 st.error(frase, icon="🚨")

@@ -1,8 +1,9 @@
-import streamlit as st
 import datetime
+import logging
+
+import streamlit as st
 from libs.dividendos import Dividendos
 from libs.market_data.carteira_global import CarteiraGlobal
-import logging
 from utils.data_hora_utils import DataHoraUtils
 
 

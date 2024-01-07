@@ -7,6 +7,8 @@ import pandas as pd
 import streamlit as st
 import yfinance as yf
 
+from src.utils.validacoes_utils import ValidacoesUtils
+
 # from tabulate import tabulate
 
 
@@ -184,21 +186,17 @@ def main():
         data_final = col2.date_input("Data final:", hoje)
 
     if st.button("Analisar"):
-        if len(st.session_state["carteiras"]) <= 1:
-            with alertas:
-                st.error(icon="🚨", body="Crie pelo menos 2 carteiras.")
-                st.stop()
+        frase = "Crie pelo menos 2 carteiras."
+        condicao = len(st.session_state["carteiras"]) <= 1
+        ValidacoesUtils.validar_condicao(condicao, alertas, frase)
 
-        if len(benchmarks_selecionados) <= 1:
-            with alertas:
-                st.error(icon="🚨", body="Selecione pelo menos 2 benchmarks.")
-                st.stop()
+        frase = "Selecione pelo menos 2 benchmarks."
+        condicao = len(benchmarks_selecionados) <= 1
+        ValidacoesUtils.validar_condicao(condicao, alertas, frase)
 
-        if not data_inicial or not data_final:
-            with alertas:
-                frase = "Data inicial e final são obrigatórias."
-                st.error(icon="🚨", body=frase)
-                st.stop()
+        frase = "Data inicial e final são obrigatórias."
+        condicao = not data_inicial or not data_final
+        ValidacoesUtils.validar_condicao(condicao, alertas, frase)
 
         # Criar dicionário com os benchmarks
         benchmarks = yf.download(
@@ -226,11 +224,7 @@ def main():
                 end=data_final.strftime("%Y-%m-%d"),
             )["Adj Close"]
             cotacoes.dropna(inplace=True)
-            # st.write(alocacoes)
             carteira = criar_carteira(cotacoes, alocacoes)
             carteiras_dict[ck] = carteira
 
-        # st.write(benchmarks_dict)
-
-        # Plota o gráfico
         plotar_grafico(benchmarks_dict, carteiras_dict)

@@ -1,7 +1,8 @@
 import fundamentus as fd
 import streamlit as st
-from libs.market_data.fundamentus import lista as minha_fd
 from requests_cache import DO_NOT_CACHE, CachedSession
+
+from libs.market_data.fundamentus import lista as minha_fd
 
 session = CachedSession(expire_after=DO_NOT_CACHE)
 

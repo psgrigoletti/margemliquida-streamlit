@@ -1,7 +1,8 @@
+import logging
+
 import streamlit as st
 from libs.relatorio_focus import RelatorioFocus
 from utils.data_hora_utils import DataHoraUtils
-import logging
 
 
 @st.cache_resource

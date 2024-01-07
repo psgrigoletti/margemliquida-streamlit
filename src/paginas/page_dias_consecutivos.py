@@ -1,5 +1,6 @@
-import streamlit as st
 import datetime
+
+import streamlit as st
 from libs.dias_consecutivos import DiasConsecutivos
 
 
