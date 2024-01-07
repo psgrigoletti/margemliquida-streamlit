@@ -1,5 +1,5 @@
-import streamlit as st
 import fundamentus as fd
+import streamlit as st
 from libs.market_data.fundamentus import lista as minha_fd
 from requests_cache import DO_NOT_CACHE, CachedSession
 
@@ -11,8 +11,6 @@ def main():
     st.write("**Fonte**: https://www.fundamentus.com.br/")
 
     if st.button("Carregar dados..."):
-        import fundamentus as fd
-
         st.write("Fundamentus Original")
         st.write(fd.get_resultado())
 

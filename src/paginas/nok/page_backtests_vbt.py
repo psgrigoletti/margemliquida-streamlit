@@ -6,7 +6,6 @@
 # from st_pages import add_page_title
 # import numpy as np
 # import fundamentus as fd
-# from utils.streamlit_utils import adicionar_avisos_dev
 # from datetime import date, timedelta
 
 # hoje = date.today()
@@ -39,7 +38,6 @@
 
 # st.set_page_config(layout="wide")
 # add_page_title()
-# adicionar_avisos_dev()
 # alertas = st.container()
 
 # estrategias = ['Buy and hold']

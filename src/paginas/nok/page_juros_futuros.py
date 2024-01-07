@@ -1,13 +1,11 @@
 # import streamlit as st
 # from st_pages import add_page_title
 # from libs.juros_futuros import JurosFuturos
-# from utils.streamlit_utils import adicionar_avisos_dev
 
 # # Construção da página
 
 # st.set_page_config(layout="wide")
 # add_page_title()
-# adicionar_avisos_dev()
 # mensagens = st.container()
 # mensagens.error(
 #     icon="🚨", body="Infelizmente o site ADVFN bloqueou o acesso aos dados que usávamos para gerar os gráficos.")

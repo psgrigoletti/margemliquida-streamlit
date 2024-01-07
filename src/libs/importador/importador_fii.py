@@ -1,6 +1,7 @@
 import re
-import pdfplumber
+
 import pandas as pd
+import pdfplumber
 
 tiposObservacoes = {
     "A": "Posição futuro",
@@ -114,8 +115,8 @@ def arquivos_pdf_2_df(arquivos):
             numero_nota = textos[1].split(" ")[0] + "-" + textos[1].split(" ")[1]
             data_nota = textos[1].split(" ")[2]
 
-            print(f"Nota: {numero_nota}")
-            print(f"Data: {data_nota}")
+            # print(f"Nota: {numero_nota}")
+            # print(f"Data: {data_nota}")
 
             # Operações
             operacoes = pagina.crop((0, 250, pagina.width, pagina.height - 400))

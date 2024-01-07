@@ -1,9 +1,9 @@
 import streamlit as st
 import streamlit_authenticator as stauth
-from streamlit_option_menu import option_menu
-
 import yaml
+from streamlit_option_menu import option_menu
 from yaml.loader import SafeLoader
+
 from menu import Menu
 
 st.set_page_config(page_title="Sistema Margem Líquida", layout="wide")

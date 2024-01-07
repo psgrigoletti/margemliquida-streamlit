@@ -11,12 +11,10 @@ import pandas as pd
 
 # import plotly.graph_objects as go
 import streamlit as st
+from requests_cache import DO_NOT_CACHE, CachedSession
 
 # import yfinance as yf
 from tabulate import tabulate
-
-# from utils.streamlit_utils import adicionar_avisos_dev
-from requests_cache import DO_NOT_CACHE, CachedSession
 
 session = CachedSession(expire_after=DO_NOT_CACHE)
 
