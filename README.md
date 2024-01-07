@@ -45,6 +45,10 @@
   - flake8	https://marketplace.visualstudio.com/items?itemName=ms-python.flake8
   - mypy	https://marketplace.visualstudio.com/items?itemName=ms-python.mypy-type-checker
 
+# :test_tube: Pylint
+- pylint ./src/ | pylint_report > report.html
+- Último report gerado: https://raw.githubusercontent.com/psgrigoletti/margemliquida-streamlit/main/report.html
+
 # :construction: Todo list:
 - Em construção
 - Separar melhor a "camada da lógica de negócio" da "camada de apresentação", de forma que seja possível reutilizar as implementações com outros frontend
