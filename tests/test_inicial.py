@@ -1,5 +1,5 @@
 import pytest
 
 
-def test():
+def test_inicial():
     assert "teste".upper() == "TESTE"

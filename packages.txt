@@ -1,6 +1,3 @@
 chromium
 firefox-esr
 wkhtmltopdf
-
-# Testes
-pytest-cov
