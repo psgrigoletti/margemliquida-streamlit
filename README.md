@@ -47,7 +47,7 @@
 
 # :test_tube: Pylint
 - pylint ./src/ | pylint_report > report.html
-- Último report gerado: https://raw.githubusercontent.com/psgrigoletti/margemliquida-streamlit/main/report.html
+- [Último report gerado](https://htmlpreview.github.io/?https://raw.githubusercontent.com/psgrigoletti/margemliquida-streamlit/main/report.html)
 
 # :construction: Todo list:
 - Em construção
