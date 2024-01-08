@@ -55,6 +55,7 @@
 - Usar https://pypi.org/project/pyettj/
 - Usar https://riskfolio-lib.readthedocs.io/
 - Usar https://shields.io/
+- Definir um fluxo de trabalho https://www.atlassian.com/br/git
 
 # :pill: Links úteis:
 - [Streamlit - Site oficial](http://streamlit.io) 
@@ -67,6 +68,7 @@
 - https://wkrzywiec.medium.com/how-to-write-good-quality-python-code-with-github-actions-2f635a2ab09a
 - https://code.visualstudio.com/docs/python/python-tutorial
 - https://code.visualstudio.com/docs/python/linting
+- https://www.atlassian.com/br/git
 
 # :email: Contato:
 - Quer contribuir neste projeto?
