@@ -18,6 +18,7 @@ class Menu:
         "Fundos Brasileiros",
         "Minha Lib Fundamentus",
         "Importador de Notas",
+        "Crypto Binance",
     ]
 
     def __init__(self):
@@ -63,6 +64,9 @@ class Menu:
 
         if selecionada == "Fundos Brasileiros":
             from paginas.page_fundos_brasileiros import main
+
+        if selecionada == "Crypto Binance":
+            from paginas.page_crypto_binance import main
 
         # if selecionada == "Markowitz - Fronteira Eficiente":
         #     from paginas.page_markowitz import main

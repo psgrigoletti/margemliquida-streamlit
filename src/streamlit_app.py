@@ -7,7 +7,7 @@ from yaml.loader import SafeLoader
 
 st.set_page_config(page_title="Sistema Margem Líquida", layout="wide")
 
-with open("./config.yaml") as file:
+with open("./config.yaml", encoding="UTF-8") as file:
     config = yaml.load(file, Loader=SafeLoader)
 
 authenticator = stauth.Authenticate(
@@ -45,9 +45,9 @@ if authentication_status:
         )
 
     Menu.carregar_pagina(pagina)
-elif authentication_status == False:
+elif authentication_status is False:
     with mensagens:
         st.error("Usuário/senha estão incorretos.")
-elif authentication_status == None:
+elif authentication_status is None:
     with mensagens:
         st.warning("Por favor, informe usuário e senha.")
