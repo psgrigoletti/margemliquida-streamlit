@@ -56,7 +56,8 @@
 - Usar https://riskfolio-lib.readthedocs.io/
 - Usar https://shields.io/
 - Definir um fluxo de trabalho https://www.atlassian.com/br/git
-
+- https://skfolio.org/
+ 
 # :pill: Links úteis:
 - [Streamlit - Site oficial](http://streamlit.io) 
 - [Streamlit - Documentação](http://docs.streamlit.io) 
