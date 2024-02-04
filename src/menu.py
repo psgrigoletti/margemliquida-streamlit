@@ -1,6 +1,7 @@
 class Menu:
     labels = [
         "Inicial",
+        "BDRs e ETFs",
         "Carteira",
         "Inflação",
         "Juros no Brasil",
@@ -13,7 +14,7 @@ class Menu:
         "Screening",
         "Composição dos índices",
         "Relatório FOCUS",
-        # "Markowitz - Fronteira Eficiente",
+        "Markowitz - Fronteira Eficiente",
         "Relatório QuantStats",
         "Fundos Brasileiros",
         "Minha Lib Fundamentus",
@@ -33,7 +34,7 @@ class Menu:
             from paginas.page_inflacao import main
 
         if selecionada == "Juros no Brasil":
-            from paginas.page_juros_brasil import main
+            from src.paginas.page_juros_brasil import main
 
         if selecionada == "Tesouro Direto":
             from paginas.page_tesouro_direto import main
@@ -68,8 +69,8 @@ class Menu:
         if selecionada == "Crypto Binance":
             from paginas.page_crypto_binance import main
 
-        # if selecionada == "Markowitz - Fronteira Eficiente":
-        #     from paginas.page_markowitz import main
+        if selecionada == "Markowitz - Fronteira Eficiente":
+            from paginas.page_markowitz.page_markowitz import main
 
         if selecionada == "Relatório FOCUS":
             from paginas.page_relatorio_focus import main
@@ -82,5 +83,8 @@ class Menu:
 
         if selecionada == "Importador de Notas":
             from paginas.page_importador_notas import main
+
+        if selecionada == "BDRs e ETFs":
+            from paginas.page_bdrs_etfs import main
 
         main()

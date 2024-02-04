@@ -1,17 +1,20 @@
 # Ultima revisão: 06/01/2024
-
 pip==23.3.2
+pprintpp==0.4.0
 
 # Interface
-streamlit==1.29.0
+streamlit==1.30.0
 streamlit-authenticator==0.2.3
 streamlit_option_menu==0.3.6
 #extra-streamlit-components==0.1.60
 
+# Meus pacotes
+margemliquida-market-data==0.1.7
+
 # Gerais
 pandas==2.1.4
 numpy==1.26.3
-
+deep-translator==1.11.4
 # Utils
 Deprecated==1.2.14
 
@@ -23,7 +26,7 @@ workalendar==17.0.0
 selenium==4.16.0
 
 # Fontes de dados
-yfinance==0.2.33
+yfinance==0.2.35
 python-bcb==0.2.0
 sidrapy==0.1.4
 fundamentus==0.2.0
@@ -34,9 +37,17 @@ matplotlib==3.8.2
 seaborn==0.13.1
 plotly==5.18.0
 imgkit==1.2.3
+mplfinance==0.12.10b0
 
 # Banco de dados
 pymongo==4.6.1
+
+# Risco
+pybind11==2.11.1
+cvxpy==1.4.1
+riskfolio-lib==5.0.0
+mosek==10.1.21
+scipy==1.11.4
 
 # Importação de notas
 pdfplumber==0.10.3

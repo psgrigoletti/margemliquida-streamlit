@@ -56,6 +56,7 @@
 - Usar https://riskfolio-lib.readthedocs.io/
 - Usar https://shields.io/
 - Definir um fluxo de trabalho https://www.atlassian.com/br/git
+- Criar um backend usando https://fastapidozero.dunossauro.com
 
 # :pill: Links úteis:
 - [Streamlit - Site oficial](http://streamlit.io) 

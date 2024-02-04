@@ -2,8 +2,11 @@ from typing import Any, Dict
 
 import extra_streamlit_components as stx
 import pandas as pd
+import plotly
 import plotly.graph_objects as go
+import riskfolio as rp
 import streamlit as st
+import yfinance as yf
 from plotly.subplots import make_subplots
 
 
@@ -144,3 +147,58 @@ def mostrar_tab_detalhes():
     )
 
     return tab_detalhes
+
+
+def mostrar_tab_markowitz(df):
+    if len(df) > 15:
+        st.error("Muitos ativos...")
+        st.stop()
+
+    ativos = [item.strip() + ".SA" for item in df.index]
+    # yf.enable_debug_mode()
+    carteira = yf.download(ativos, start="2023-01-01", ignore_tz=True)["Adj Close"]
+
+    # pd.DataFrame()
+    # for i in ativos:
+    #     try:
+    #         carteira[i] = yf.download(i, start="2023-01-01", ignore_tz=True)[
+    #             "Adj Close"
+    #         ]
+    #     except Exception:
+    #         print(f"{i} não encontrado no YFinance")
+
+    # print(carteira)
+    retornos = carteira.pct_change().dropna()
+    portfolio = rp.Portfolio(returns=retornos)
+    # plotly.plot(retornos.T, alpha=0.4)
+
+    mu = "hist"  # estimando os retornos com base no histórico
+    cov = "hist"  # estimar a matriz de covariância através do histórico
+
+    portfolio.assets_stats(method_mu=mu, method_cov=cov, d=0.94)
+
+    # Construindo o modelo
+
+    model = "Classic"
+    rm = "MV"
+    obj = "Sharpe"
+    hist = True
+    rf = 0
+    l = 0
+
+    w = portfolio.optimization(model=model, rm=rm, obj=obj, rf=rf, l=l, hist=hist)
+
+    st.write(w.T)
+
+    ax = rp.plot_pie(
+        w=w,
+        title="Otimização de Portfólio",
+        others=0.01,
+        nrow=25,
+        cmap="tab20",
+        height=8,
+        width=10,
+        ax=None,
+    )
+
+    st.write(ax.figure, width=600)

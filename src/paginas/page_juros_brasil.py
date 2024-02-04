@@ -6,7 +6,9 @@ from bcb import sgs
 
 def main():
     st.title(":calendar: Juros no Brasil")
-    st.write("**Fonte**: ? via [?]()")
+    st.write(
+        "**Fonte**: https://www.bcb.gov.br/ via [bcb](https://pypi.org/project/python-bcb/)"
+    )
     mensagens = st.container()
     selic_diaria = sgs.get({"SELIC Diária": 11}, start="2023-01-01")
     selic_diaria["SELIC Acumulada"] = (

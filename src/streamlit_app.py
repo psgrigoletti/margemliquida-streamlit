@@ -1,9 +1,11 @@
+# import psutil
 import streamlit as st
 import streamlit_authenticator as stauth
 import yaml
-from menu import Menu
 from streamlit_option_menu import option_menu
 from yaml.loader import SafeLoader
+
+from menu import Menu
 
 st.set_page_config(page_title="Sistema Margem Líquida", layout="wide")
 
@@ -35,7 +37,13 @@ if authentication_status:
             default_index=0,  # optional
         )
         authenticator.logout(":door: Sair")
-        st.write("---")
+        # st.write("---")
+        # st.write("% CPU", psutil.cpu_percent())
+        # st.write(
+        #     "% RAM",
+        #     psutil.virtual_memory().available * 100 / psutil.virtual_memory().total,
+        # )
+        # st.write("---")
         st.markdown(f"Usuário: {name}")
         st.markdown("Versão 1.0")
         st.write("---")

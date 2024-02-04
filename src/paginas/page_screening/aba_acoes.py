@@ -1,5 +1,6 @@
 import pandas as pd
 import streamlit as st
+
 from libs.market_data.fundamentus import lista
 
 from .cache import (
@@ -10,6 +11,7 @@ from .cache import (
 from .comuns import (
     mostrar_tab_estatisticas,
     mostrar_tab_graficos,
+    mostrar_tab_markowitz,
     mostrar_tab_resultados,
     retonar_item_filtro,
 )
@@ -74,6 +76,12 @@ def mostrar_filtros_acoes(filtros, itens_col1, itens_col2, itens_col3):
 def filtrar_df_acoes(filtros, itens_col1, itens_col2, itens_col3):
     """Filtrar as ações de acordo com os filtros informados."""
     df_tela = busca_df_acoes_do_cache().copy()
+    df_tela["ROE"] = df_tela["ROE"] * 100.0
+    df_tela["ROIC"] = df_tela["ROIC"] * 100.0
+    df_tela["Div.Yield"] = df_tela["Div.Yield"] * 100.0
+    df_tela["Cresc. Rec.5a"] = df_tela["Cresc. Rec.5a"] * 100.0
+    df_tela["Mrg Ebit"] = df_tela["Mrg Ebit"] * 100.0
+    df_tela["Mrg. Líq."] = df_tela["Mrg. Líq."] * 100.0
 
     if filtros["Apenas ações negociadas nos últimos 2 meses"]:
         df_tela = df_tela.loc[df_tela["Liq.2meses"] > 0]
@@ -90,6 +98,11 @@ def filtrar_df_acoes(filtros, itens_col1, itens_col2, itens_col3):
         minimo = float(filtros[coluna].get("minimo"))
         maximo = float(filtros[coluna].get("maximo"))
 
+        print("Filtrando por:")
+        print(f"Coluna: {coluna}")
+        print(f"Mínimo: {minimo}")
+        print(f"Máximo: {maximo}")
+
         if minimo > maximo:
             frase = f"Para o campo {coluna} o valor mínimo está maior que o valor máximo! Corrija o seu filtro!"
             print(frase)
@@ -99,16 +112,17 @@ def filtrar_df_acoes(filtros, itens_col1, itens_col2, itens_col3):
             )
             st.stop()
 
+        print("Valores da coluna:")
+        print(df_tela[coluna].unique())
+        print("========================")
         df_tela = df_tela[df_tela[coluna] >= minimo]
         df_tela = df_tela[df_tela[coluna] <= maximo]
 
     df_tela.set_index("Papel", drop=True, inplace=True)
-    df_tela["ROE"] = df_tela["ROE"] * 100.0
-    df_tela["ROIC"] = df_tela["ROIC"] * 100.0
-    df_tela["Div.Yield"] = df_tela["Div.Yield"] * 100.0
-    df_tela["Cresc. Rec.5a"] = df_tela["Cresc. Rec.5a"] * 100.0
-    df_tela["Mrg Ebit"] = df_tela["Mrg Ebit"] * 100.0
-    df_tela["Mrg. Líq."] = df_tela["Mrg. Líq."] * 100.0
+
+    if len(df_tela) == 0:
+        st.error("Com os filtros aplicados não foram encontrados resultados.", icon="🚨")
+        st.stop()
 
     return df_tela
 
@@ -191,12 +205,19 @@ def mostrar_tab_acoes():
     if filtrar_acoes:
         df_acoes_tela = filtrar_df_acoes(filtros, itens_col1, itens_col2, itens_col3)
 
-        tab_detalhes_1, tab_detalhes_2, tab_detalhes_3, tab_detalhes_4 = st.tabs(
+        (
+            tab_detalhes_1,
+            tab_detalhes_2,
+            tab_detalhes_3,
+            tab_detalhes_4,
+            tab_detalhes_5,
+        ) = st.tabs(
             [
                 ":memo: Resultados",
                 ":bar_chart: Gráficos",
                 ":straight_ruler: Estatísticas",
                 ":magic_wand: Fórmula Mágica",
+                ":dart: Markowitz",
             ]
         )
 
@@ -223,7 +244,7 @@ def mostrar_tab_acoes():
             else:
                 st.info(
                     "O gráfico de desempenho normalizado só é gerado para até 15 registros.",
-                    icon="⚠️",
+                    # icon="⚠️",
                 )
 
         with tab_detalhes_2:
@@ -245,3 +266,6 @@ def mostrar_tab_acoes():
 
         with tab_detalhes_4:
             mostrar_tab_magic_formula_acoes(df_acoes_tela)
+
+        with tab_detalhes_5:
+            mostrar_tab_markowitz(df_acoes_tela)

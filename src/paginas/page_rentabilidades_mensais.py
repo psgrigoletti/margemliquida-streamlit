@@ -51,7 +51,7 @@ def main():
                 st.stop()
 
         data_inicial = "1999-12-01"
-        data_final = "2023-12-01"
+        data_final = "2024-01-09"
 
         ticker = ticker.upper()
         if opcoes == "Ações" and not ticker.endswith(".SA"):

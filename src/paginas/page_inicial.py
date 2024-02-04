@@ -11,9 +11,9 @@ def main():
     st.markdown("### Curso:")
     col1, col2 = st.columns([1, 2])
     col1.image("imagens/pmf.png", width=250)
-    col2.markdown("**Trading com Dados**: https://tradingcomdados.com/")
+    col2.markdown("**Trading com Dados**: https://www.tradingcomdados.com.br/")
     col2.markdown(
-        "**Curso Python para Mercado Financeiro**: https://hotmart.com/pt-br/marketplace/produtos/python-para-mercado-financeiro/"
+        "**Curso Python para Mercado Financeiro**: https://hotmart.com/pt-br/marketplace/produtos/pmf-2-0-python-para-mercado-financeiro/B80730640O"
     )
     st.markdown("### Contato:")
     col4, col5 = st.columns([1, 2])

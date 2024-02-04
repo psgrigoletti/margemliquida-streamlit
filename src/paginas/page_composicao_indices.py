@@ -1,126 +1,26 @@
-import os
-from io import StringIO
-from time import sleep
-
 import pandas as pd
 import plotly.express as px
 import streamlit as st
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.options import Options
-
-
-def configura_webdriver_firefox():
-    # Configurar as opções do Firefox para o modo headless e definir a pasta de download
-    firefox_options = Options()
-    firefox_options.headless = True  # Modo headless
-
-    # Configurar a pasta de download e permitir o download automático
-    firefox_options.set_preference("browser.download.folderList", 2)
-    firefox_options.set_preference(
-        "browser.download.dir", "/tmp/downloads"
-    )  # Substitua pelo caminho da sua pasta
-    firefox_options.set_preference("browser.download.useDownloadDir", True)
-    firefox_options.set_preference(
-        "browser.download.viewableInternally.enabledTypes", ""
-    )
-    firefox_options.set_preference(
-        "browser.helperApps.neverAsk.saveToDisk", "application/zip"
-    )  # Substitua pelo tipo MIME do seu arquivo
-
-    firefox_options.add_argument("--headless")
-    firefox_options.add_argument("--disable-gpu")
-
-    # Criar uma instância do WebDriver do Firefox
-    driver = webdriver.Firefox(options=firefox_options)
-    return driver
-
-
-def busca_carteira_teorica(indice, espera=6):
-    url = f"https://sistemaswebb3-listados.b3.com.br/indexPage/day/{indice.upper()}?language=pt-br"
-
-    wd = configura_webdriver_firefox()
-
-    wd.get(url)
-    wd.find_element(By.ID, "segment").send_keys("Setor de Atuação")
-    sleep(espera)
-
-    wd.find_element(By.LINK_TEXT, "Download").click()
-    sleep(espera)
-
-    path = "/tmp/downloads/"
-    lista = os.listdir(path)
-    lista = [path + arquivo for arquivo in lista]
-    # print(lista)
-    time_sorted_list = sorted(lista, key=os.path.getmtime)
-    file_name = time_sorted_list[len(time_sorted_list) - 1]
-
-    return pd.read_csv(
-        file_name,
-        sep=";",
-        encoding="ISO-8859-1",
-        skipfooter=2,
-        engine="python",
-        thousands=".",
-        decimal=",",
-        header=1,
-        index_col=False,
-    )
-
-
-def corrigir_setores_ibov(setor):
-    if (
-        setor == "Cons N  Básico"
-        or setor == "Cons N Cíclico"
-        or setor == "Cons N Ciclico"
-    ):
-        return "Consumo Não-Cíclico"
-    if setor == "Financ e Outros" or setor == "Financeiro e Outros":
-        return "Financeiro"
-    if setor == "Utilidade Públ":
-        return "Utilidade Pública"
-    if setor == "Diverso":
-        return "Diversos"
-    if setor == "Holdings Divers":
-        return "Holdings Diversas"
-    if setor == "Mats Básicos":
-        return "Materiais Básicos"
-    if setor == "Tec.Informação":
-        return "Tecnologia da Informação"
-    if setor == "Telecomunicaçã":
-        return "Telecomunicação"
-    if setor == "Bens Indls":
-        return "Bens Industriais"
-    else:
-        return setor
+from margemliquida_market_data.fundsexplorer import fundsexplorer
 
 
 @st.cache_data(show_spinner="Carregando dados do IFIX", ttl=60 * 5)
 def buscar_dados_ifix():
-    ifix = busca_carteira_teorica("IFIX")
-    ifix.drop(columns=["Setor", "Tipo", "Part. (%)Acum."], inplace=True)
-    return ifix
+    from libs.market_data.b3.b3 import CarteiraTeoricaB3
+
+    return CarteiraTeoricaB3.buscar_dados_ifix()
 
 
 @st.cache_data(show_spinner="Carregando dados do site fundsexplorer", ttl=60 * 5)
 def buscar_dados_fundsexplorer():
-    url = "https://www.fundsexplorer.com.br/ranking"
-    wd = configura_webdriver_firefox()
-    wd.get(url)
-    sleep(8)
-    html_content = wd.page_source
-    fiis_fundsexplorer = pd.read_html(StringIO(str(html_content)), encoding="utf-8")[0]
-    fiis_fundsexplorer.rename(columns={"Fundos": "Código"}, inplace=True)
-    return fiis_fundsexplorer
+    return fundsexplorer.buscar_dados_fundsexplorer()
 
 
 @st.cache_data(show_spinner="Carregando dados do IBOV", ttl=60 * 5)
 def buscar_dados_ibov():
-    ibov = busca_carteira_teorica("IBOV")
-    ibov["Subsetor"] = ibov["Setor"].apply(lambda s: s[s.rfind("/") + 1 :].strip())
-    ibov["Setor"] = ibov["Setor"].apply(lambda s: s[: s.rfind("/")].strip())
-    ibov["Setor"] = ibov["Setor"].apply(corrigir_setores_ibov)
-    return ibov
+    from libs.market_data.b3.b3 import CarteiraTeoricaB3
+
+    return CarteiraTeoricaB3.buscar_dados_ibov()
 
 
 def main():

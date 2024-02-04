@@ -79,7 +79,7 @@ def filtrar_df_fiis(filtros, itens_col1, itens_col2, itens_col3):
 
     df_tela = busca_df_fiis_do_cache().copy()
     df_tela["FFO Yield"] = df_tela["FFO Yield"] * 100.0
-    df_tela["Dividend Yield"] = df_tela["Dividend Yield"]
+    df_tela["Dividend Yield"] = df_tela["Dividend Yield"] * 100.0
     df_tela["Cap Rate"] = df_tela["Cap Rate"] * 100.0
     df_tela["Vacância Média"] = df_tela["Vacância Média"] * 100.0
 
@@ -113,7 +113,10 @@ def filtrar_df_fiis(filtros, itens_col1, itens_col2, itens_col3):
         df_tela = df_tela[df_tela[coluna] <= maximo]
 
     df_tela.set_index("Papel", drop=True, inplace=True)
-    df_tela["Dividend Yield"] = df_tela["Dividend Yield"] * 100.0
+
+    if len(df_tela) == 0:
+        st.error("Com os filtros aplicados não foram encontrados resultados.", icon="🚨")
+        st.stop()
 
     return df_tela
 
